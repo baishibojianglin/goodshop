@@ -1,0 +1,10 @@
+/*登录背景图片*/
+.loginbg{background-image: url(../image/loginbg.png); background-size: 100% 100%;}
+
+/*颜色*/
+.color-white{color:#fff;}
+
+/*字体大小*/
+.font2{font-size: 2em;}
+.font25{font-size: 2.5em;}
+.font30{font-size: 3em;}
