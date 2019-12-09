@@ -14,7 +14,7 @@
 				  </div>
 				  <div class="checkcode">
 				  	 <el-input style="width: 188px;" v-model="verifycode" type="text"  placeholder="输入验证码"></el-input>
-					 <el-button style="width:112px; margin: 20px 0;" type="success" plain>获取验证码</el-button>
+					 <el-button style="width:112px; margin: 20px 0;" type="success" plain>{{tips}}</el-button>
 				  </div>
 				  <div class="count">
 				  	 <el-button style="width: 300px;" type="success">登录</el-button>
@@ -26,14 +26,19 @@
 </template>
 
 <script>
+	  import aes from '@/assets/js/aes.js'
+	  
 	  export default {
 	    data() {
 	      return {
 	        count: '',
 			password:'',
-			verifycode:''
+			verifycode:'',
+			tips:'获取验证码'
 	      }
 	    }
+		
+		
 	  }
 </script>
 
