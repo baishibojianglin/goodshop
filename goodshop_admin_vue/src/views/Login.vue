@@ -2,7 +2,7 @@
 	<div class="login loginbg">
 		<el-row>
 		  <el-col :span="24" style="background-image: ;">
-			  <div class="title font2">供销联盟后台管理系统</div>
+			  <div class="title font2">后台管理系统</div>
 		  </el-col>
 		  <el-col :span="24">
 		  	  <div class="content">
@@ -36,7 +36,10 @@
 			verifycode:'',
 			tips:'获取验证码'
 	      }
-	    }
+	    },
+		mounted(){
+			
+		}
 		
 		
 	  }

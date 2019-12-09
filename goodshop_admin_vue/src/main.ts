@@ -8,6 +8,7 @@ import axios from 'axios'
 //公用配置
 Vue.config.productionTip = false
 Vue.prototype.$axios = axios
+Vue.prototype.$url='http://www.goodshop.com/index.php'
 
 //引入基本样式
 import './assets/css/basic.css'

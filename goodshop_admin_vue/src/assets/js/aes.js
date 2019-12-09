@@ -1,4 +1,4 @@
-import CryptoJS from '/node_modules/crypto-js/crypto-js.js';
+import CryptoJS from '../../../node_modules/crypto-js/crypto-js.js';
 const key = CryptoJS.enc.Utf8.parse("123a456b789c123d");
 const iv = "1234567812345678";
 
