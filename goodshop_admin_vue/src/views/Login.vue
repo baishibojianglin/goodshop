@@ -13,8 +13,11 @@
 				  	 <el-input v-model="password" type="password" placeholder="请输入密码"></el-input>
 				  </div>
 				  <div class="checkcode">
-				  	 <el-input v-model="password" type="number" placeholder="输入验证码"></el-input>
-					 <el-button type="success" plain>成功按钮</el-button>
+				  	 <el-input style="width: 188px;" v-model="verifycode" type="text"  placeholder="输入验证码"></el-input>
+					 <el-button style="width:112px; margin: 20px 0;" type="success" plain>获取验证码</el-button>
+				  </div>
+				  <div class="count">
+				  	 <el-button style="width: 300px;" type="success">登录</el-button>
 				  </div>
 			  </div>
 		  </el-col>
@@ -27,7 +30,8 @@
 	    data() {
 	      return {
 	        count: '',
-			password:''
+			password:'',
+			verifycode:''
 	      }
 	    }
 	  }
@@ -53,10 +57,12 @@
 		margin-top:20px;
 	}
 	.checkcode{
-		width:30%;
-		margin: 20px auto;
+		width: 300px;
+		margin:0 auto;
 	}
 	.checkcode input{
-		width: 180px;
+		width: 200px;
+		margin:20px 0;		
 	}
+
 </style>

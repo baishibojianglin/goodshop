@@ -14,7 +14,7 @@ import './assets/css/basic.css'
 
 //引入element-ui
 import 'element-ui/lib/theme-chalk/index.css';
-import { Container,Header,Aside,Main,Footer,Button,Input} from 'element-ui';
+import { Row,Col,Container,Header,Aside,Main,Footer,Button,Input} from 'element-ui';
 
 Vue.use(Container);
 Vue.use(Header);
@@ -23,6 +23,9 @@ Vue.use(Main);
 Vue.use(Footer);
 Vue.use(Button);
 Vue.use(Input);
+Vue.use(Button);
+Vue.use(Row);
+Vue.use(Col);
 
 new Vue({
   router,
