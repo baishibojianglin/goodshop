@@ -7,7 +7,7 @@
 		  <el-col :span="24">
 		  	  <div class="content">
 				  <div class="count">
-					 <el-input v-model="count" type="text" placeholder="请输入账号"></el-input>
+					 <el-input v-model="account" type="text" placeholder="请输入账号"></el-input>
 				  </div>
 				  <div class="count">
 				  	 <el-input v-model="password" type="password" placeholder="请输入密码"></el-input>
@@ -31,7 +31,7 @@
 	  export default {
 	    data() {
 	      return {
-	        count: '',
+	        account: '',
 			password:'',
 			verifycode:'',
 			tips:'获取验证码'
@@ -40,8 +40,10 @@
         methods:{
 			login(){
 				//数据加密
-			  	let str=aes.Encrypt('count='+this.count+'&password='+this.password+'&verifycode='+this.verifycode);
+			  	let str=aes.Encrypt('account='+this.account+'&password='+this.password+'&verifycode='+this.verifycode);
 				let sign=aes.Encrypt(this.$sign);
+				console.log(str)
+				console.log(sign)
 				//数据提交
 				this.$axios.post(this.$url+'login',{
 					str:str,

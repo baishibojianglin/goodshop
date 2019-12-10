@@ -25,7 +25,7 @@ class Login
       //字符串分解成变量
       parse_str($str,$data);
       //验证账号是否为空
-      if(empty($data['count'])){
+      if(empty($data['account'])){
         $result['status']=0;
         $result['message']='请填写账号';
         return json($result);     	
@@ -44,8 +44,12 @@ class Login
       }
       //密码md5加密
       $data['password']=md5($data['password']);
-	  //查询数据表模型类
-	  $list=model('Companyuser')->checklogin($data['count'],$data['password']);
+	    //查询数据表模型类
+	    $list=model('Companyuser')->checklogin($data['account'],$data['password']);
+      if(!empty($list)){
+        return json($list); 
+      }
+      
       
     }
 }
