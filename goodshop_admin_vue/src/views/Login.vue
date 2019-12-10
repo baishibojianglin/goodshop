@@ -17,7 +17,7 @@
 					 <el-button style="width:112px; margin: 20px 0;" type="success" plain>{{tips}}</el-button>
 				  </div>
 				  <div class="count">
-				  	 <el-button style="width: 300px;" type="success">登录</el-button>
+				  	 <el-button style="width: 300px;" type="success" @click="login()">登录</el-button>
 				  </div>
 			  </div>
 		  </el-col>
@@ -37,10 +37,20 @@
 			tips:'获取验证码'
 	      }
 	    },
-		mounted(){
-			
-		}
-		
+        methods:{
+			login(){
+				//数据加密
+			  	let str=aes.Encrypt('count='+this.count+'&password='+this.password+'&verifycode='+this.verifycode);
+				let sign=aes.Encrypt(this.$sign);
+				//数据提交
+				this.$axios.post(this.$url+'login',{
+					str:str,
+					sign:sign
+				}).then(function(res){
+					console.log(res.data)
+				})
+			}
+		}	
 		
 	  }
 </script>

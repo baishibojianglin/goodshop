@@ -8,10 +8,13 @@ import axios from 'axios'
 //公用配置
 Vue.config.productionTip = false
 Vue.prototype.$axios = axios
-Vue.prototype.$url='http://www.goodshop.com/index.php'
+Vue.prototype.$url='http://www.goodshop.com/index.php/'
 
 //引入基本样式
 import './assets/css/basic.css'
+
+//验证签名值
+Vue.prototype.$sign = 'jl_goodshop';
 
 //引入element-ui
 import 'element-ui/lib/theme-chalk/index.css';
