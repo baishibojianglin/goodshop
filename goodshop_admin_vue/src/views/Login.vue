@@ -60,6 +60,8 @@
 				//数据加密
 			  	let str=aes.Encrypt('account='+this.account+'&password='+this.password+'&verifycode='+this.verifycode);
 				let sign=aes.Encrypt(this.$sign);
+				console.log(str)
+				console.log(sign)
 				//数据提交
 				this.$axios.post(this.$url+'login',{
 					str:str,

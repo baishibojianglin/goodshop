@@ -45,11 +45,11 @@ class Login
         return json($result);     	
       }
       //验证码是否正确
-      if($data['verifycode']!=session('code')){
-        $result['status']=0;
-        $result['message']='验证码不正确';
-        return json($result);         
-      }
+      // if($data['verifycode']!=session('code')){
+      //   $result['status']=0;
+      //   $result['message']='验证码不正确';
+      //   return json($result);         
+      // }
       //密码md5加密
       $data['password']=md5($data['password']);
 	    //查询数据表模型类
@@ -61,7 +61,7 @@ class Login
       }
       //通过验证,生成token,放行登录
       $token=md5(uniqid(mt_rand(), true)).mt_rand();
-      $token=$aes->encrypt($token);
+      $token=$aes->encrypt('56ffdryyg');
       $result['token']=$token;
       $result['status']=1;
       $result['message']='登录成功';      
@@ -78,6 +78,13 @@ class Login
       $result['status']=1;
       session('code', $result['one']+$result['two']);
       return json($result);     
+    }
+
+    public function test(){
+      $aes=new Aes();
+      $str=$aes->encrypt('123');
+      $str=rtrim($str);
+      return $str;
     }
 
 }
