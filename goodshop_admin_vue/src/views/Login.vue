@@ -14,7 +14,7 @@
 				  </div>
 				  <div class="checkcode">
 				  	 <el-input style="width: 188px;" v-model="verifycode" type="text"  placeholder="输入验证码"></el-input>
-					 <el-button style="width:112px; margin: 20px 0;" type="success" plain>{{tips}}</el-button>
+					 <el-button @click='getverifycode()' style="width:112px; margin: 20px 0;" type="success" plain>{{tips}}</el-button>
 				  </div>
 				  <div class="count">
 				  	 <el-button style="width: 300px;" type="success" @click="login()">登录</el-button>
@@ -27,6 +27,7 @@
 
 <script>
 	  import aes from '@/assets/js/aes.js'
+
 	  
 	  export default {
 	    data() {
@@ -38,18 +39,41 @@
 	      }
 	    },
         methods:{
+			//获取验证码
+			getverifycode(){
+				self=this;
+				this.$axios.get(this.$url+'code').then(function(res){
+					if(res.data['status']==1){   //成功获取验证码
+					   self.tips=res.data['one']+'+'+res.data['two']+'=?';	
+					}else{   //获取验证码失败
+					   self.$message({
+						 message: '网络忙，请重试',
+						 type: 'warning'
+					   });
+					}
+					
+				})
+			},
+			//登录提交
 			login(){
+				self=this;
 				//数据加密
 			  	let str=aes.Encrypt('account='+this.account+'&password='+this.password+'&verifycode='+this.verifycode);
 				let sign=aes.Encrypt(this.$sign);
-				console.log(str)
-				console.log(sign)
 				//数据提交
 				this.$axios.post(this.$url+'login',{
 					str:str,
 					sign:sign
 				}).then(function(res){
-					console.log(res.data)
+					if(res.data['status']==0){ //验证未通过
+					   self.$message({
+						 message:res.data['message'],
+						 type: 'warning'
+					   });						
+					}else{  //登录成功
+					   console.log(res.data)
+					}
+					
 				})
 			}
 		}	

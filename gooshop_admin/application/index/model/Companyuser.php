@@ -10,8 +10,8 @@ class Companyuser extends  Model
     /**
 	 * 分公司登录
 	 */ 
-	 public function checklogin($count,$password){
-         $map['count']=$count;
+	 public function checklogin($account,$password){
+         $map['account']=$account;
          $map['password']=$password;
          $list=$this->where($map)->find();
          return $list;
