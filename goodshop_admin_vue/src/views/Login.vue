@@ -1,9 +1,7 @@
 <template>
 	<div class="login loginbg">
 		<el-row>
-		  <el-col :span="24" style="background-image: ;">
-			  <div class="title font2">后台管理系统</div>
-		  </el-col>
+		  <el-col :span="24" class="title font2">后台管理系统</el-col>
 		  <el-col :span="24">
 		  	  <div class="content">
 				  <div class="count">
@@ -27,7 +25,8 @@
 
 <script>
 	  import aes from '@/assets/js/aes.js'
-
+	  import { mapState } from 'vuex'
+	  import {mapMutations} from 'vuex'
 	  
 	  export default {
 	    data() {
@@ -60,8 +59,6 @@
 				//数据加密
 			  	let str=aes.Encrypt('account='+this.account+'&password='+this.password+'&verifycode='+this.verifycode);
 				let sign=aes.Encrypt(this.$sign);
-				console.log(str)
-				console.log(sign)
 				//数据提交
 				this.$axios.post(this.$url+'login',{
 					str:str,
@@ -73,7 +70,9 @@
 						 type: 'warning'
 					   });						
 					}else{  //登录成功
-					   console.log(res.data)
+					   //前端存储token
+					   let token=aes.Decrypt(res.data['token']);
+					   localStorage.setItem("token", token);
 					}
 					
 				})
@@ -93,10 +92,15 @@
 	}
 	.title{
 		margin-top:10%;
+		text-align: center;
 	}
 	.content{
         width:30%;
-		margin: 30px auto;
+		margin:30px auto;
+	}
+	.count{
+		width: 300px;
+		margin:0 auto;
 	}
 	.count input{
 		width:300px;
