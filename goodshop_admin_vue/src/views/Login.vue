@@ -72,18 +72,8 @@
 					   let token=aes.Decrypt(res.data['token']);
 					   localStorage.setItem("token", token);
 					   //跳转首页
-					   self.$router.push({
-						   path:'/home'
-						   
-					   })
-					   router.onError((error) => {
-					       const pattern = /Loading chunk (\d)+ failed/g;
-					       const isChunkLoadFailed = error.message.match(pattern);
-					       const targetPath = router.history.pending.fullPath;
-					       if(isChunkLoadFailed){
-					           router.replace(targetPath);
-					       }
-					   })
+					   self.$router.push('/home');
+
 
 					}
 					
