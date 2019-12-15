@@ -54,6 +54,30 @@
 			//登录提交
 			login(){
 				self=this;
+				//前台验证账号
+				if(self.account==''){
+				   self.$message({
+					 message:'请填写账号',
+					 type: 'warning'
+				   });
+				   return false;
+				}
+				//前台验证密码
+				if(self.password==''){
+				   self.$message({
+					 message:'请填写密码',
+					 type: 'warning'
+				   });
+				   return false;
+				}
+				//前台验证验证码
+				if(self.verifycode==''){
+				   self.$message({
+					 message:'请填写验证码',
+					 type: 'warning'
+				   });
+				   return false;
+				}
 				//数据加密
 			  	let str=aes.Encrypt('account='+this.account+'&password='+this.password+'&verifycode='+this.verifycode);
 				let sign=aes.Encrypt(this.$sign);
@@ -73,8 +97,6 @@
 					   localStorage.setItem("token", token);
 					   //跳转首页
 					   self.$router.push('/home');
-
-
 					}
 					
 				})

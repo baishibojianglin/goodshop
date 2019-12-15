@@ -3,7 +3,11 @@
 <!--    <img alt="Vue logo" src="../assets/logo.png">
     <HelloWorld msg="Welcome to Your Vue.js App"/> -->
 		<el-container>
-		  <el-header>Header</el-header>
+		  <el-header>
+			  <el-row>
+			    <el-col :span="5">后台管理系统</el-col>
+			  </el-row>
+		  </el-header>
 		  <el-container>
 			<el-aside width="200px">Aside</el-aside>
 			<el-container>
@@ -26,3 +30,9 @@ export default {
   }
 }
 </script>
+<style>
+	.el-header{
+		background-color: #181C31;
+		color:#FFFFFF;
+	}
+</style>
