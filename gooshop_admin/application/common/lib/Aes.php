@@ -6,8 +6,7 @@ class AES {
      *密钥
      */
     public $key='123a456b789c123d';
-    
-
+    public $options=0;
     /**
      * aes加密
      * @param string $string 需要加密的字符串
@@ -15,9 +14,8 @@ class AES {
      * @return string
      */
     public function encrypt($string)
-    {
-        $data = openssl_encrypt($string, 'AES-128-ECB', $this->key, OPENSSL_RAW_DATA);
-        $data = strtolower(base64_decode($data));
+    {  
+        $data = openssl_encrypt($string, 'AES-128-ECB', $this->key,$this->options);
         return $data;
     }
 
@@ -30,7 +28,7 @@ class AES {
      */
     public function decrypt($string)
     {
-        $decrypted = openssl_decrypt(base64_decode($string), 'AES-128-ECB', $this->key, OPENSSL_RAW_DATA);
+        $decrypted = openssl_decrypt($string, 'AES-128-ECB', $this->key,$this->options);
         return $decrypted;
     }
 
