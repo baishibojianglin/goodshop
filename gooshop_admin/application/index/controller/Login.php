@@ -67,6 +67,8 @@ class Login
       $token=$aes->encrypt($token);
       //成功放行登录
       if(!empty($lsittoken)){
+        $result['id']=$list['id'];
+        $result['name']=$list['name'];
         $result['token']=$token;
         $result['status']=1;
         $result['message']='登录成功';      

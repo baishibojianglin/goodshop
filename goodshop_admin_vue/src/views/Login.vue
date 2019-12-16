@@ -96,7 +96,10 @@
 					   let token=aes.Decrypt(res.data['token']);
 					   localStorage.setItem("token", token);
 					   //跳转首页
-					   self.$router.push('/home');
+					   self.$router.push({
+						   'name':'home',
+						   'params':{id:res.data['id']}
+					   });
 					}
 					
 				})

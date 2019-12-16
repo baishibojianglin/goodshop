@@ -5,7 +5,9 @@
 		<el-container>
 		  <el-header>
 			  <el-row>
-			    <el-col :span="5">后台管理系统</el-col>
+			    <el-col :span="5">
+					<div class="header_title">后台管理系统</div>
+				</el-col>
 			  </el-row>
 		  </el-header>
 		  <el-container>
@@ -27,6 +29,9 @@ export default {
   name: 'home',
   components: {
    // HelloWorld
+  },
+  mounted(){
+	  console.log(this.$route.params)
   }
 }
 </script>
@@ -34,5 +39,9 @@ export default {
 	.el-header{
 		background-color: #181C31;
 		color:#FFFFFF;
+	}
+	.header_title{
+         line-height:50px;
+		 text-align: left;
 	}
 </style>
