@@ -20,7 +20,7 @@ Vue.prototype.$sign = 'jl_goodshop';
 
 //引入element-ui
 import 'element-ui/lib/theme-chalk/index.css';
-import { Row,Col,Container,Header,Aside,Main,Footer,Button,Input,Message} from 'element-ui';
+import { Row,Col,Container,Header,Aside,Main,Footer,Button,Input,Message,Menu,Submenu,MenuItem,MenuItemGroup} from 'element-ui';
 
 Vue.use(Container);
 Vue.use(Header);
@@ -32,6 +32,10 @@ Vue.use(Input);
 Vue.use(Button);
 Vue.use(Row);
 Vue.use(Col);
+Vue.use(Menu);
+Vue.use(Submenu);
+Vue.use(MenuItem);
+Vue.use(MenuItemGroup);
 Vue.prototype.$message = Message
 
 new Vue({
