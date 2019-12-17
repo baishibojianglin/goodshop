@@ -98,10 +98,9 @@
 					   //跳转首页
 					   self.$router.push({
 						   'name':'home',
-						   'params':{id:res.data['id']}
+						   'params':{id:res.data['id'],name:res.data['name']}
 					   });
-					}
-					
+					}					
 				})
 			}
 		}	

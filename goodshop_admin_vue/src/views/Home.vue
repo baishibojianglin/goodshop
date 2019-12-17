@@ -1,12 +1,10 @@
 <template>
   <div class="home">
-<!--    <img alt="Vue logo" src="../assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/> -->
 		<el-container>
 		  <el-header>
 			  <el-row>
 			    <el-col :span="5">
-					<div class="header_title">后台管理系统</div>
+					<div class="header_title">{{name}}后台管理系统</div>
 				</el-col>
 			  </el-row>
 		  </el-header>
@@ -27,11 +25,17 @@
 
 export default {
   name: 'home',
+  data(){
+	return {
+		name:'', //机构名字
+	}  
+  },
   components: {
    // HelloWorld
   },
   mounted(){
-	  console.log(this.$route.params)
+	  //显示机构名字
+	  this.name=this.$route.params['name'];
   }
 }
 </script>
