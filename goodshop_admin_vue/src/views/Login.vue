@@ -29,8 +29,8 @@
 	  export default {
 	    data() {
 	      return {
-	        account: '',
-			password:'',
+	        account: 'test',
+			password:'111111',
 			verifycode:'',
 			tips:'获取验证码'
 	      }
@@ -54,6 +54,7 @@
 			//登录提交
 			login(){
 				self=this;
+				
 				//前台验证账号
 				if(self.account==''){
 				   self.$message({
@@ -86,6 +87,7 @@
 					str:str,
 					sign:sign
 				}).then(function(res){
+					
 					if(res.data['status']==0){ //验证未通过
 					   self.$message({
 						 message:res.data['message'],
@@ -96,10 +98,9 @@
 					   let token=aes.Decrypt(res.data['token']);
 					   localStorage.setItem("token", token);
 					   //跳转首页
-					   self.$router.push({
-						   'name':'home',
-						   'params':{id:res.data['id'],name:res.data['name']}
-					   });
+					   self.$router.replace({
+								path:'/home'
+					   });					
 					}					
 				})
 			}

@@ -51,7 +51,9 @@
 		    </el-container>
 		  </el-container>
 		</el-container>		
+		
   </div>
+ 
 </template>
 
 <script>
@@ -70,7 +72,8 @@ export default {
   },
   mounted(){
 	  //显示机构名字
-	  this.name=this.$route.params['name'];
+	  this.name=this.$route.query.name;
+
   },
   methods: {
 	handleOpen(key, keyPath) {

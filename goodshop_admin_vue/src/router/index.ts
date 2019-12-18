@@ -9,28 +9,21 @@ const routes = [
   {
     path: '/',
     name: 'login',
-    component: Login
+	component:Login
+	//component:() => import(/* webpackChunkName: '1' */ '../views/Login.vue')	
   },
   {
-    path: '/home/:id',
+    path: '/home',
     name: 'home',
-    //component: () => import('../views/Home.vue')
-	component: Home
+	component:Home
   }
 ]
 
 const router = new VueRouter({
-  routes
+		routes
 })
 
-//router报错解决方案
-router.onError((error) => {
-    const pattern = /Loading chunk (\d)+ failed/g;
-    const isChunkLoadFailed = error.message.match(pattern);
-    if(isChunkLoadFailed){ 
-		 //避免死循环的加载
-         location.reload();
-    }   
-});
+
+
 
 export default router
