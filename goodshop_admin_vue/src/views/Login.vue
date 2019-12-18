@@ -53,8 +53,7 @@
 			},
 			//登录提交
 			login(){
-				self=this;
-				
+				let self=this;			
 				//前台验证账号
 				if(self.account==''){
 				   self.$message({
@@ -94,13 +93,13 @@
 						 type: 'warning'
 					   });						
 					}else{  //登录成功
-					   //前端存储token
+					   //前端存储token、分公司（供应商）id、分公司（供应商）名字
 					   let token=aes.Decrypt(res.data['token']);
-					   localStorage.setItem("token", token);
+					   localStorage.setItem("goodshoptoken", token);
+					   localStorage.setItem("goodshopid", res.data['id']);
+					   localStorage.setItem("goodshopname", res.data['name']);
 					   //跳转首页
-					   self.$router.replace({
-								path:'/home'
-					   });					
+					   self.$router.replace({path:'/home'});					
 					}					
 				})
 			}

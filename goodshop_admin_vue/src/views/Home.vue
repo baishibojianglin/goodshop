@@ -57,8 +57,7 @@
 </template>
 
 <script>
-// @ is an alias to /src
-//import HelloWorld from '@/components/HelloWorld.vue'
+
 
 export default {
   name: 'home',
@@ -68,11 +67,11 @@ export default {
 	}  
   },
   components: {
-   // HelloWorld
+ 
   },
   mounted(){
 	  //显示机构名字
-	  this.name=this.$route.query.name;
+	  this.name=localStorage.getItem("goodshopname");
 
   },
   methods: {
