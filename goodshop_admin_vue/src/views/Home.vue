@@ -1,59 +1,27 @@
 <template>
   <div class="home">
-		<el-container>
-		  <el-header>
-			  <el-row>
-			    <el-col :span="5">
-					<div class="header_title">{{name}}后台管理系统</div>
-				</el-col>
-			  </el-row>
-		  </el-header>
-		  <el-container>
-			  
-			<el-aside>
-				<el-row class="tac">
-				  <el-col :span="12">
-				    <el-menu default-active="2" class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose">
-				      <el-submenu index="1">
-				        <template slot="title">
-				          <i class="el-icon-location"></i>
-				          <span>导航一</span>
-				        </template>
-				        <el-menu-item-group>
-				          <template slot="title">分组一</template>
-				          <el-menu-item index="1-1">选项1</el-menu-item>
-				          <el-menu-item index="1-2">选项2</el-menu-item>
-				        </el-menu-item-group>
-				        <el-menu-item-group title="分组2">
-				          <el-menu-item index="1-3">选项3</el-menu-item>
-				        </el-menu-item-group>
-				        <el-submenu index="1-4">
-				          <template slot="title">选项4</template>
-				          <el-menu-item index="1-4-1">选项1</el-menu-item>
-				        </el-submenu>
-				      </el-submenu>
-				      <el-menu-item index="2">
-				        <i class="el-icon-menu"></i>
-				        <span slot="title">导航二</span>
-				      </el-menu-item>
-				      <el-menu-item index="3">
-				        <i class="el-icon-setting"></i>
-				        <span slot="title">导航三</span>
-				      </el-menu-item>
-				    </el-menu>
-				  </el-col>
-				</el-row>
-			</el-aside>
-			
-			<el-container>
-			  <el-main>Main</el-main>
-			  <el-footer>Footer</el-footer>
-		    </el-container>
-		  </el-container>
-		</el-container>		
+	<el-row>
 		
+	  <el-col :span="24" class="homeheader color-white"> <!--header s-->    
+		   <el-col :span="5">
+			   <div class="hometitle">{{name}}</div>
+		   </el-col>	  
+	  </el-col> <!--header e-->
+
+	  <el-col :span="24"> <!--content s-->    
+		   <el-col  :xs="6" :sm="5" :md="4" :lg="3" :xl="2">  <!--menu s-->
+			   <div class="homemenu">
+				   <dl class="m0">
+					   <dt><span class="el-icon-s-data"></span> 供应商管理</dt>
+					   <dd>分公司管理</dd>
+					   <dd>供应商管理</dd>
+				   </dl>
+			   </div>
+		   </el-col> <!--menu e-->	  
+	  </el-col> <!--content e-->
+	  
+	</el-row>									
   </div>
- 
 </template>
 
 <script>
@@ -70,27 +38,30 @@ export default {
  
   },
   mounted(){
-	  //显示机构名字
-	  this.name=localStorage.getItem("goodshopname");
-
+	  //获取公司（供应商）基本信息
+	  let account=JSON.parse(localStorage.getItem("company"));
+	  this.name=account['name'];
   },
   methods: {
-	handleOpen(key, keyPath) {
-	  console.log(key, keyPath);
-	},
-	handleClose(key, keyPath) {
-	  console.log(key, keyPath);
-	}
+
   }
 }
 </script>
-<style>
-	.el-header{
-		background-color: #181C31;
-		color:#FFFFFF;
-	}
-	.header_title{
-         line-height:50px;
-		 text-align: left;
-	}
+<style>	
+ .homeheader{
+	 background-color:#003366;
+ }
+ .hometitle{
+	 line-height: 50px;
+	 text-indent: 10px;
+ }
+ .homemenu{
+	 padding: 10px 10px;
+	 border-right: 1px solid #E3E0D5;
+	 background-color: #EEEEEE;
+ }
+ dt,dd{
+	 line-height: 35px;
+	 border-bottom: 1px solid #E3E0D5;
+ }
 </style>

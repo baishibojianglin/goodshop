@@ -65,11 +65,10 @@ class Login
       $lsittoken=model('Companyuser')->savetoken($list['id'],$token);
       //用aes加密token
       $token=$aes->encrypt($token);
+      $list['token']=$token;
       //成功放行登录
       if(!empty($lsittoken)){
-        $result['id']=$list['id'];
-        $result['name']=$list['name'];
-        $result['token']=$token;
+        $result['value']=$list;
         $result['status']=1;
         $result['message']='登录成功';      
         return json($result);       
