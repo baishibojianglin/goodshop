@@ -12,7 +12,7 @@
 		   <el-col  :xs="6" :sm="5" :md="4" :lg="3" :xl="2">  <!--menu s-->
 			   <div class="homemenu">
 				   <dl class="m0">
-					   <dt><span class="el-icon-s-data"></span> 供应商管理</dt>
+					   <dt><span class="el-icon-s-data" @click="controlmenu()"></span> 供应商管理</dt>
 					   <dd>分公司管理</dd>
 					   <dd>供应商管理</dd>
 				   </dl>
@@ -43,7 +43,8 @@ export default {
 	  this.name=account['name'];
   },
   methods: {
-
+    //menu折叠效果
+	
   }
 }
 </script>
@@ -63,5 +64,6 @@ export default {
  dt,dd{
 	 line-height: 35px;
 	 border-bottom: 1px solid #E3E0D5;
+	 cursor: pointer;
  }
 </style>
