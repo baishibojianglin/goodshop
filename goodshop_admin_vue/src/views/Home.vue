@@ -12,12 +12,28 @@
 		   <el-col  :xs="6" :sm="5" :md="4" :lg="3" :xl="2">  <!--menu s-->
 			   <div class="homemenu">
 				   <dl class="m0">
-					   <dt><span class="el-icon-s-data" @click="controlmenu()"></span> 供应商管理</dt>
-					   <dd>分公司管理</dd>
-					   <dd>供应商管理</dd>
+					   <dt @click="menush(0)">
+						   <span class="el-icon-menu"> 供应商管理</span> 
+						   <span class="fr derection" :class="menuvalue[0]?derectionup:derectiondown"></span>
+					   </dt>
+					   <dd v-show="menuvalue[0]"><router-link to="/companycreate">新建供应商</router-link></dd>
+					   <dd v-show="menuvalue[0]">供应商管理</dd>
+					   <dt @click="menush(1)">
+						   <span class="el-icon-menu"> 供应商管理</span> 
+						   <span class="fr derection" :class="menuvalue[1]?derectionup:derectiondown"></span>
+					   </dt>
+					   <dd v-show="menuvalue[1]">新建供应商</dd>
+					   <dd v-show="menuvalue[1]">供应商管理</dd>
 				   </dl>
 			   </div>
-		   </el-col> <!--menu e-->	  
+		   </el-col> <!--menu e-->	
+		   <el-col  :xs="18" :sm="19" :md="20" :lg="21" :xl="22">  <!--main s-->
+		     <div style="width: 100%;">
+                <router-view></router-view>
+				</div>
+		   </el-col> <!--main e-->			 
+			 
+			 
 	  </el-col> <!--content e-->
 	  
 	</el-row>									
@@ -32,19 +48,32 @@ export default {
   data(){
 	return {
 		name:'', //机构名字
+		menuvalue:[false,false], //菜单层级
+		derectiondown:'el-icon-arrow-down',
+		derectionup:'el-icon-arrow-up'
+		
+		
 	}  
   },
   components: {
  
   },
   mounted(){
-	  //获取公司（供应商）基本信息
-	  let account=JSON.parse(localStorage.getItem("company"));
-	  this.name=account['name'];
+    //获取公司（供应商）基本信息
+    let account=JSON.parse(localStorage.getItem("company"));
+    this.name=account['name'];
   },
   methods: {
-    //menu折叠效果
-	
+	//menu折叠效果
+	menush(val){
+		let self=this;
+		this.menuvalue.forEach((value,index)=>{
+			if(index!=val){
+			 self.$set(this.menuvalue,index,false);				
+			}
+		});
+		this.$set(this.menuvalue,val,!this.menuvalue[val]);
+	}	
   }
 }
 </script>
@@ -61,9 +90,22 @@ export default {
 	 border-right: 1px solid #E3E0D5;
 	 background-color: #EEEEEE;
  }
+ .derection{
+	padding: 10px 5px; 
+ }
  dt,dd{
 	 line-height: 35px;
 	 border-bottom: 1px solid #E3E0D5;
 	 cursor: pointer;
+ }
+ a:hover{
+	 color:#1D72B9;
+ }
+ a {
+   text-decoration: none;
+   color:#000;
+ }
+ .router-link-active {
+   text-decoration: none;
  }
 </style>
