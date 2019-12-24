@@ -24,12 +24,11 @@
 </template>
 
 <script>
-	  import aes from '@/assets/js/aes.js'
-	  
+	  import aes from '@/assets/js/aes.js'  
 	  export default {
-	    data() {
+	    data(){
 	      return {
-	        account: 'test',
+	        account:'test',
 			password:'111111',
 			verifycode:'',
 			tips:'获取验证码'
@@ -47,8 +46,7 @@
 						 message: '网络忙，请重试',
 						 type: 'warning'
 					   });
-					}
-					
+					}					
 				})
 			},
 			//登录提交
