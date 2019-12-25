@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import Login from '@/views/Login.vue'
 import Home from '@/views/Home.vue'
 
+
 Vue.use(VueRouter)
 
 const routes = [
@@ -22,9 +23,9 @@ const routes = [
 		 //供应商管理
 		 {
 		   //创建供应商
-		   path: '/companycreate',
+		   path: 'companycreate',
 		   name: 'companycreate',
-		   component:() => import('../pages/company/Create')	
+		   component:() => import('@/views/Companycreate.vue')
 		 }		
 	]
   }

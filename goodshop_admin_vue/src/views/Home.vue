@@ -16,8 +16,13 @@
 						   <span class="el-icon-menu"> 供应商管理</span> 
 						   <span class="fr derection" :class="menuvalue[0]?derectionup:derectiondown"></span>
 					   </dt>
-					   <dd v-show="menuvalue[0]"><router-link to="/companycreate">新建供应商</router-link></dd>
-					   <dd v-show="menuvalue[0]">供应商管理</dd>
+					   <el-collapse-transition>
+						   <div v-show="menuvalue[0]">
+							   <dd><router-link to="/home/companycreate">新建供应商</router-link></dd>
+							   <dd>供应商管理</dd>
+						   </div>
+					   </el-collapse-transition>
+					  
 					   <dt @click="menush(1)">
 						   <span class="el-icon-menu"> 供应商管理</span> 
 						   <span class="fr derection" :class="menuvalue[1]?derectionup:derectiondown"></span>
@@ -28,9 +33,7 @@
 			   </div>
 		   </el-col> <!--menu e-->	
 		   <el-col  :xs="18" :sm="19" :md="20" :lg="21" :xl="22">  <!--main s-->
-		     <div style="width: 100%;">
-                <router-view></router-view>
-				</div>
+                   <router-view></router-view>
 		   </el-col> <!--main e-->			 
 			 
 			 
