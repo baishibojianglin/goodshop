@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Login from '@/views/Login.vue'
 import Home from '@/views/Home.vue'
+import Companycreate from '@/views/Companycreate.vue'
 
 
 Vue.use(VueRouter)
@@ -25,7 +26,7 @@ const routes = [
 		   //创建供应商
 		   path: 'companycreate',
 		   name: 'companycreate',
-		   component:() => import('@/views/Companycreate.vue')
+		   component:Companycreate
 		 }		
 	]
   }

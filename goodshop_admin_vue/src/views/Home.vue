@@ -33,7 +33,9 @@
 			   </div>
 		   </el-col> <!--menu e-->	
 		   <el-col  :xs="18" :sm="19" :md="20" :lg="21" :xl="22">  <!--main s-->
-                   <router-view></router-view>
+		       <div class="homemain">
+                   <router-view></router-view>				   
+			   </div>
 		   </el-col> <!--main e-->			 
 			 
 			 
@@ -53,9 +55,7 @@ export default {
 		name:'', //机构名字
 		menuvalue:[false,false], //菜单层级
 		derectiondown:'el-icon-arrow-down',
-		derectionup:'el-icon-arrow-up'
-		
-		
+		derectionup:'el-icon-arrow-up'	
 	}  
   },
   components: {

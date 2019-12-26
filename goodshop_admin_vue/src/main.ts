@@ -20,11 +20,9 @@ Vue.prototype.$sign = 'jl_goodshop';
 
 //引入element-ui
 import 'element-ui/lib/theme-chalk/index.css';
-import { Row,Col,Button,Input,Message} from 'element-ui';
-//引入element-ui动画
 import 'element-ui/lib/theme-chalk/base.css';
+import { Row,Col,Button,Input,Message} from 'element-ui';
 import CollapseTransition from 'element-ui/lib/transitions/collapse-transition';
-Vue.component(CollapseTransition.name, CollapseTransition);
 
 
 
@@ -33,6 +31,12 @@ Vue.use(Input);
 Vue.use(Button);
 Vue.use(Row);
 Vue.use(Col);
+Vue.component(CollapseTransition.name, CollapseTransition);
+
+
+
+
+
 
 Vue.prototype.$message = Message
 
