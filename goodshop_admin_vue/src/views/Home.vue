@@ -34,7 +34,7 @@
 		   <el-col  :xs="18" :sm="19" :md="20" :lg="21" :xl="22">  <!--main s-->
 		   
 		       <el-col  :span='24' class="createtitle">
-				   <span></span>	
+				   <span>{{menuonetitle}}</span>	
 			   </el-col>
 			   
 		       <div class="homemain">
@@ -50,7 +50,8 @@
 </template>
 
 <script>
-
+    import { mapState } from 'vuex';
+	
 	export default {
 	  name: 'home',
 	  data(){
@@ -66,6 +67,11 @@
 	  },
 	  components: {
 	 
+	  },
+	  computed: {
+	    ...mapState([
+          'menuonetitle'
+	    ])
 	  },
 	  mounted(){
 		//获取公司（供应商）基本信息
@@ -89,6 +95,7 @@
 					 self.$set(this.activevalue,index,false);				
 				});			
 			}
+			this.getmenutitle('abc');
 		},
 		//menu折叠效果
 		menuactive(val){
@@ -99,6 +106,10 @@
 				}
 			});
 			this.$set(this.activevalue,val,true);
+		},
+		//获取menu一级标题和二级标题
+		getmenutitle(title){
+			this.$store.commit('menutitle',title);
 		}
 		
 		
