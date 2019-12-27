@@ -13,16 +13,15 @@
 			   <div class="homemenu">
 				   <dl class="m0">
 					   <dt @click="menush(0)">
-						   <span class="el-icon-menu"> 供应商管理</span> 
+						   <span class="el-icon-menu" id="menu0"> 供应商管理</span> 
 						   <span class="fr derection" :class="menuvalue[0]?derectionup:derectiondown"></span>
 					   </dt>
 					   <el-collapse-transition>
 						   <div v-show="menuvalue[0]">
-							   <dd><router-link to="/home/companycreate">新建供应商</router-link></dd>
+							   <dd :class="activevalue[0]?activeclass:''"  @click="menuactive(0)"><router-link to="/home/companycreate">新建供应商</router-link></dd>
 							   <dd>供应商管理</dd>
 						   </div>
-					   </el-collapse-transition>
-					  
+					   </el-collapse-transition>				  
 					   <dt @click="menush(1)">
 						   <span class="el-icon-menu"> 供应商管理</span> 
 						   <span class="fr derection" :class="menuvalue[1]?derectionup:derectiondown"></span>
@@ -33,6 +32,11 @@
 			   </div>
 		   </el-col> <!--menu e-->	
 		   <el-col  :xs="18" :sm="19" :md="20" :lg="21" :xl="22">  <!--main s-->
+		   
+		       <el-col  :span='24' class="createtitle">
+				   <span></span>	
+			   </el-col>
+			   
 		       <div class="homemain">
                    <router-view></router-view>				   
 			   </div>
@@ -47,38 +51,60 @@
 
 <script>
 
-
-export default {
-  name: 'home',
-  data(){
-	return {
-		name:'', //机构名字
-		menuvalue:[false,false], //菜单层级
-		derectiondown:'el-icon-arrow-down',
-		derectionup:'el-icon-arrow-up'	
-	}  
-  },
-  components: {
- 
-  },
-  mounted(){
-    //获取公司（供应商）基本信息
-    let account=JSON.parse(localStorage.getItem("company"));
-    this.name=account['name'];
-  },
-  methods: {
-	//menu折叠效果
-	menush(val){
-		let self=this;
-		this.menuvalue.forEach((value,index)=>{
-			if(index!=val){
-			 self.$set(this.menuvalue,index,false);				
+	export default {
+	  name: 'home',
+	  data(){
+		return {
+			name:'', //供应商名字
+			menuvalue:[false,false], //菜单层级
+			derectiondown:'el-icon-arrow-down', //一级菜单向上箭头
+			derectionup:'el-icon-arrow-up', //一级菜单向下箭头
+			activevalue:[false],//激活菜单
+			activeclass:'activecolor' //选中二级菜单样式
+			
+		}  
+	  },
+	  components: {
+	 
+	  },
+	  mounted(){
+		//获取公司（供应商）基本信息
+		let account=JSON.parse(localStorage.getItem("company"));
+		this.name=account['name'];
+	  },
+	  methods: {
+		//menu折叠效果
+		menush(val){
+			//控制一级菜单折叠
+			let self=this;
+			this.menuvalue.forEach((value,index)=>{
+				if(index!=val){
+				 self.$set(this.menuvalue,index,false);				
+				}
+			});
+			this.$set(this.menuvalue,val,!this.menuvalue[val]);
+			//所有一级菜单折叠后，将二级菜单状态初始化到最初状态
+			if(!this.menuvalue[val]){
+				this.activevalue.forEach((value,index)=>{
+					 self.$set(this.activevalue,index,false);				
+				});			
 			}
-		});
-		this.$set(this.menuvalue,val,!this.menuvalue[val]);
-	}	
-  }
-}
+		},
+		//menu折叠效果
+		menuactive(val){
+			let self=this;
+			this.activevalue.forEach((value,index)=>{
+				if(index!=val){
+				 self.$set(this.activevalue,index,false);				
+				}
+			});
+			this.$set(this.activevalue,val,true);
+		}
+		
+		
+	  }
+
+	}
 </script>
 <style>	
  .homeheader{
@@ -110,5 +136,15 @@ export default {
  }
  .router-link-active {
    text-decoration: none;
+ }
+ .activecolor a{
+	 color:#1D72B9;
+ }
+ .createtitle{
+    border-bottom: 1px solid #E8EAED;
+ 	line-height: 40px;
+ 	background-color: #FBFCFC;
+ 	padding: 0 10px;
+ 	font-size: 0.8em;
  }
 </style>
