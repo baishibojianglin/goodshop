@@ -13,7 +13,7 @@ class Companyuser extends  Model
 	 public function checklogin($account,$password){
          $map['account']=$account;
          $map['password']=$password;
-         $list=$this->where($map)->field('password',true)->find();
+         $list=$this->where($map)->field('password,tokentime',true)->find();
          return $list;
 	 }  
     /**

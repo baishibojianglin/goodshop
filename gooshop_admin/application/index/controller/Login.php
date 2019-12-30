@@ -87,4 +87,15 @@ class Login
       return json($result);     
     }
 
+
+  /**
+  *检查登录状态
+  */
+    public function loginstatus()
+    {
+
+      return '123';     
+    }
+
+
 }

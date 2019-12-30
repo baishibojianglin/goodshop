@@ -5,11 +5,13 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-	  menuonetitle:''
+	  menuonetitle:'', //一级标题
+	  menutwotitle:'' //二级标题
   },
   mutations:{
 	  menutitle(state,title){
-		 state.menuonetitle=title; 
+		 state.menuonetitle=title.onetitletext; 
+		 state.menutwotitle=title.twotitletext;
 	  }
   },
   actions: {

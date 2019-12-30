@@ -18,8 +18,8 @@
 					   </dt>
 					   <el-collapse-transition>
 						   <div v-show="menuvalue[0]">
-							   <dd :class="activevalue[0]?activeclass:''"  @click="menuactive(0)"><router-link to="/home/companycreate">新建供应商</router-link></dd>
-							   <dd>供应商管理</dd>
+							   <router-link to="/home/companycreate"><dd id='menu01' :class="activevalue[0]?activeclass:''"  @click="menuactive(0,0,1)">新建供应商</dd></router-link>
+							   <router-link to="/home/companycreate"><dd id='menu02' :class="activevalue[1]?activeclass:''"  @click="menuactive(1,0,2)">供应商管理</dd></router-link>
 						   </div>
 					   </el-collapse-transition>				  
 					   <dt @click="menush(1)">
@@ -34,7 +34,7 @@
 		   <el-col  :xs="18" :sm="19" :md="20" :lg="21" :xl="22">  <!--main s-->
 		   
 		       <el-col  :span='24' class="createtitle">
-				   <span>{{menuonetitle}}</span>	
+				   <span>{{menuonetitle}} > {{menutwotitle}}</span>	
 			   </el-col>
 			   
 		       <div class="homemain">
@@ -51,6 +51,7 @@
 
 <script>
     import { mapState } from 'vuex';
+	import { mapMutations } from 'vuex';
 	
 	export default {
 	  name: 'home',
@@ -70,15 +71,31 @@
 	  },
 	  computed: {
 	    ...mapState([
-          'menuonetitle'
+          'menuonetitle',
+		  'menutwotitle'
 	    ])
 	  },
 	  mounted(){
 		//获取公司（供应商）基本信息
 		let account=JSON.parse(localStorage.getItem("company"));
 		this.name=account['name'];
+		this.logincheck(account.id,);
 	  },
 	  methods: {
+		//vuex存储共享数据
+		...mapMutations([
+		    'menutitle', //存储菜单标题
+		  ]),	
+		//检测登录
+		logincheck(id,time){
+				//数据提交
+				this.$axios.post(this.$url+'islogin',{
+					id:'',
+					sign:''
+				}).then(function(res){
+				    
+				})			
+		},
 		//menu折叠效果
 		menush(val){
 			//控制一级菜单折叠
@@ -92,13 +109,16 @@
 			//所有一级菜单折叠后，将二级菜单状态初始化到最初状态
 			if(!this.menuvalue[val]){
 				this.activevalue.forEach((value,index)=>{
-					 self.$set(this.activevalue,index,false);				
+					self.$set(this.activevalue,index,false);				
 				});			
 			}
-			this.getmenutitle('abc');
 		},
 		//menu折叠效果
-		menuactive(val){
+		//val:选中激活状态样式索引数组
+		//onetitle:一级标题
+		//twotitle:二级标题
+		menuactive(val,onetitle,twotitle){
+			//控制选中menu样式
 			let self=this;
 			this.activevalue.forEach((value,index)=>{
 				if(index!=val){
@@ -106,11 +126,15 @@
 				}
 			});
 			this.$set(this.activevalue,val,true);
-		},
-		//获取menu一级标题和二级标题
-		getmenutitle(title){
-			this.$store.commit('menutitle',title);
+			//设置标题
+			let titleobject=new Object();
+            titleobject.onetitletext=document.getElementById('menu'+onetitle).innerText;
+			titleobject.twotitletext=document.getElementById('menu'+onetitle+''+twotitle).innerText;		
+			this.menutitle(titleobject);
 		}
+		
+	
+
 		
 		
 	  }
