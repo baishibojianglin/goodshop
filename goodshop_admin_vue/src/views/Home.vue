@@ -79,7 +79,7 @@
 		//获取公司（供应商）基本信息
 		let account=JSON.parse(localStorage.getItem("company"));
 		this.name=account['name'];
-		this.logincheck(account.id,);
+		this.logincheck(account.id);
 	  },
 	  methods: {
 		//vuex存储共享数据
@@ -109,7 +109,7 @@
 			//所有一级菜单折叠后，将二级菜单状态初始化到最初状态
 			if(!this.menuvalue[val]){
 				this.activevalue.forEach((value,index)=>{
-					self.$set(this.activevalue,index,false);				
+				 self.$set(this.activevalue,index,false);				
 				});			
 			}
 		},

@@ -25,7 +25,8 @@ class Companyuser extends  Model
          $data['tokentime']=time();
          $list=$this->save($data,$map);
          return $list;
-	 } 	  
+	 } 
+     	  
 }
 
 
