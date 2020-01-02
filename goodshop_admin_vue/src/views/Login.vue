@@ -92,7 +92,6 @@
 					   });						
 					}else{  //登录成功
 					   //前端存储token、分公司（供应商）id、分公司（供应商）名字等存入缓存
-					   //let token=aes.Decrypt(res.data['token']);
 					    localStorage.setItem("company",JSON.stringify(res.data.value));
 					   //跳转首页
 					    self.$router.replace({path:'/home'});		

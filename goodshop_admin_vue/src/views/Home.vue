@@ -34,7 +34,9 @@
 		   <el-col  :xs="18" :sm="19" :md="20" :lg="21" :xl="22">  <!--main s-->
 		   
 		       <el-col  :span='24' class="createtitle">
-				   <span>{{menuonetitle}} > {{menutwotitle}}</span>	
+				   <span>{{menuonetitle}} </span>
+				   <span class="el-icon-arrow-right"></span>
+				   <span> {{menutwotitle}}</span>	
 			   </el-col>
 			   
 		       <div class="homemain">
@@ -50,6 +52,7 @@
 </template>
 
 <script>
+	import aes from '@/assets/js/aes.js';
     import { mapState } from 'vuex';
 	import { mapMutations } from 'vuex';
 	
@@ -61,9 +64,8 @@
 			menuvalue:[false,false], //菜单层级
 			derectiondown:'el-icon-arrow-down', //一级菜单向上箭头
 			derectionup:'el-icon-arrow-up', //一级菜单向下箭头
-			activevalue:[false],//激活菜单
-			activeclass:'activecolor' //选中二级菜单样式
-			
+			activevalue:[false,false], //激活菜单数组
+			activeclass:'activecolor' //选中二级菜单样式		
 		}  
 	  },
 	  components: {
@@ -79,7 +81,8 @@
 		//获取公司（供应商）基本信息
 		let account=JSON.parse(localStorage.getItem("company"));
 		this.name=account['name'];
-		this.logincheck(account.id);
+		let token=aes.Decrypt(account.token);
+		this.logincheck(token,);
 	  },
 	  methods: {
 		//vuex存储共享数据
@@ -113,10 +116,11 @@
 				});			
 			}
 		},
-		//menu折叠效果
-		//val:选中激活状态样式索引数组
-		//onetitle:一级标题
-		//twotitle:二级标题
+		/**menu折叠效果
+		*val:选中激活状态样式索引数组
+		*onetitle:一级标题
+		*twotitle:二级标题
+		*/
 		menuactive(val,onetitle,twotitle){
 			//控制选中menu样式
 			let self=this;
@@ -172,7 +176,7 @@
  .router-link-active {
    text-decoration: none;
  }
- .activecolor a{
+ .activecolor{
 	 color:#1D72B9;
  }
  .createtitle{
