@@ -93,7 +93,6 @@ class Login
   */
     public function loginstatus()
     {
-
       return '123';     
     }
 
