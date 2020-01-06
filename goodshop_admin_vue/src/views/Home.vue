@@ -81,24 +81,12 @@
 		//获取公司（供应商）基本信息
 		let account=JSON.parse(localStorage.getItem("company"));
 		this.name=account['name'];
-		let token=aes.Decrypt(account.token);
-		this.logincheck(token,);
 	  },
 	  methods: {
 		//vuex存储共享数据
 		...mapMutations([
 		    'menutitle', //存储菜单标题
 		  ]),	
-		//检测登录
-		logincheck(id,time){
-				//数据提交
-				this.$axios.post(this.$url+'islogin',{
-					id:'',
-					sign:''
-				}).then(function(res){
-				    
-				})			
-		},
 		//menu折叠效果
 		menush(val){
 			//控制一级菜单折叠

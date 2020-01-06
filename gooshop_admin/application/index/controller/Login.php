@@ -88,13 +88,6 @@ class Login
     }
 
 
-  /**
-  *检查登录状态
-  */
-    public function loginstatus()
-    {
-      return '123';     
-    }
 
 
 }
