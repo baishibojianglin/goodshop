@@ -1,6 +1,6 @@
 <?php
-namespace app\index\controller;
-use app\index\model\Companyuser;
+namespace app\admin\controller;
+use app\admin\model\Companyuser;
 use app\common\lib\Aes;
 
 class Login

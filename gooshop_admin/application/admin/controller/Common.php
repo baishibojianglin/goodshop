@@ -1,6 +1,7 @@
 <?php
-namespace app\index\controller;
-use app\index\model\Companyuser;
+namespace app\admin\controller;
+use app\admin\model\Companyuser;
+use think\Request;
 
 
 class Common extends Controller
@@ -12,7 +13,6 @@ class Common extends Controller
   public function _initialize(){
     //调用检查操作是否合法和登录是否过期
     $this->loginstatus();
-
   }
 
 
@@ -21,7 +21,7 @@ class Common extends Controller
   */
     public function loginstatus()
     {
-       
+       $header=request()->header();
        $lsit=model('Companyuser')->loginstatus();   
        //验证token
        if(empty($lsit)){
