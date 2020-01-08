@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import Login from '@/views/Login.vue'
 import Home from '@/views/Home.vue'
 import Companycreate from '@/pages/company/Companycreate.vue'
+import Region from '@/pages/region/Region.vue'
 
 
 Vue.use(VueRouter)
@@ -27,7 +28,14 @@ const routes = [
 		   path: 'companycreate',
 		   name: 'companycreate',
 		   component:Companycreate
-		 }		
+		 },
+		 //2--地区管理
+		 {
+		   //地区管理
+		   path: 'region',
+		   name: 'region',
+		   component:Region
+		 }
 	]
   }
 
