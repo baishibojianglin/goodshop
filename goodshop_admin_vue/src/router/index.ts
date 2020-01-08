@@ -22,20 +22,20 @@ const routes = [
     name: 'home',
 	component:Home,
 	children: [
-		 //2--供应商管理
-		 {
-		   //创建供应商
-		   path: 'companycreate',
-		   name: 'companycreate',
-		   component:Companycreate
-		 },
-		 //2--地区管理
-		 {
-		   //地区管理
-		   path: 'region',
-		   name: 'region',
-		   component:Region
-		 }
+		//2--供应商管理
+		{
+			//创建供应商
+			path: 'companycreate',
+			name: 'companycreate',
+			component:Companycreate
+		},
+		// 2--区域管理
+		{
+			// 区域
+			path: 'region',
+			name: 'region',
+			component:Region
+		}
 	]
   }
 

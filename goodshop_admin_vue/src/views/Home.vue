@@ -25,13 +25,12 @@
 					   </el-collapse-transition>
 									 
 					   <dt @click="menush(2)">
-						   <span class="el-icon-menu" id="menu2"> 地区管理</span> 
+						   <span class="el-icon-menu" id="menu2"> 区域管理</span> 
 						   <span class="fr derection" :class="menuvalue[2]?derectionup:derectiondown"></span>
 					   </dt>
 					   <el-collapse-transition>
 						   <div v-show="menuvalue[2]">
-								<router-link to="/home/companycreate"><dd id='menu21' :class="activevalue[21]?activeclass:''" @click="menuactive(21,2,1)">地区1</dd></router-link>
-								<router-link to="/home/companycreate"><dd id='menu22' :class="activevalue[22]?activeclass:''" @click="menuactive(22,2,2)">地区2</dd></router-link>
+								<router-link to="/home/region"><dd id='menu21' :class="activevalue[21]?activeclass:''" @click="menuactive(21,2,1)">区域</dd></router-link>
 							</div>
 					   </el-collapse-transition>
 					   
