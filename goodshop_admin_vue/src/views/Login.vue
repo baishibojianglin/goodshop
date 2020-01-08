@@ -28,16 +28,16 @@
 	  export default {
 	    data(){
 	      return {
-	        account:'test',
-			password:'111111',
-			verifycode:'',
-			tips:'获取验证码'
+	        account:'test',  //登录账号
+			password:'111111',  //登录密码
+			verifycode:'', //验证码
+			tips:'获取验证码'  //验证码框提示信息
 	      }
 	    },
         methods:{
 			/**
 			 * 获取验证码
-			*/
+			 */
 			getverifycode(){
 				self=this;
 				this.$axios.get(this.$url+'code').then(function(res){
@@ -53,7 +53,7 @@
 			},
 			/**
 			 * 提交登录
-			*/
+			 */
 			login(){
 				let self=this;			
 				//前台验证账号

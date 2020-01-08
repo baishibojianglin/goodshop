@@ -80,12 +80,14 @@
 	  },
 	  computed: {
 	    ...mapState([
-          'menuonetitle',
-		  'menutwotitle'
+          'menuonetitle', //home主页一级标题
+		  'menutwotitle'  //home主页二级标题
 	    ])
 	  },
 	  mounted(){
-		//获取公司（供应商）基本信息
+		/**
+		 *获取供应商名称
+		 */
 		let account=JSON.parse(localStorage.getItem("company"));
 		this.name=account['name'];
 	  },
@@ -93,14 +95,15 @@
 		  
 	  /**
 	   * vuex存储共享数据
-	  */
+	   */
 		...mapMutations([
 		    'menutitle', //存储菜单标题
 		  ]),
 			  
 	  /**
 	   * menu折叠效果
-	  */
+	   * @param {int} val 一级菜单索引
+	   */
 		menush(val){
 			//控制一级菜单折叠
 			let self=this;
@@ -119,11 +122,11 @@
 		},
 		
 		/**
-		* menu折叠效果
-		*val:选中激活状态样式索引数组
-		*onetitle:一级标题
-		*twotitle:二级标题
-		*/
+		 * menu折叠效果
+		 * @param {int} val 被选中状态样式数组索引
+		 * @param {string} onetitle 一级标题
+		 * @param {string} twotitle 二级标题
+		 */
 		menuactive(val,onetitle,twotitle){
 			//控制选中menu样式
 			let self=this;
