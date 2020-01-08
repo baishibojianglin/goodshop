@@ -21,7 +21,7 @@ Vue.prototype.$sign = 'jl_goodshop';
 //引入element-ui
 import 'element-ui/lib/theme-chalk/index.css';
 import 'element-ui/lib/theme-chalk/base.css';
-import { Row,Col,Button,Input,Message} from 'element-ui';
+import { Row,Col,Button,Input,Message,Form,FormItem,Select,Option,OptionGroup,DatePicker,TimeSelect,TimePicker} from 'element-ui';
 import CollapseTransition from 'element-ui/lib/transitions/collapse-transition';
 
 
@@ -31,6 +31,14 @@ Vue.use(Input);
 Vue.use(Button);
 Vue.use(Row);
 Vue.use(Col);
+Vue.use(Form);
+Vue.use(FormItem);
+Vue.use(Select);
+Vue.use(Option);
+Vue.use(OptionGroup);
+Vue.use(DatePicker);
+Vue.use(TimeSelect);
+Vue.use(TimePicker);
 Vue.component(CollapseTransition.name, CollapseTransition);
 
 

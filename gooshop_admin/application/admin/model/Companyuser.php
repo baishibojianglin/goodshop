@@ -8,6 +8,11 @@ use think\Model;
 class Companyuser extends  Model
 {
     /**
+    *表前缀
+    */
+    protected $connection = ['prefix'=>'goodshop_'];
+
+    /**
 	 * 分公司登录
 	 */ 
 	 public function checklogin($account,$password){

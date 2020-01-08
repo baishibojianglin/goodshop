@@ -6,7 +6,6 @@ use think\Request;
 class Company
 {
 
-
 	public function test(){
 		$header=request()->header();
 		return json($header);
