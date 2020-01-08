@@ -12,22 +12,29 @@
 		   <el-col  :xs="6" :sm="5" :md="4" :lg="3" :xl="2">  <!--menu s-->
 			   <div class="homemenu">
 				   <dl class="m0">
-					   <dt @click="menush(0)">
-						   <span class="el-icon-menu" id="menu0"> 供应商管理</span> 
-						   <span class="fr derection" :class="menuvalue[0]?derectionup:derectiondown"></span>
-					   </dt>
-					   <el-collapse-transition>
-						   <div v-show="menuvalue[0]">
-							   <router-link to="/home/companycreate"><dd id='menu01' :class="activevalue[0]?activeclass:''"  @click="menuactive(0,0,1)">新建供应商</dd></router-link>
-							   <router-link to="/home/companycreate"><dd id='menu02' :class="activevalue[1]?activeclass:''"  @click="menuactive(1,0,2)">供应商管理</dd></router-link>
-						   </div>
-					   </el-collapse-transition>				  
+					   
 					   <dt @click="menush(1)">
-						   <span class="el-icon-menu"> 供应商管理</span> 
+						   <span class="el-icon-menu" id="menu1"> 供应商管理</span> 
 						   <span class="fr derection" :class="menuvalue[1]?derectionup:derectiondown"></span>
 					   </dt>
-					   <dd v-show="menuvalue[1]">新建供应商</dd>
-					   <dd v-show="menuvalue[1]">供应商管理</dd>
+					   <el-collapse-transition>
+						   <div v-show="menuvalue[1]">
+							   <router-link to="/home/companycreate"><dd id='menu11' :class="activevalue[11]?activeclass:''"  @click="menuactive(11,1,1)">新建供应商</dd></router-link>
+							   <router-link to="/home/companycreate"><dd id='menu12' :class="activevalue[12]?activeclass:''"  @click="menuactive(12,1,2)">供应商管理</dd></router-link>
+						   </div>
+					   </el-collapse-transition>
+									 
+					   <dt @click="menush(2)">
+						   <span class="el-icon-menu" id="menu2"> 地区管理</span> 
+						   <span class="fr derection" :class="menuvalue[2]?derectionup:derectiondown"></span>
+					   </dt>
+					   <el-collapse-transition>
+						   <div v-show="menuvalue[2]">
+								<router-link to="/home/companycreate"><dd id='menu21' :class="activevalue[21]?activeclass:''" @click="menuactive(21,2,1)">地区1</dd></router-link>
+								<router-link to="/home/companycreate"><dd id='menu22' :class="activevalue[22]?activeclass:''" @click="menuactive(22,2,2)">地区2</dd></router-link>
+							</div>
+					   </el-collapse-transition>
+					   
 				   </dl>
 			   </div>
 		   </el-col> <!--menu e-->	
@@ -61,10 +68,10 @@
 	  data(){
 		return {
 			name:'', //供应商名字
-			menuvalue:[false,false], //菜单层级
+			menuvalue:[], //菜单层级
 			derectiondown:'el-icon-arrow-down', //一级菜单向上箭头
 			derectionup:'el-icon-arrow-up', //一级菜单向下箭头
-			activevalue:[false,false], //激活菜单数组
+			activevalue:[], //激活菜单数组
 			activeclass:'activecolor' //选中二级菜单样式		
 		}  
 	  },
