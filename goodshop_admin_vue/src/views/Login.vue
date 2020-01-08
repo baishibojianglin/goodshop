@@ -35,7 +35,9 @@
 	      }
 	    },
         methods:{
-			//获取验证码
+			/**
+			 * 获取验证码
+			*/
 			getverifycode(){
 				self=this;
 				this.$axios.get(this.$url+'code').then(function(res){
@@ -49,7 +51,9 @@
 					}					
 				})
 			},
-			//登录提交
+			/**
+			 * 提交登录
+			*/
 			login(){
 				let self=this;			
 				//前台验证账号

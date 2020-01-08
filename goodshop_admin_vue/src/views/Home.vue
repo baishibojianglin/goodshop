@@ -83,11 +83,17 @@
 		this.name=account['name'];
 	  },
 	  methods: {
-		//vuex存储共享数据
+		  
+	  /**
+	   * vuex存储共享数据
+	  */
 		...mapMutations([
 		    'menutitle', //存储菜单标题
-		  ]),	
-		//menu折叠效果
+		  ]),
+			  
+	  /**
+	   * menu折叠效果
+	  */
 		menush(val){
 			//控制一级菜单折叠
 			let self=this;
@@ -104,7 +110,9 @@
 				});			
 			}
 		},
-		/**menu折叠效果
+		
+		/**
+		* menu折叠效果
 		*val:选中激活状态样式索引数组
 		*onetitle:一级标题
 		*twotitle:二级标题
@@ -172,6 +180,6 @@
  	line-height: 40px;
  	background-color: #FBFCFC;
  	padding: 0 10px;
- 	font-size: 0.8em;
+ 	font-size: 1em;
  }
 </style>
