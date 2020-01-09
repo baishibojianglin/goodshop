@@ -70,9 +70,9 @@ class Login
       if(!empty($lsittoken)){
         $result['value']=$list;
         $result['status']=1;
-        $result['message']='登录成功';      
-        return json($result);       
-      }  
+        $result['message']='登录成功';
+        return json($result);
+      }
     }
 
   /**

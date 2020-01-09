@@ -1,69 +1,64 @@
 <template>
 	<div class="region">
 		<el-card class="box-card">
+			
+			<!-- 区域列表 s -->
 			<el-row :gutter="12">
-				<el-col :xs="12" :sm="8" :md="8" :lg="6" :xl="1" style="margin-bottom: 1rem;">
-					<el-card shadow="hover">
-					<span>北京市</span>
-					<div style="margin-top: 1rem;">
-						<el-button type="primary" size="mini" plain icon="el-icon-edit">管理</el-button>
-						<el-popconfirm confirmButtonText='确定' cancelButtonText='取消' icon="el-icon-info" iconColor="red" title="确定删除该区域？" style="margin-left: 0.5rem;">
-							<el-button type="danger" size="mini" plain icon="el-icon-delete" slot="reference">删除</el-button>
-						</el-popconfirm>
-					</div>
-					</el-card>
-				</el-col>
-				<el-col :xs="12" :sm="8" :md="8" :lg="6" :xl="1" style="margin-bottom: 1rem;">
-					<el-card shadow="hover">
-					<span>天津市</span>
-					<div style="margin-top: 1rem;">
-						<el-button type="primary" size="mini" plain icon="el-icon-edit">管理</el-button>
-						<el-popconfirm confirmButtonText='确定' cancelButtonText='取消' icon="el-icon-info" iconColor="red" title="确定删除该区域？" style="margin-left: 0.5rem;">
-							<el-button type="danger" size="mini" plain icon="el-icon-delete" slot="reference">删除</el-button>
-						</el-popconfirm>
-					</div>
-					</el-card>
-				</el-col>
-				<el-col :xs="12" :sm="8" :md="8" :lg="6" :xl="1" style="margin-bottom: 1rem;">
-					<el-card shadow="hover">
-					<span>上海市</span>
-					<div style="margin-top: 1rem;">
-						<el-button type="primary" size="mini" plain icon="el-icon-edit">管理</el-button>
-						<el-popconfirm confirmButtonText='确定' cancelButtonText='取消' icon="el-icon-info" iconColor="red" title="确定删除该区域？" style="margin-left: 0.5rem;">
-							<el-button type="danger" size="mini" plain icon="el-icon-delete" slot="reference">删除</el-button>
-						</el-popconfirm>
-					</div>
-					</el-card>
-				</el-col>
-				<el-col :xs="12" :sm="8" :md="8" :lg="6" :xl="1" style="margin-bottom: 1rem;">
-					<el-card shadow="hover">
-					<span>重庆市</span>
-					<div style="margin-top: 1rem;">
-						<el-button type="primary" size="mini" plain icon="el-icon-edit">管理</el-button>
-						<el-popconfirm confirmButtonText='确定' cancelButtonText='取消' icon="el-icon-info" iconColor="red" title="确定删除该区域？" style="margin-left: 0.5rem;">
-							<el-button type="danger" size="mini" plain icon="el-icon-delete" slot="reference">删除</el-button>
-						</el-popconfirm>
-					</div>
-					</el-card>
-				</el-col>
-				<el-col :xs="12" :sm="8" :md="8" :lg="6" :xl="1" style="margin-bottom: 1rem;">
-					<el-card shadow="hover">
-					<span>四川省</span>
-					<div style="margin-top: 1rem;">
-						<el-button type="primary" size="mini" plain icon="el-icon-edit">管理</el-button>
-						<el-popconfirm confirmButtonText='确定' cancelButtonText='取消' icon="el-icon-info" iconColor="red" title="确定删除该区域？" style="margin-left: 0.5rem;">
-							<el-button type="danger" size="mini" plain icon="el-icon-delete" slot="reference">删除</el-button>
-						</el-popconfirm>
-					</div>
+				<el-col :xs="12" :sm="8" :md="8" :lg="6" :xl="1" v-for="(item, index) in regionList" :key="index" style="margin-bottom: 1rem;">
+					<el-card>
+						<span>{{item.region_name}}</span>
+						<div style="margin-top: 1rem;">
+							<el-button type="primary" size="mini" plain icon="el-icon-edit">管理{{item.region_id}}</el-button>
+							<el-popconfirm confirmButtonText='确定' cancelButtonText='取消' icon="el-icon-info" iconColor="red" title="确定删除该区域？" style="margin-left: 0.5rem;">
+								<el-button type="danger" size="mini" plain icon="el-icon-delete" slot="reference">删除</el-button>
+							</el-popconfirm>
+						</div>
 					</el-card>
 				</el-col>
 			</el-row>
+			<!-- 区域列表 e -->
+			
 		</el-card>
 	</div>
 </template>
 
 <script>
+	export default {
+		data() {
+			return {
+				regionList: [] // 区域列表，如 [{region_id: 1, region_name: '北京市', level: 1, parent_id: 0}, {…}, …]
+			}
+		},
+		mounted() { // 实例被挂载后调用
+			this.getRegionList(); // 获取区域列表
+		},
+		methods: {
+			/**
+			 * 获取区域列表
+			 */
+			getRegionList(){
+				let self = this;
+				this.$axios.get(this.$url+'region')
+				.then(function(res) {
+					if (res.data.status == 1) {
+						self.regionList = res.data.data;
+					} else {
+						self.$message({
+							message: '网络忙，请重试',
+							type: 'warning'
+						});
+					}
+				})
+				.catch(function (error) {
+					console.log(error);
+				});
+			},
+		}
+	}
 </script>
 
 <style>
+	.box-card{
+		margin: 1rem;
+	}
 </style>
