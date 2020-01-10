@@ -28,7 +28,7 @@ class Region extends Controller
             // 查询条件
             $map = [];
             if (!empty($param['region_name'])) { // 区域名称
-                $map['region_name'] = trim($param['region_name']);
+                $map['region_name'] = ['like', '%' . trim($param['region_name']) . '%'];
             }
             if (isset($param['level'])) { // 区域级别
                 $map['level'] = intval($param['level']);
