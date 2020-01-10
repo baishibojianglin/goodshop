@@ -21,7 +21,7 @@ Vue.prototype.$sign = 'jl_goodshop';
 //引入element-ui
 import 'element-ui/lib/theme-chalk/index.css';
 import 'element-ui/lib/theme-chalk/base.css';
-import { Row,Col,Button,Input,Message,Form,FormItem,Card,Popconfirm} from 'element-ui';
+import { Row,Col,Button,Input,Message,Form,FormItem,Card,Popconfirm,Container} from 'element-ui';
 import CollapseTransition from 'element-ui/lib/transitions/collapse-transition';
 
 
@@ -35,6 +35,7 @@ Vue.use(Form);
 Vue.use(FormItem);
 Vue.use(Card);
 Vue.use(Popconfirm);
+Vue.use(Container);
 Vue.component(CollapseTransition.name, CollapseTransition);
 
 
