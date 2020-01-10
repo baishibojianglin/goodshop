@@ -14,6 +14,16 @@
 			 <el-input style="width:350px;"  v-model="ruleForm.phone"></el-input>
 		   </el-form-item>
 
+		   <el-form-item label="营业执照" prop="license">
+			   <el-input v-show='false' style="width:350px;"  v-model="ruleForm.license"></el-input>
+			   <el-upload action="" :limit="1">
+				  <el-button size="small" type="primary">上传图片</el-button>
+			   </el-upload>
+		   </el-form-item>
+
+
+
+
 		   
 		   <el-form-item>
 			 <el-button type="primary" @click="submitForm('ruleForm')">立即创建</el-button>
@@ -30,7 +40,9 @@
 				ruleForm: {
 				   name: '',
 				   address:'',
-				   phone:''
+				   phone:'',
+				   license:'',
+				   fileList: []
 				},
 				rules: {
 				  name: [
@@ -41,7 +53,10 @@
 				  ],
 				  phone:[
 					{ required: true, message: '请输入供应商电话', trigger: 'blur' }					  
-				  ],				  
+				  ],
+				  license:[
+					{ required: true, message: '请上传营业执照'}					  
+				  ],									
 				}
 		   }
      },
@@ -50,7 +65,8 @@
 			this.$refs[formName].validate((valid) => {
 			  if (valid) {
 				alert('submit!');
-			  } else {
+				console.log(filelist);
+			  }else {
 				console.log('error submit!!');
 				return false;
 			  }
