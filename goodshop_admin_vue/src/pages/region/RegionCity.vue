@@ -55,7 +55,7 @@
 	export default {
 		data() {
 			return {
-				title: '省级区域',
+				title: '市级区域',
 				formInline: {
 					region_name: '' // 区域名称
 				},

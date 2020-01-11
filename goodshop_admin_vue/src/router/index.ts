@@ -4,6 +4,7 @@ import Login from '@/views/Login.vue'
 import Home from '@/views/Home.vue'
 import Companycreate from '@/pages/company/Companycreate.vue'
 import Region from '@/pages/region/Region.vue'
+import RegionCity from '@/pages/region/RegionCity.vue'
 
 
 Vue.use(VueRouter)
@@ -30,12 +31,8 @@ const routes = [
 			component:Companycreate
 		},
 		// 2--区域管理
-		{
-			// 区域
-			path: 'region',
-			name: 'region',
-			component:Region
-		}
+		{path: 'region', name: 'region', component: Region}, // 省级区域
+		{path: 'regioncity', name: 'regioncity', component: RegionCity}, // 市级区域
 	]
   }
 

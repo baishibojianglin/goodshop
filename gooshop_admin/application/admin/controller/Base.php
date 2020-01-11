@@ -7,7 +7,7 @@ use think\Controller;
 use think\Request;
 
 /**
- * admin模块登录权限基础控制器类
+ * admin模块登录授权基础控制器类
  * Class Base
  * @package app\admin\controller
  */
