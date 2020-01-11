@@ -16,7 +16,7 @@
 
 		   <el-form-item label="营业执照" prop="license">
 			   <el-input v-show='false' style="width:350px;"  v-model="ruleForm.license"></el-input>
-			   <el-upload action="" :limit="1">
+			   <el-upload :action="this.$url+'test'" :limit="1" name='zhizhao'>
 				  <el-button size="small" type="primary">上传图片</el-button>
 			   </el-upload>
 		   </el-form-item>

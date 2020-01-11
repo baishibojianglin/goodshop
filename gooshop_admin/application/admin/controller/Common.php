@@ -89,4 +89,13 @@ class Common extends Controller
         $this->size = !empty($params['size']) ? $params['size'] : config('paginate.list_rows');
         $this->from = ($this->page - 1) * $this->size; // 'limit from,size'
     }
+
+    /**
+     * 上传图片
+     */
+    public function test(){
+        $file = request()->file('zhizhao');
+    }
+
+
 }

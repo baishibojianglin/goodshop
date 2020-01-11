@@ -7,6 +7,6 @@ Route::POST('login','admin/Login/login');
 //生成登录验证码
 Route::GET('code','admin/Login/createverifycode');
 
-Route::GET('test','admin/Company/test');
+Route::POST('test','admin/Common/test');
 // 区域
 Route::resource('region', 'admin/region');
