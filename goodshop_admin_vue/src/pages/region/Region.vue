@@ -4,7 +4,7 @@
 			<div slot="header" class="clearfix">
 				<el-row :gutter="20">
 					<el-col :span="6"><span>{{title}}</span></el-col>
-					<el-col :span="6" :offset="6">
+					<el-col :span="6">
 						<!-- 查询 s -->
 						<el-form :inline="true" :model="formInline" class="demo-form-inline">
 							<el-form-item label="">
@@ -35,9 +35,10 @@
 						<el-card>
 							<span>{{item.region_name}}</span>
 							<div style="margin-top: 1rem;">
-								<router-link :to="{ path: 'regioncity', query: { parent_id: item.region_id }}">
-									<el-button type="primary" size="mini" plain icon="el-icon-edit">管理{{item.level}}</el-button>
-								</router-link>
+								<!-- <router-link :to="{ path: 'regioncity', query: { parent_id: item.region_id }}">
+									<el-button type="primary" size="mini" plain icon="el-icon-edit">管理</el-button>
+								</router-link> -->
+								<el-button type="primary" size="mini" plain icon="el-icon-edit" @click="toDetail(item.region_id, item.region_name)">管理</el-button>
 								<el-popconfirm confirmButtonText='确定' cancelButtonText='取消' icon="el-icon-info" iconColor="red" title="确定删除该区域？" style="margin-left: 0.5rem;">
 									<el-button type="danger" size="mini" plain icon="el-icon-delete" slot="reference" title="删除"><!-- 删除 --></el-button>
 								</el-popconfirm>
@@ -137,6 +138,15 @@
 					}
 					// this.formAddRegion.region_name = ''; // 初始化区域名称
 				});
+			},
+			
+			/**
+			 * 跳转区域管理
+			 * @param {Object} parent_id
+			 * @param {Object} parent_name
+			 */
+			toDetail(parent_id, parent_name) {
+				this.$router.push({path: "regioncity", query: {parent_id: parent_id, parent_name: parent_name}});
 			}
 		}
 	}

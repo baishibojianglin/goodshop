@@ -5,6 +5,8 @@ import Home from '@/views/Home.vue'
 import Companycreate from '@/pages/company/Companycreate.vue'
 import Region from '@/pages/region/Region.vue'
 import RegionCity from '@/pages/region/RegionCity.vue'
+import RegionCounty from '@/pages/region/RegionCounty.vue'
+import RegionTown from '@/pages/region/RegionTown.vue'
 
 
 Vue.use(VueRouter)
@@ -33,6 +35,8 @@ const routes = [
 		// 2--区域管理
 		{path: 'region', name: 'region', component: Region}, // 省级区域
 		{path: 'regioncity', name: 'regioncity', component: RegionCity}, // 市级区域
+		{path: 'regioncounty', name: 'regioncounty', component: RegionCounty}, // 区县级区域
+		{path: 'regiontown', name: 'regiontown', component: RegionTown}, // 乡镇街道级区域
 	]
   }
 
