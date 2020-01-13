@@ -2,7 +2,6 @@
 
 namespace app\admin\controller;
 
-use app\common\lib\exception\ApiException;
 use think\Controller;
 use think\Request;
 
@@ -15,14 +14,12 @@ class Base extends Common
 {
     /**
      * 初始化方法
-     * @throws ApiException
      */
     public function _initialize()
     {
         // 判断是否登录
         if (!($this->$this->loginstatus())) {
             return show(config('code.error'), '未登录', '', 401);
-            //throw new ApiException('未登录', 401);
         }
     }
 

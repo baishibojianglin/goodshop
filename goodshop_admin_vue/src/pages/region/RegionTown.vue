@@ -86,7 +86,6 @@
 			getParams() {
 				this.paren_name = this.$route.query.parent_name;
 				this.formAddRegion.parent_id = this.$route.query.parent_id;
-				// console.log("接受的parent_id的值：", this.$route.query);
 			},
 			
 			/**
@@ -112,7 +111,6 @@
 					}
 				})
 				.catch(function (error) {
-					console.log(error.response);
 					self.$message({
 						message: error.response.data.message,
 						type: 'warning'
@@ -140,7 +138,6 @@
 							});
 						})
 						.catch(function (error) {
-							console.log(error.response);
 							self.$message({
 								message: error.response.data.message,
 								type: 'warning'
@@ -150,7 +147,7 @@
 						console.log('error submit!!');
 						return false;
 					}
-					// this.formAddRegion.region_name = ''; // 初始化区域名称
+					// this.formAddRegion.region_name = ''; // 初始化新增输入框的区域名称
 				});
 			},
 			

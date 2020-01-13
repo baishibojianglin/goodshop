@@ -2,7 +2,6 @@
 
 namespace app\admin\controller;
 
-use app\common\lib\exception\ApiException;
 use think\Controller;
 use think\Request;
 
@@ -43,7 +42,6 @@ class Region extends Controller
                 $data = model('Region')->getRegion($map);
             } catch (\Exception $e) {
                 return show(config('code.error'), $e->getMessage(), [], 500);
-                // TODO：throw new ApiException($e->getMessage(), 500, config('code.error'));
             }
 
             return show(config('code.success'), 'OK', $data);
@@ -75,7 +73,6 @@ class Region extends Controller
                 $id = model('Region')->add($data, 'region_id');
             } catch (\Exception $e) {
                 return show(config('code.error'), $e->getMessage(), [], 500);
-                // TODO：throw new ApiException($e->getMessage(), 500, config('code.error'));
             }
             if ($id) {
                 return show(config('code.success'), '新增成功', ['region_id' => $id], 201);
@@ -101,7 +98,6 @@ class Region extends Controller
                 $data = model('Region')->find($id);
             } catch (\Exception $e) {
                 return show(config('code.error'), $e->getMessage(), [], 500);
-                // TODO：throw new ApiException($e->getMessage(), 500, config('code.error'));
             }
 
             if ($data) {
@@ -176,7 +172,7 @@ class Region extends Controller
             try {
                 $result = model('Ad')->save($data, ['ad_id' => $id]); // 更新
             } catch (\Exception $e) {
-                throw new ApiException($e->getMessage(), 500, config('code.error'));
+                return show(config('code.error'), $e->getMessage(), [], 500);
             }
             if (false === $result) {
                 return show(config('code.error'), '更新失败', [], 403);
@@ -215,7 +211,6 @@ class Region extends Controller
                 $data = model('Region')->find($id);
             } catch (\Exception $e) {
                 return show(config('code.error'), $e->getMessage(), [], 500);
-                // TODO：throw new ApiException($e->getMessage(), 500, config('code.error'));
             }
 
             // 判断数据是否存在
@@ -235,7 +230,7 @@ class Region extends Controller
                 try {
                     $result = model('Ad')->softDelete('ad_id', $id);
                 } catch (\Exception $e) {
-                    throw new ApiException($e->getMessage(), 500, config('code.error'));
+                    return show(config('code.error'), $e->getMessage(), [], 500);
                 }
 
                 if (!$result) {
