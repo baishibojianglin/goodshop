@@ -87,7 +87,14 @@ class Login
       return json($result);     
     }
 
+    /**
+     * 上传图片
+     */
+    public function test(){
+        $file = request()->file('zhizhao');
 
+        return json($file);
+    }
 
 
 }
