@@ -4,6 +4,7 @@ namespace app\admin\controller;
 
 use think\Cache;
 use think\Controller;
+require_once ROOT_PATH . 'vendor/oss/autoload.php';
 
 /**
  * admin模块公共控制器类
@@ -54,6 +55,15 @@ class Common extends Controller
         $this->size = !empty($params['size']) ? $params['size'] : config('paginate.list_rows');
         $this->from = ($this->page - 1) * $this->size; // 'limit from,size'
     }
+
+
+    /**
+     * 上传图片
+     */
+    public function test(){
+        $file = request()->file('zhizhao');
+    }
+
 
 
 

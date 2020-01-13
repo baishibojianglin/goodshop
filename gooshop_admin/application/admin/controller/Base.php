@@ -45,13 +45,6 @@ class Base extends Common
         return true;
     }
 
-    /**
-     * 上传图片
-     */
-    public function test(){
-        $file = request()->file('zhizhao');
-    }
-
 
 
 }
