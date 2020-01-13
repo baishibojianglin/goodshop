@@ -3,7 +3,7 @@
 		<el-card class="box-card">
 			<div slot="header" class="clearfix">
 				<el-row :gutter="20">
-					<el-col :span="6"><span>{{title}}</span></el-col>
+					<el-col :span="6"><span>{{paren_name}}</span></el-col>
 					<el-col :span="6">
 						<!-- 查询 s -->
 						<el-form :inline="true" :model="formInline" class="demo-form-inline">
@@ -26,6 +26,9 @@
 						</el-form>
 						<!-- 新增 e -->
 					</el-col>
+					<el-col :span="3" :offset="3">
+						<el-button size="mini" icon="el-icon-back" title="返回" @click="back()"></el-button>
+					</el-col>
 				</el-row>
 			</div>
 			<div class="">
@@ -35,9 +38,6 @@
 						<el-card>
 							<span>{{item.region_name}}</span>
 							<div style="margin-top: 1rem;">
-								<!-- <router-link :to="{ path: 'regioncity', query: { parent_id: item.region_id }}">
-									<el-button type="primary" size="mini" plain icon="el-icon-edit">管理</el-button>
-								</router-link> -->
 								<el-button type="primary" size="mini" plain icon="el-icon-edit" @click="toDetail(item.region_id, item.region_name)">管理</el-button>
 								<el-popconfirm confirmButtonText='确定' cancelButtonText='取消' icon="el-icon-info" iconColor="red" title="确定删除该区域？" style="margin-left: 0.5rem;">
 									<el-button type="danger" size="mini" plain icon="el-icon-delete" slot="reference" title="删除"><!-- 删除 --></el-button>
@@ -56,15 +56,16 @@
 	export default {
 		data() {
 			return {
-				title: '省级区域',
+				title: '区县',
+				paren_name: '',
 				formInline: {
 					region_name: '' // 区域名称
 				},
 				regionList: [], // 区域列表，如 [{region_id: 1, region_name: '北京市', level: 1, parent_id: 0}, {…}, …]
 				formAddRegion: {
 					region_name: '',
-					level: 1, // 区域级别
-					parent_id: 0 // 上级ID
+					level: 3, // 区域级别
+					parent_id: '' // 上级ID
 				},
 				rules: { // 验证规则
 					region_name: [
@@ -73,10 +74,22 @@
 				}
 			}
 		},
+		created() {
+			this.getParams();
+		},
 		mounted() { // 实例被挂载后调用
 			this.getRegionList(); // 获取区域列表
 		},
 		methods: {
+			/**
+			 * 取到路由带过来的参数
+			 */
+			getParams() {
+				this.paren_name = this.$route.query.parent_name;
+				this.formAddRegion.parent_id = this.$route.query.parent_id;
+				// console.log("接受的parent_id的值：", this.$route.query);
+			},
+			
 			/**
 			 * 获取区域列表
 			 */
@@ -84,7 +97,9 @@
 				let self = this;
 				this.$axios.get(this.$url+'region', {
 					params: {
-						region_name: this.formInline.region_name
+						region_name: this.formInline.region_name,
+						level: 3,
+						parent_id: this.$route.query.parent_id
 					}
 				})
 				.then(function(res) {
@@ -146,8 +161,15 @@
 			 * @param {Object} parent_name
 			 */
 			toDetail(parent_id, parent_name) {
-				this.$router.push({path: "regioncity", query: {parent_id: parent_id, parent_name: parent_name}});
-			}
+				this.$router.push({path: "regiontown", query: {parent_id: parent_id, parent_name: parent_name}});
+			},
+			
+			/**
+			 * 返回上一页
+			 */
+			back(){
+				this.$router.go(-1);
+			},
 		}
 	}
 </script>
