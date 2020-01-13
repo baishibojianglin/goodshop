@@ -90,12 +90,7 @@ class Common extends Controller
         $this->from = ($this->page - 1) * $this->size; // 'limit from,size'
     }
 
-    /**
-     * 上传图片
-     */
-    public function test(){
-        $file = request()->file('zhizhao');
-    }
+
 
 
 }

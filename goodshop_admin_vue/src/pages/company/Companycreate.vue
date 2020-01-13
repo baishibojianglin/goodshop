@@ -67,7 +67,7 @@
 				alert('submit!');
 				console.log(filelist);
 			  }else {
-				console.log('error submit!!');
+				console.log(this.fileList);
 				return false;
 			  }
 			});
