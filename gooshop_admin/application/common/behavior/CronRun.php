@@ -12,7 +12,8 @@ class CronRun
         $headers = [
             "Access-Control-Allow-Origin" => $host_name,
             "Access-Control-Allow-Credentials" => 'true',
-            "Access-Control-Allow-Headers" => "x-token,x-uid,x-token-check,x-requested-with,content-type,Host,sign"
+            "Access-Control-Allow-Headers" => "x-token,x-uid,x-token-check,x-requested-with,content-type,Host,sign",
+            "Access-Control-Allow-Methods" => "PUT, DELETE"
         ];
         if($dispatch instanceof Response) {
             $dispatch->header($headers);

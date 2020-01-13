@@ -219,38 +219,22 @@ class Region extends Controller
             }
 
             // TODO：以下待开发
-            // 判断删除条件：广告是否显示
-            if (1 == $data['is_show']) {
-                return show(config('code.error'), '删除失败：广告已显示', ['url' => 'deleteFalse']/*, 403*/);
-            }
-
-            // 软删除
-            if ($data['is_delete'] != config('code.is_delete')) {
-                // 捕获异常
-                try {
-                    $result = model('Ad')->softDelete('ad_id', $id);
-                } catch (\Exception $e) {
-                    return show(config('code.error'), $e->getMessage(), [], 500);
-                }
-
-                if (!$result) {
-                    return show(config('code.error'), '移除失败', ['url' => 'parent']/*, 403*/);
-                } else {
-                    return show(config('code.success'), '移除成功', ['url' => 'delete']);
-                }
+            // 判断删除条件：判断是否存在下级区域
+            $regionList = model('Region')->where(['parent_id' => $id])->select();
+            if (!empty($regionList)) {
+                return show(config('code.error'), '删除失败：存在下级区域', [], 403);
             }
 
             // 真删除
-            if ($data['is_delete'] == config('code.is_delete')) {
-                $result = model('Ad')->destroy($id);
-                if (!$result) {
-                    return show(config('code.error'), '删除失败', ['url' => 'parent']/*, 403*/);
-                } else {
-                    // 删除文件
-                    @unlink(ROOT_PATH . 'public' . DS . $data['ad_pic']);
-
-                    return show(config('code.success'), '删除成功', ['url' => 'delete']);
-                }
+            try { // 捕获异常
+                $result = model('Region')->destroy($id);
+            } catch (\Exception $e) {
+                return show(config('code.error'), $e->getMessage(), [], 500);
+            }
+            if (!$result) {
+                return show(config('code.error'), '删除失败', [], 403);
+            } else {
+                return show(config('code.success'), '删除成功', []);
             }
         } else {
             return show(config('code.error'), '请求不合法', [], 400);

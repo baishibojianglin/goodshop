@@ -38,7 +38,7 @@
 						<el-card>
 							<span>{{item.region_name}}</span>
 							<div style="margin-top: 1rem;">
-								<el-popconfirm confirmButtonText='确定' cancelButtonText='取消' icon="el-icon-info" iconColor="red" title="确定删除该区域？" style="margin-left: 0.5rem;">
+								<el-popconfirm iconColor="red" title="确定删除该区域？" style="margin-left: 0.5rem;" @onConfirm="deleteRegion(item.region_id)">
 									<el-button type="danger" size="mini" plain icon="el-icon-delete" slot="reference" title="删除"><!-- 删除 --></el-button>
 								</el-popconfirm>
 							</div>
@@ -93,7 +93,7 @@
 			 */
 			getRegionList() {
 				let self = this;
-				this.$axios.get(this.$url+'region', {
+				this.$axios.get(this.$url + 'region', {
 					params: {
 						region_name: this.formInline.region_name,
 						level: 4,
@@ -125,12 +125,13 @@
 				let self = this;
 				this.$refs[formName].validate((valid) => {
 					if (valid) {
-						this.$axios.post(this.$url+'region', {
+						this.$axios.post(this.$url + 'region', {
 							region_name: this.formAddRegion.region_name,
 							level: this.formAddRegion.level,
 							parent_id: this.formAddRegion.parent_id
 						})
 						.then(function(res) {
+							self.getRegionList();
 							let type = res.data.status == 1 ? 'success' : 'warning';
 							self.$message({
 								message: res.data.message,
@@ -157,6 +158,29 @@
 			back(){
 				this.$router.go(-1);
 			},
+			
+			/**
+			 * 删除区域
+			 * @param {Object} region_id
+			 */
+			deleteRegion(region_id) {
+				let self = this;
+				this.$axios.delete(this.$url + 'region/' + region_id)
+				.then(function(res) {
+					self.getRegionList();
+					let type = res.data.status == 1 ? 'success' : 'warning';
+					self.$message({
+						message: res.data.message,
+						type: type
+					});
+				})
+				.catch(function (error) {
+					self.$message({
+						message: error.response.data.message,
+						type: 'warning'
+					});
+				});
+			}
 		}
 	}
 </script>
