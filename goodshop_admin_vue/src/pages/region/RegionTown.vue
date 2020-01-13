@@ -131,6 +131,7 @@
 							parent_id: this.formAddRegion.parent_id
 						})
 						.then(function(res) {
+							self.getRegionList();
 							let type = res.data.status == 1 ? 'success' : 'warning';
 							self.$message({
 								message: res.data.message,
@@ -166,6 +167,7 @@
 				let self = this;
 				this.$axios.delete(this.$url + 'region/' + region_id)
 				.then(function(res) {
+					self.getRegionList();
 					let type = res.data.status == 1 ? 'success' : 'warning';
 					self.$message({
 						message: res.data.message,
