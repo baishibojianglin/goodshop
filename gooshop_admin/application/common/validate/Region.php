@@ -17,7 +17,7 @@ class Region extends Validate
     ];
 
     protected $message = [
-        //'region_name.require' => '区域名称不能为空'
+        'region_name.unique' => '区域已存在', // 唯一性
     ];
 
     protected $scene = [

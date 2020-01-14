@@ -5,7 +5,6 @@ namespace app\admin\controller;
 use think\Cache;
 use think\Controller;
 
-
 /**
  * admin模块公共控制器类
  * Class Common

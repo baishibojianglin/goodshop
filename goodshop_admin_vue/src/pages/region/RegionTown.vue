@@ -6,7 +6,7 @@
 					<el-col :span="6"><span>{{paren_name}}</span></el-col>
 					<el-col :span="6">
 						<!-- 查询 s -->
-						<el-form :inline="true" :model="formInline" class="demo-form-inline">
+						<el-form :inline="true" :model="formInline" size="mini" class="demo-form-inline">
 							<el-form-item label="">
 								<el-input :placeholder="'查询' + title" v-model="formInline.region_name" clearable>
 									<el-button slot="append" icon="el-icon-search" @click="getRegionList"></el-button>
@@ -17,7 +17,7 @@
 					</el-col>
 					<el-col :span="6">
 						<!-- 新增 s -->
-						<el-form :inline="true" :model="formAddRegion" :rules="rules" ref="ruleForm" class="demo-form-inline">
+						<el-form :inline="true" :model="formAddRegion" :rules="rules" size="mini" ref="ruleForm" class="demo-form-inline">
 							<el-form-item label="" prop="region_name">
 								<el-input :placeholder="'新增'+ title" v-model="formAddRegion.region_name" clearable>
 									<el-button slot="append" icon="el-icon-plus" @click="addRegion('ruleForm')"></el-button>
@@ -27,7 +27,7 @@
 						<!-- 新增 e -->
 					</el-col>
 					<el-col :span="3" :offset="3">
-						<el-button size="mini" icon="el-icon-back" title="返回" @click="back()"></el-button>
+						<el-button size="mini" icon="el-icon-back" title="返回" @click="back()">返回上一级</el-button>
 					</el-col>
 				</el-row>
 			</div>
@@ -38,7 +38,7 @@
 						<el-card>
 							<span>{{item.region_name}}</span>
 							<div style="margin-top: 1rem;">
-								<el-popconfirm iconColor="red" title="确定删除该区域？" style="margin-left: 0.5rem;" @onConfirm="deleteRegion(item.region_id)">
+								<el-popconfirm iconColor="red" title="确定删除该区域？" style="margin-left: 0.5rem;" @onConfirm="deleteRegion(item.region_id, index)">
 									<el-button type="danger" size="mini" plain icon="el-icon-delete" slot="reference" title="删除"><!-- 删除 --></el-button>
 								</el-popconfirm>
 							</div>
@@ -131,7 +131,14 @@
 							parent_id: this.formAddRegion.parent_id
 						})
 						.then(function(res) {
-							self.getRegionList();
+							// 新增元素
+							self.regionList.push({
+								region_id: res.data.data.region_id,
+								region_name: self.formAddRegion.region_name,
+								level: self.formAddRegion.level,
+								parent_id: self.formAddRegion.parent_id
+							});
+							
 							let type = res.data.status == 1 ? 'success' : 'warning';
 							self.$message({
 								message: res.data.message,
@@ -163,11 +170,13 @@
 			 * 删除区域
 			 * @param {Object} region_id
 			 */
-			deleteRegion(region_id) {
+			deleteRegion(region_id, index) {
 				let self = this;
 				this.$axios.delete(this.$url + 'region/' + region_id)
 				.then(function(res) {
-					self.getRegionList();
+					// 移除元素
+					self.regionList.splice(index, 1)
+					
 					let type = res.data.status == 1 ? 'success' : 'warning';
 					self.$message({
 						message: res.data.message,
@@ -187,6 +196,6 @@
 
 <style>
 	.box-card{
-		margin: 1rem;
+		margin: 4rem 1rem;
 	}
 </style>

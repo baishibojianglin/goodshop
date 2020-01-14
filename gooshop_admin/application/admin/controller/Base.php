@@ -18,9 +18,9 @@ class Base extends Common
     public function _initialize()
     {
         // 判断是否登录
-        if (!($this->$this->loginstatus())) {
+        /*if (!($this->$this->loginstatus())) {
             return show(config('code.error'), '未登录', '', 401);
-        }
+        }*/
     }
 
     /**
