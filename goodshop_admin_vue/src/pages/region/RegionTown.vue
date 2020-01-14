@@ -6,7 +6,7 @@
 					<el-col :span="6"><span>{{paren_name}}</span></el-col>
 					<el-col :span="6">
 						<!-- 查询 s -->
-						<el-form :inline="true" :model="formInline" class="demo-form-inline">
+						<el-form :inline="true" :model="formInline" size="mini" class="demo-form-inline">
 							<el-form-item label="">
 								<el-input :placeholder="'查询' + title" v-model="formInline.region_name" clearable>
 									<el-button slot="append" icon="el-icon-search" @click="getRegionList"></el-button>
@@ -17,7 +17,7 @@
 					</el-col>
 					<el-col :span="6">
 						<!-- 新增 s -->
-						<el-form :inline="true" :model="formAddRegion" :rules="rules" ref="ruleForm" class="demo-form-inline">
+						<el-form :inline="true" :model="formAddRegion" :rules="rules" size="mini" ref="ruleForm" class="demo-form-inline">
 							<el-form-item label="" prop="region_name">
 								<el-input :placeholder="'新增'+ title" v-model="formAddRegion.region_name" clearable>
 									<el-button slot="append" icon="el-icon-plus" @click="addRegion('ruleForm')"></el-button>
@@ -27,7 +27,7 @@
 						<!-- 新增 e -->
 					</el-col>
 					<el-col :span="3" :offset="3">
-						<el-button size="mini" icon="el-icon-back" title="返回" @click="back()"></el-button>
+						<el-button size="mini" icon="el-icon-back" title="返回" @click="back()">返回上一级</el-button>
 					</el-col>
 				</el-row>
 			</div>
@@ -187,6 +187,6 @@
 
 <style>
 	.box-card{
-		margin: 1rem;
+		margin: 4rem 1rem;
 	}
 </style>
