@@ -4,7 +4,7 @@ namespace app\admin\controller;
 
 use think\Cache;
 use think\Controller;
-require_once ROOT_PATH . 'vendor/oss/autoload.php';
+
 
 /**
  * admin模块公共控制器类
@@ -57,12 +57,7 @@ class Common extends Controller
     }
 
 
-    /**
-     * 上传图片
-     */
-    public function test(){
-        $file = request()->file('zhizhao');
-    }
+
 
 
 
