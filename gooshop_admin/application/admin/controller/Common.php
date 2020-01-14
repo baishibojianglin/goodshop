@@ -4,7 +4,6 @@ namespace app\admin\controller;
 
 use think\Cache;
 use think\Controller;
-require_once ROOT_PATH . 'vendor/oss/autoload.php';
 
 /**
  * admin模块公共控制器类

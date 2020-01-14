@@ -6,14 +6,14 @@ use think\Controller;
 use think\Request;
 
 /**
- * admin模块区域管理控制器类
+ * admin模块商品类别管理控制器类
  * Class Region
  * @package app\admin\controller
  */
-class Region extends Base
+class GoodsCate extends Base
 {
     /**
-     * 显示区域资源列表
+     * 显示商品类别资源列表
      *
      * @return \think\Response
      */
@@ -23,25 +23,29 @@ class Region extends Base
         if (request()->isGet()) {
             // 传入的参数
             $param = input('param.');
-            //$query = http_build_query($param); // 生成 URL-encode 之后的请求字符串 //halt($query);
 
             // 查询条件
             $map = [];
-            if (!empty($param['region_name'])) { // 区域名称
-                $map['region_name'] = ['like', '%' . trim($param['region_name']) . '%'];
-            }
-            if (isset($param['level'])) { // 区域级别
-                $map['level'] = intval($param['level']);
+            if (!empty($param['cate_name'])) { // 商品类别名称
+                $map['cate_name'] = ['like', '%' . trim($param['cate_name']) . '%'];
             }
             if (isset($param['parent_id'])) { // 上级ID
                 $map['parent_id'] = intval($param['parent_id']);
             }
 
-            // 获取区域列表数据
+            // 获取商品类别列表数据
             try {
-                $data = model('Region')->getRegion($map);
+                $data = model('GoodsCate')->getGoodsCate($map);
             } catch (\Exception $e) {
                 return show(config('code.error'), $e->getMessage(), [], 500);
+            }
+
+            if ($data) {
+                // 处理数据
+                $auditStatus = config('code.audit_status'); // 审核状态：0待审核，1通过，2驳回
+                foreach ($data as $key => $value) {
+                    $data[$key]['status_msg'] = $auditStatus[$key]; // 定义审核状态信息
+                }
             }
 
             return show(config('code.success'), 'OK', $data);
@@ -51,7 +55,7 @@ class Region extends Base
     }
 
     /**
-     * 保存新建的区域资源
+     * 保存新建的商品类别资源
      *
      * @param  \think\Request  $request
      * @return \think\Response
@@ -85,7 +89,7 @@ class Region extends Base
     }
 
     /**
-     * 显示指定的区域资源
+     * 显示指定的商品类别资源
      *
      * @param  int  $id
      * @return \think\Response
@@ -197,7 +201,7 @@ class Region extends Base
     }
 
     /**
-     * 删除指定区域资源
+     * 删除指定商品类别资源
      *
      * @param  int  $id
      * @return \think\Response
@@ -206,7 +210,7 @@ class Region extends Base
     {
         // 判断为DELETE请求
         if (request()->isDelete()) {
-            // 获取指定的区域
+            // 获取指定的商品类别
             try {
                 $data = model('Region')->find($id);
             } catch (\Exception $e) {
@@ -219,10 +223,10 @@ class Region extends Base
             }
 
             // TODO：以下待开发
-            // 判断删除条件：判断是否存在下级区域
+            // 判断删除条件：判断是否存在下级商品类别
             $regionList = model('Region')->where(['parent_id' => $id])->select();
             if (!empty($regionList)) {
-                return show(config('code.error'), '删除失败：存在下级区域', [], 403);
+                return show(config('code.error'), '删除失败：存在下级商品类别', [], 403);
             }
 
             // 真删除
