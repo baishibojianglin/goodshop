@@ -39,7 +39,7 @@
 							<span>{{item.region_name}}</span>
 							<div style="margin-top: 1rem;">
 								<el-button type="primary" size="mini" plain icon="el-icon-edit" @click="toDetail(item.region_id, item.region_name)">管理</el-button>
-								<el-popconfirm iconColor="red" title="确定删除该区域？" style="margin-left: 0.5rem;" @onConfirm="deleteRegion(item.region_id)">
+								<el-popconfirm iconColor="red" title="确定删除该区域？" style="margin-left: 0.5rem;" @onConfirm="deleteRegion(item.region_id, index)">
 									<el-button type="danger" size="mini" plain icon="el-icon-delete" slot="reference" title="删除"><!-- 删除 --></el-button>
 								</el-popconfirm>
 							</div>
@@ -132,7 +132,14 @@
 							parent_id: this.formAddRegion.parent_id
 						})
 						.then(function(res) {
-							self.getRegionList();
+							// 新增元素
+							self.regionList.push({
+								region_id: res.data.data.region_id,
+								region_name: self.formAddRegion.region_name,
+								level: self.formAddRegion.level,
+								parent_id: self.formAddRegion.parent_id
+							});
+							
 							let type = res.data.status == 1 ? 'success' : 'warning';
 							self.$message({
 								message: res.data.message,
@@ -173,11 +180,13 @@
 			 * 删除区域
 			 * @param {Object} region_id
 			 */
-			deleteRegion(region_id) {
+			deleteRegion(region_id, index) {
 				let self = this;
 				this.$axios.delete(this.$url + 'region/' + region_id)
 				.then(function(res) {
-					self.getRegionList();
+					// 移除元素
+					self.regionList.splice(index, 1);
+					
 					let type = res.data.status == 1 ? 'success' : 'warning';
 					self.$message({
 						message: res.data.message,

@@ -175,7 +175,7 @@
 				this.$axios.delete(this.$url + 'region/' + region_id)
 				.then(function(res) {
 					// 移除元素
-					self.regionList.splice(index, 1)
+					self.regionList.splice(index, 1);
 					
 					let type = res.data.status == 1 ? 'success' : 'warning';
 					self.$message({
