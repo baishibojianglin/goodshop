@@ -41,7 +41,7 @@ class Region extends Base
             try {
                 $data = model('Region')->getRegion($map);
             } catch (\Exception $e) {
-                return show(config('code.error'), $e->getMessage(), [], 500);
+                return show(config('code.error'), '网络忙，请重试', [], 500); // $e->getMessage()
             }
 
             return show(config('code.success'), 'OK', $data);
@@ -72,7 +72,7 @@ class Region extends Base
             try {
                 $id = model('Region')->add($data, 'region_id');
             } catch (\Exception $e) {
-                return show(config('code.error'), $e->getMessage(), [], 500);
+                return show(config('code.error'), '网络忙，请重试', [], 500); // $e->getMessage()
             }
             if ($id) {
                 return show(config('code.success'), '新增成功', ['region_id' => $id], 201);
@@ -97,7 +97,7 @@ class Region extends Base
             try {
                 $data = model('Region')->find($id);
             } catch (\Exception $e) {
-                return show(config('code.error'), $e->getMessage(), [], 500);
+                return show(config('code.error'), '网络忙，请重试', [], 500); // $e->getMessage()
             }
 
             if ($data) {
@@ -172,7 +172,7 @@ class Region extends Base
             try {
                 $result = model('Ad')->save($data, ['ad_id' => $id]); // 更新
             } catch (\Exception $e) {
-                return show(config('code.error'), $e->getMessage(), [], 500);
+                return show(config('code.error'), '网络忙，请重试', [], 500); // $e->getMessage()
             }
             if (false === $result) {
                 return show(config('code.error'), '更新失败', [], 403);
@@ -210,7 +210,7 @@ class Region extends Base
             try {
                 $data = model('Region')->find($id);
             } catch (\Exception $e) {
-                return show(config('code.error'), $e->getMessage(), [], 500);
+                return show(config('code.error'), '网络忙，请重试', [], 500); // $e->getMessage()
             }
 
             // 判断数据是否存在
@@ -218,7 +218,6 @@ class Region extends Base
                 return show(config('code.error'), '数据不存在');
             }
 
-            // TODO：以下待开发
             // 判断删除条件：判断是否存在下级区域
             $regionList = model('Region')->where(['parent_id' => $id])->select();
             if (!empty($regionList)) {
@@ -229,7 +228,7 @@ class Region extends Base
             try { // 捕获异常
                 $result = model('Region')->destroy($id);
             } catch (\Exception $e) {
-                return show(config('code.error'), $e->getMessage(), [], 500);
+                return show(config('code.error'), '网络忙，请重试', [], 500); // $e->getMessage()
             }
             if (!$result) {
                 return show(config('code.error'), '删除失败', [], 403);

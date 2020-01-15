@@ -1,6 +1,6 @@
 <template>
 	<div class="region">
-		<el-card class="box-card">
+		<el-card class="main-card">
 			<div slot="header" class="clearfix">
 				<el-row :gutter="20">
 					<el-col :span="6"><span>{{paren_name}}</span></el-col>
@@ -81,7 +81,7 @@
 		},
 		methods: {
 			/**
-			 * 取到路由带过来的参数
+			 * 获取路由带过来的参数
 			 */
 			getParams() {
 				this.paren_name = this.$route.query.parent_name;
@@ -195,7 +195,4 @@
 </script>
 
 <style>
-	.box-card{
-		margin: 4rem 1rem;
-	}
 </style>

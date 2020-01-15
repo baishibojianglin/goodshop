@@ -12,3 +12,4 @@ Route::POST('test','admin/Login/test');
 Route::resource('region', 'admin/region');
 // 商品类别
 Route::resource('goods_cate', 'admin/goods_cate');
+Route::get('goods_cate_tree', 'admin/goods_cate/goodsCateTree');

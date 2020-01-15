@@ -21,3 +21,7 @@ body{margin: 0;padding: 0; font-size:0.95em;}
 .fr{float: right;}
 
 
+/* 主体卡片容器 */
+.main-card{
+	margin: 4rem 1rem;
+}

@@ -1,6 +1,6 @@
 <template>
 	<div class="region">
-		<el-card class="box-card">
+		<el-card class="main-card">
 			<div slot="header" class="clearfix">
 				<el-row :gutter="20">
 					<el-col :span="6"><span>{{title}}</span></el-col>
@@ -181,7 +181,4 @@
 </script>
 
 <style>
-	.box-card{
-		margin: 4rem 1rem;
-	}
 </style>
