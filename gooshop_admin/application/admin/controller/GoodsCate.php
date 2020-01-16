@@ -29,7 +29,7 @@ class GoodsCate extends Base
             if (!empty($param['cate_name'])) { // 商品类别名称
                 $map['gc.cate_name'] = ['like', '%' . trim($param['cate_name']) . '%'];
             }
-            if (isset($param['parent_id'])) { // 上级ID
+            if (isset($param['parent_id']) && $param['parent_id'] != '') { // 上级ID
                 $map['gc.parent_id'] = intval($param['parent_id']);
             }
 
@@ -46,9 +46,11 @@ class GoodsCate extends Base
                 foreach ($data as $key => $value) {
                     $data[$key]['status_msg'] = $auditStatus[$value['status']]; // 定义审核状态信息
                 }
-            }
 
-            return show(config('code.success'), 'OK', $data);
+                return show(config('code.success'), 'OK', $data);
+            } else {
+                return show(config('code.error'), 'Not Found', $data, 404);
+            }
         } else {
             return show(config('code.error'), '请求不合法', [], 400);
         }

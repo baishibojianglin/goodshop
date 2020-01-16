@@ -9,7 +9,7 @@
 						<el-form :inline="true" :model="formInline" size="mini" class="demo-form-inline">
 							<el-form-item label="">
 								<el-input placeholder="查询商品类别" v-model="formInline.cate_name" clearable>
-									<el-button slot="append" icon="el-icon-search" @click="getGoodsCateList()"></el-button>
+									<el-button slot="append" icon="el-icon-search" @click="getGoodsCateList(formInline.cate_name)"></el-button>
 								</el-input>
 							</el-form-item>
 						</el-form>
@@ -32,7 +32,7 @@
 				<el-table :data="goodsCateList" border style="width: 100%">
 					<el-table-column prop="id" label="ID" fixed width="90"></el-table-column>
 					<el-table-column prop="cate_name" label="类别名称" fixed min-width="180"></el-table-column>
-					<el-table-column prop="parent_name" label="上级类别" width="180" v-if="parentId == '' ? false : true"></el-table-column>
+					<el-table-column prop="parent_name" label="上级类别" width="180"></el-table-column>
 					<!-- <el-table-column prop="parent_id" label="上级ID" width="90"></el-table-column> -->
 					<!-- <el-table-column prop="grandparent_id" label="上上级ID" width="100"></el-table-column> -->
 					<el-table-column prop="status_msg" label="审核状态" width="120"></el-table-column>
@@ -58,7 +58,7 @@
 				},
 				goodsCateList: [], // 商品类别列表，如 [{cate_id: 1, cate_name: '油盐酱醋茶', parent_id: 0, status: 0, status_msg: '待审核'}, {…}, …]
 				grandparentId: '', // 上上级ID
-				parentId: '', // 上级ID
+				parentId: 0, // 上级ID，默认为 0 查看顶级类别
 				isBack: false, // 是否显示返回按钮
 			}
 		},
@@ -68,15 +68,33 @@
 		methods: {
 			/**
 			 * 获取商品类别列表
+			 * @param {Object} row
 			 */
 			getGoodsCateList(row) {
 				let self = this;
-				let parentId = row ? (row.cate_id ? row.cate_id : row) : ''; // 上级ID是否存在时赋值
+				console.log('row', row, typeof(row))
+				
+				// 当参数 row 存在时，执行 查看下级 、 返回上级  或 查询 操作
+				this.isBack = row ? true : false;
+				if (row) {
+					if (row.cate_id && typeof(row.cate_id) == 'number') { // 当为 查看下级 操作时
+						this.parentId = row.cate_id;
+					} else if (typeof(row) == 'number') { // 当为 返回上级 操作时
+						this.parentId = row;
+					} else if (typeof(row) == 'string') { // 查询操作
+						console.log('查询操作', row, typeof(row))
+						this.formInline.cate_name = row;
+						this.parentId = '';
+					}
+				} else { // 加载页面和从第二级返回上级操作时
+					this.formInline.cate_name = '';
+					this.parentId = 0;
+				}
 				
 				this.$axios.get(this.$url + 'goods_cate', {
 					params: {
 						cate_name: this.formInline.cate_name,
-						parent_id: parentId
+						parent_id: this.parentId
 					}
 				})
 				.then(function(res) {
@@ -98,8 +116,6 @@
 							}
 						});
 						self.goodsCateList = goodsCateList;
-						self.parentId = parentId;
-						self.isBack = row ? true : false;
 					} else {
 						self.$message({
 							message: '网络忙，请重试',

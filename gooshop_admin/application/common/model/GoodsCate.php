@@ -18,9 +18,9 @@ class GoodsCate extends Base
      */
     public function getGoodsCate($map = [])
     {
-        if(!isset($map['gc.parent_id'])) { // 父级ID
+        /*if(!isset($map['gc.parent_id'])) { // 父级ID
             $map['gc.parent_id'] = 0;
-        }
+        }*/
 
         $result = $this->alias('gc')
             ->field('gc.*, pgc.cate_name parent_name, pgc.parent_id grandparent_id')
