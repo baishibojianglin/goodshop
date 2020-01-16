@@ -17,7 +17,7 @@
 					</el-form-item>
 					<el-form-item label="上级类别" prop="parent_id">
 						<el-select v-model="form.parent_id" placeholder="请选择…" filterable>
-							<el-option :key="0" label="顶级分类" :value="0"></el-option>
+							<el-option :key="0" label="顶级类别" :value="0"></el-option>
 							<el-option
 								v-for="item in options"
 								:key="item.cate_id"

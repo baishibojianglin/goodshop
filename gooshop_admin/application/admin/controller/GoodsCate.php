@@ -44,7 +44,8 @@ class GoodsCate extends Base
                 // 处理数据
                 $auditStatus = config('code.audit_status'); // 审核状态：0待审核，1通过，2驳回
                 foreach ($data as $key => $value) {
-                    $data[$key]['status_msg'] = $auditStatus[$value['status']]; // 定义审核状态信息
+                    $data[$key]['audit_status_msg'] = $auditStatus[$value['audit_status']]; // 定义审核状态信息
+                    $data[$key]['parent_name'] = $value['parent_id'] == 0 ? '顶级类别' : $value['parent_name']; // 上级类别名称
                 }
 
                 return show(config('code.success'), 'OK', $data);

@@ -35,7 +35,7 @@
 					<el-table-column prop="parent_name" label="上级类别" width="180"></el-table-column>
 					<!-- <el-table-column prop="parent_id" label="上级ID" width="90"></el-table-column> -->
 					<!-- <el-table-column prop="grandparent_id" label="上上级ID" width="100"></el-table-column> -->
-					<el-table-column prop="status_msg" label="审核状态" width="120"></el-table-column>
+					<el-table-column prop="audit_status_msg" label="审核状态" width="120"></el-table-column>
 					<el-table-column label="操作" fixed="right" width="120">
 						<template slot-scope="scope">
 							<el-button type="text" size="small" @click="getGoodsCateList(scope.row)">下级</el-button>
@@ -56,7 +56,7 @@
 				formInline: {
 					cate_name: '' // 商品类别名称
 				},
-				goodsCateList: [], // 商品类别列表，如 [{cate_id: 1, cate_name: '油盐酱醋茶', parent_id: 0, status: 0, status_msg: '待审核'}, {…}, …]
+				goodsCateList: [], // 商品类别列表，如 [{cate_id: 1, cate_name: '油盐酱醋茶', parent_id: 0, audit_status: 0, audit_status_msg: '待审核'}, {…}, …]
 				grandparentId: '', // 上上级ID
 				parentId: 0, // 上级ID，默认为 0 查看顶级类别
 				isBack: false, // 是否显示返回按钮
@@ -84,7 +84,7 @@
 						this.formInline.cate_name = row;
 						this.parentId = '';
 					}
-				} else { // 加载页面和从第二级返回上级操作时
+				} else { // 加载页面或从第二级类别返回上级操作时
 					this.formInline.cate_name = '';
 					this.parentId = 0;
 				}
