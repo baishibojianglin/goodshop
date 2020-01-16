@@ -8,6 +8,8 @@ import RegionCity from '@/pages/region/RegionCity.vue'
 import RegionCounty from '@/pages/region/RegionCounty.vue'
 import RegionTown from '@/pages/region/RegionTown.vue'
 import GoodsCate from '@/pages/goods_cate/GoodsCate.vue'
+import GoodsCateAdd from '@/pages/goods_cate/GoodsCateAdd.vue'
+import GoodsCateEdit from '@/pages/goods_cate/GoodsCateEdit.vue'
 
 Vue.use(VueRouter)
 
@@ -39,6 +41,8 @@ const routes = [
 			{path: 'regiontown', name: 'regiontown', component: RegionTown}, // 乡镇街道级区域
 			// 3--商品管理
 			{path: 'goodscate', name: 'goodscate', component: GoodsCate}, // 商品类别
+			{path: 'goodscateadd', name: 'goodscateadd', component: GoodsCateAdd}, // 新增商品类别
+			{path: 'goodscateedit', name: 'goodscateedit', component: GoodsCateEdit}, // 编辑商品类别
 		]
 	}
 ]

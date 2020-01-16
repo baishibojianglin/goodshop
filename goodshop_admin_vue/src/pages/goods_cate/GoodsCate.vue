@@ -1,36 +1,45 @@
 <template>
 	<div class="goods_cate">
-		<el-card class="box-card">
+		<el-card class="main-card">
 			<div slot="header" class="clearfix">
-				<el-row :gutter="20">
+				<el-row :gutter="20" type="flex" justify="space-between">
 					<el-col :span="6"><span>商品类别列表</span></el-col>
 					<el-col :span="6">
 						<!-- 查询 s -->
-						
+						<el-form :inline="true" :model="formInline" size="mini" class="demo-form-inline">
+							<el-form-item label="">
+								<el-input placeholder="查询商品类别" v-model="formInline.cate_name" clearable>
+									<el-button slot="append" icon="el-icon-search" @click="getGoodsCateList()"></el-button>
+								</el-input>
+							</el-form-item>
+						</el-form>
 						<!-- 查询 e -->
 					</el-col>
 					<el-col :span="6">
 						<!-- 新增 s -->
-						<el-button size="mini" icon="el-icon-plus">新增类别</el-button>
+						<router-link to="goodscateadd"><el-button size="mini" icon="el-icon-plus">新增类别</el-button></router-link>
 						<!-- 新增 e -->
 					</el-col>
-					<el-col :span="3" :offset="3">
-						<router-view v-if="true"></router-view>
-						<el-button size="mini" icon="el-icon-refresh" title="刷新" @click="getGoodsCateList()">刷新</el-button>
+					<el-col :span="6">
+						<el-button size="mini" icon="el-icon-back" title="返回" @click="getGoodsCateList()" v-if="isBack">顶级</el-button>
+						<el-button size="mini" icon="el-icon-back" title="返回" @click="getGoodsCateList(grandparentId)" v-if="isBack">上级</el-button>
+						<el-button size="mini" icon="el-icon-refresh" title="刷新" @click="getGoodsCateList(parentId)">刷新</el-button>
 					</el-col>
 				</el-row>
 			</div>
 			<div class="">
 				<!-- 商品类别列表 s -->
 				<el-table :data="goodsCateList" border style="width: 100%">
-					<el-table-column prop="cate_id" label="类别ID" width="100"></el-table-column>
-					<el-table-column prop="cate_name" label="类别名称" minwidth="180"></el-table-column>
-					<el-table-column prop="parent_id" label="上级ID" width="180"></el-table-column>
-					<el-table-column prop="status_msg" label="审核状态" width="180"></el-table-column>
-					<el-table-column label="操作" fixed="right" width="100">
+					<el-table-column prop="cate_id" label="类别ID" fixed width="90"></el-table-column>
+					<el-table-column prop="cate_name" label="类别名称" fixed min-width="180"></el-table-column>
+					<el-table-column prop="parent_name" label="上级类别" width="180"></el-table-column>
+					<el-table-column prop="parent_id" label="上级ID" width="90"></el-table-column>
+					<!-- <el-table-column prop="grandparent_id" label="上上级ID" width="100"></el-table-column> -->
+					<el-table-column prop="status_msg" label="审核状态" width="120"></el-table-column>
+					<el-table-column label="操作" fixed="right" width="120">
 						<template slot-scope="scope">
-							<el-button @click="getGoodsCateList(scope.row)" type="text" size="small">子类</el-button>
-							<el-button type="text" size="small">编辑</el-button>
+							<el-button type="text" size="small" @click="getGoodsCateList(scope.row)">下级</el-button>
+							<el-button type="text" size="small" @click="toGoodsCateEdit(scope.row)">编辑</el-button>
 						</template>
 					</el-table-column>
 				</el-table>
@@ -44,7 +53,13 @@
 	export default {
 		data() {
 			return {
-				goodsCateList: [] // 商品类别列表，如 [{cate_id: 1, cate_name: '王小虎', parent_id: 0, status}, {…}, …]
+				formInline: {
+					cate_name: '' // 商品类别名称
+				},
+				goodsCateList: [], // 商品类别列表，如 [{cate_id: 1, cate_name: '油盐酱醋茶', parent_id: 0, status: 0, status_msg: '待审核'}, {…}, …]
+				grandparentId: '', // 上上级ID
+				parentId: '', // 上级ID
+				isBack: false, // 是否显示返回按钮
 			}
 		},
 		mounted() {
@@ -56,17 +71,34 @@
 			 */
 			getGoodsCateList(row) {
 				let self = this;
-				console.log('handleClick', row);
-				let parent_id = row ? row.cate_id : ''; // 父级ID是否存在时赋值
+				let parentId = row ? (row.cate_id ? row.cate_id : row) : ''; // 上级ID是否存在时赋值
+				
 				this.$axios.get(this.$url + 'goods_cate', {
 					params: {
-						cate_name: '',
-						parent_id: parent_id
+						cate_name: this.formInline.cate_name,
+						parent_id: parentId
 					}
 				})
 				.then(function(res) {
 					if (res.data.status == 1) {
-						self.goodsCateList = res.data.data;
+						let goodsCateList = res.data.data;
+						if (goodsCateList.length == 0) {
+							self.$message({
+								message: '不存在下级分类',
+								type: 'warning'
+							});
+							return;
+						}
+						
+						goodsCateList.forEach((item, index) => {
+							if (index == 0) { // 0表示第1条数据
+								self.grandparentId = item.grandparent_id; // 上上级ID是否存在时赋值
+								return;
+							}
+						});
+						self.goodsCateList = goodsCateList;
+						self.parentId = parentId;
+						self.isBack = row ? true : false;
 					} else {
 						self.$message({
 							message: '网络忙，请重试',
@@ -80,7 +112,15 @@
 						type: 'warning'
 					});
 				});
-			}
+			},
+			
+			/**
+			 * 跳转产品类别编辑页
+			 * @param {Object} row
+			 */
+			toGoodsCateEdit(row) {
+				this.$router.push({path: "goodscateedit", query: {cate_id: row.cate_id, cate_name: row.cate_name, parent_id: row.parent_id}});
+			},
 		}
 	}
 </script>
