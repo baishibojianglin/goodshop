@@ -22,7 +22,7 @@ class Region extends Base
             $map['level'] = 1;
         }
 
-        $result = $this->where($map)->select();
+        $result = $this->where($map)->cache(true, 10)->select();
         return $result;
     }
 }

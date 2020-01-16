@@ -25,7 +25,7 @@ class GoodsCate extends Base
         $result = $this->alias('gc')
             ->field('gc.*, pgc.cate_name parent_name, pgc.parent_id grandparent_id')
             ->join('__GOODS_CATE__ pgc', 'gc.parent_id = pgc.cate_id', 'LEFT') // 上级
-            ->where($map)->select();
+            ->where($map)->cache(true, 10)->select();
         return $result;
     }
 
@@ -36,7 +36,7 @@ class GoodsCate extends Base
      */
     public function getGoodsCateTree($map = [])
     {
-        $result = $this->where($map)->select();
+        $result = $this->where($map)->cache(true, 10)->select();
         return $this->sort($result);
     }
 

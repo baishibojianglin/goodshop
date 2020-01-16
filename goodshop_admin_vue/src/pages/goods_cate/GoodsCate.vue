@@ -23,17 +23,17 @@
 					<el-col :span="6">
 						<el-button size="mini" icon="el-icon-back" title="返回" @click="getGoodsCateList()" v-if="isBack">顶级</el-button>
 						<el-button size="mini" icon="el-icon-back" title="返回" @click="getGoodsCateList(grandparentId)" v-if="isBack">上级</el-button>
-						<el-button size="mini" icon="el-icon-refresh" title="刷新" @click="getGoodsCateList(parentId)">刷新</el-button>
+						<!-- <el-button size="mini" icon="el-icon-refresh" title="刷新" @click="getGoodsCateList(parentId)">刷新</el-button> -->
 					</el-col>
 				</el-row>
 			</div>
 			<div class="">
 				<!-- 商品类别列表 s -->
 				<el-table :data="goodsCateList" border style="width: 100%">
-					<el-table-column prop="cate_id" label="类别ID" fixed width="90"></el-table-column>
+					<el-table-column prop="id" label="ID" fixed width="90"></el-table-column>
 					<el-table-column prop="cate_name" label="类别名称" fixed min-width="180"></el-table-column>
-					<el-table-column prop="parent_name" label="上级类别" width="180"></el-table-column>
-					<el-table-column prop="parent_id" label="上级ID" width="90"></el-table-column>
+					<el-table-column prop="parent_name" label="上级类别" width="180" v-if="parentId == '' ? false : true"></el-table-column>
+					<!-- <el-table-column prop="parent_id" label="上级ID" width="90"></el-table-column> -->
 					<!-- <el-table-column prop="grandparent_id" label="上上级ID" width="100"></el-table-column> -->
 					<el-table-column prop="status_msg" label="审核状态" width="120"></el-table-column>
 					<el-table-column label="操作" fixed="right" width="120">
@@ -91,6 +91,7 @@
 						}
 						
 						goodsCateList.forEach((item, index) => {
+							item.id = index + 1; // 定义编号ID
 							if (index == 0) { // 0表示第1条数据
 								self.grandparentId = item.grandparent_id; // 上上级ID是否存在时赋值
 								return;
