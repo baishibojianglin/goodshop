@@ -72,7 +72,6 @@
 			 */
 			getGoodsCateList(row) {
 				let self = this;
-				console.log('row', row, typeof(row))
 				
 				// 当参数 row 存在时，执行 查看下级 、 返回上级  或 查询 操作
 				this.isBack = row ? true : false;
@@ -82,7 +81,6 @@
 					} else if (typeof(row) == 'number') { // 当为 返回上级 操作时
 						this.parentId = row;
 					} else if (typeof(row) == 'string') { // 查询操作
-						console.log('查询操作', row, typeof(row))
 						this.formInline.cate_name = row;
 						this.parentId = '';
 					}
