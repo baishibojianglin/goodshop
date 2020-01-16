@@ -36,10 +36,11 @@
 					<!-- <el-table-column prop="parent_id" label="上级ID" width="90"></el-table-column> -->
 					<!-- <el-table-column prop="grandparent_id" label="上上级ID" width="100"></el-table-column> -->
 					<el-table-column prop="audit_status_msg" label="审核状态" width="120"></el-table-column>
-					<el-table-column label="操作" fixed="right" width="120">
+					<el-table-column label="操作" fixed="right" width="210">
 						<template slot-scope="scope">
-							<el-button type="text" size="small" @click="getGoodsCateList(scope.row)">下级</el-button>
-							<el-button type="text" size="small" @click="toGoodsCateEdit(scope.row)">编辑</el-button>
+							<el-button size="mini" @click="getGoodsCateList(scope.row)">下级</el-button>
+							<el-button type="primary" size="mini" plain @click="toGoodsCateEdit(scope.row)">编辑</el-button>
+							<el-button type="danger" size="mini" plain @click="deleteGoodsCate(scope.row)">删除</el-button>
 						</template>
 					</el-table-column>
 				</el-table>
@@ -107,6 +108,7 @@
 						}
 						
 						goodsCateList.forEach((item, index) => {
+							item.index = index; // 定义index
 							item.id = index + 1; // 定义编号ID
 							if (index == 0) { // 0表示第1条数据
 								self.grandparentId = item.grandparent_id; // 上上级ID是否存在时赋值
@@ -130,12 +132,49 @@
 			},
 			
 			/**
-			 * 跳转产品类别编辑页
+			 * 跳转商品类别编辑页
 			 * @param {Object} row
 			 */
 			toGoodsCateEdit(row) {
 				this.$router.push({path: "goodscateedit", query: {cate_id: row.cate_id, cate_name: row.cate_name, parent_id: row.parent_id}});
 			},
+			
+			/**
+			 * 删除商品类别
+			 * @param {Object} row
+			 */
+			deleteGoodsCate(row) {
+				this.$confirm('此操作将永久删除该类别, 是否继续?', '删除', {
+					confirmButtonText: '确定',
+					cancelButtonText: '取消',
+					type: 'warning'
+				}).then(() => {
+					// 调用删除接口
+					let self = this;
+					this.$axios.delete(this.$url + 'goods_cate/' + row.cate_id)
+					.then(function(res) {
+						// 移除元素
+						self.goodsCateList.splice(row.index, 1);
+						
+						let type = res.data.status == 1 ? 'success' : 'warning';
+						self.$message({
+							message: res.data.message,
+							type: type
+						});
+					})
+					.catch(function (error) {
+						self.$message({
+							message: error.response.data.message,
+							type: 'warning'
+						});
+					});
+				}).catch(() => {
+					this.$message({
+						type: 'info',
+						message: '已取消删除'
+					});
+				});
+			}
 		}
 	}
 </script>
