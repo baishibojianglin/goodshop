@@ -144,7 +144,7 @@
 			 * @param {Object} row
 			 */
 			deleteGoodsCate(row) {
-				this.$confirm('此操作将永久删除该类别, 是否继续?', '删除', {
+				this.$confirm('此操作将永久删除该商品类别, 是否继续?', '删除', {
 					confirmButtonText: '确定',
 					cancelButtonText: '取消',
 					type: 'warning'
