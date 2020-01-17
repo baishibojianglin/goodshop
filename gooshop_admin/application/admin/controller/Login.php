@@ -3,17 +3,6 @@ namespace app\admin\controller;
 use app\admin\model\Companyuser;
 use app\common\lib\Aes;
 
-//阿里云oss对象存储
-if (is_file(__DIR__ . '/../autoload.php')) {
-    require_once __DIR__ . '/../autoload.php';
-}
-if (is_file(__DIR__ . '/../vendor/autoload.php')) {
-    require_once __DIR__ . '/../vendor/autoload.php';
-}
-use OSS\OssClient;
-use OSS\Core\OssException;
-
-
 class Login
 {
 
@@ -98,34 +87,12 @@ class Login
       return json($result);     
     }
 
-
-  /**
-  *上传图片
-  */
-    public function test()
-    {
-        $file = request()->file('image');
-       var_dump($file->getInfo());
-        // // 阿里云主账号AccessKey拥有所有API的访问权限，风险很高。强烈建议您创建并使用RAM账号进行API访问或日常运维，请登录 https://ram.console.aliyun.com 创建RAM账号。
-        // $accessKeyId = "LTAI4FkCSGwQHirzGvdvWqiG";
-        // $accessKeySecret = "ACpMHxZXPkkl23ont4mQfzjCZKtL3L";
-        // // Endpoint以杭州为例，其它Region请按实际情况填写。
-        // $endpoint = "http://oss-cn-chengdu.aliyuncs.com";
-        // // 存储空间名称
-        // $bucket = "goodshopimages";
-
-        // $object = 'test.jpg';
-        // $content = $file;
-
-        // try {
-        //     $ossClient = new OssClient($accessKeyId, $accessKeySecret, $endpoint);
-        //     $ossClient->putObject($bucket, $object, $content);
-        // } catch (OssException $e) {
-        //     print $e->getMessage();
-        // }
-
+    /**
+    *test
+    */
+      public function test()
+      {
+        $lsittoken=model('Companyuser')->savetoken(1,'abc');   
       }
-
-
 
 }

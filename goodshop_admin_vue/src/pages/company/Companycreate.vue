@@ -16,8 +16,8 @@
 
 		   <el-form-item label="营业执照" prop="license">
 			   <el-input v-show='false' style="width:350px;"  v-model="ruleForm.license"></el-input>
-			   <el-upload :action="this.$url+'test'" :limit="1" name='image'>
-				  <el-button size="small" type="primary">上传图片</el-button>
+			   <el-upload :action="this.$url+'upload'" :limit="1" name='image'>
+				  <el-button size="small" type="primary">上传副本图片</el-button>
 			   </el-upload>
 		   </el-form-item>
 		   
@@ -61,6 +61,10 @@
 		   }
      },
      methods: {
+		 /**
+		  * 提交表单
+		  * @param {Object} formName
+		  */
 		  submitForm(formName) {
 			this.$refs[formName].validate((valid) => {
 			  if (valid) {
@@ -72,6 +76,10 @@
 			  }
 			});
 		  },
+		  /**
+		   * 重置表单
+		   * @param {Object} formName
+		   */
 		  resetForm(formName) {
 			this.$refs[formName].resetFields();
 		  }
