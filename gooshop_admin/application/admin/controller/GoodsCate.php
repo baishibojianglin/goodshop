@@ -29,7 +29,7 @@ class GoodsCate extends Base
             if (!empty($param['cate_name'])) { // 商品类别名称
                 $map['gc.cate_name'] = ['like', '%' . trim($param['cate_name']) . '%'];
             }
-            if (isset($param['parent_id'])) { // 上级ID
+            if (isset($param['parent_id']) && $param['parent_id'] != '') { // 上级ID
                 $map['gc.parent_id'] = intval($param['parent_id']);
             }
 
@@ -44,11 +44,14 @@ class GoodsCate extends Base
                 // 处理数据
                 $auditStatus = config('code.audit_status'); // 审核状态：0待审核，1通过，2驳回
                 foreach ($data as $key => $value) {
-                    $data[$key]['status_msg'] = $auditStatus[$value['status']]; // 定义审核状态信息
+                    $data[$key]['audit_status_msg'] = $auditStatus[$value['audit_status']]; // 定义审核状态信息
+                    $data[$key]['parent_name'] = $value['parent_id'] == 0 ? '顶级类别' : $value['parent_name']; // 上级类别名称
                 }
-            }
 
-            return show(config('code.success'), 'OK', $data);
+                return show(config('code.success'), 'OK', $data);
+            } else {
+                return show(config('code.error'), 'Not Found', $data, 404);
+            }
         } else {
             return show(config('code.error'), '请求不合法', [], 400);
         }

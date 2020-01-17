@@ -17,7 +17,7 @@
 					</el-form-item>
 					<el-form-item label="上级类别" prop="parent_id">
 						<el-select v-model="form.parent_id" placeholder="请选择…" filterable>
-							<el-option :key="0" label="顶级分类" :value="0"></el-option>
+							<el-option :key="0" label="顶级类别" :value="0"></el-option>
 							<el-option
 								v-for="item in options"
 								:key="item.cate_id"
@@ -27,8 +27,8 @@
 						</el-select>
 					</el-form-item>
 					<el-form-item>
-						<el-button type="primary" @click="submitForm('ruleForm')">提交</el-button>
-						<el-button @click="resetForm('ruleForm')">重置</el-button>
+						<el-button type="primary" plain @click="submitForm('ruleForm')">提交</el-button>
+						<el-button plain @click="resetForm('ruleForm')">重置</el-button>
 					</el-form-item>
 				</el-form>
 				<!-- Form 表单 e -->
