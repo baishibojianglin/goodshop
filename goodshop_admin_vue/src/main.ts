@@ -21,7 +21,7 @@ Vue.prototype.$sign = 'jl_goodshop';
 // 引入element-ui
 import 'element-ui/lib/theme-chalk/index.css';
 import 'element-ui/lib/theme-chalk/base.css';
-import { Row,Col,Button,Input,Message,MessageBox,Form,FormItem,Select,Option,Card,Popconfirm,Upload,Table,TableColumn} from 'element-ui';
+import { Row,Col,Button,Input,Message,MessageBox,Form,FormItem,Select,Option,Card,Popconfirm,Upload,Table,TableColumn,Pagination} from 'element-ui';
 import CollapseTransition from 'element-ui/lib/transitions/collapse-transition';
 
 
@@ -39,6 +39,7 @@ Vue.use(Popconfirm);
 Vue.use(Upload);
 Vue.use(Table);
 Vue.use(TableColumn);
+Vue.use(Pagination);
 Vue.component(CollapseTransition.name, CollapseTransition);
 
 

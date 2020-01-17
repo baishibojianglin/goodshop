@@ -46,6 +46,11 @@
 				</el-table>
 				<!-- 商品类别列表 e -->
 			</div>
+				
+				<!-- <el-pagination
+				    layout="prev, pager, next"
+				    :total="2">
+				</el-pagination> -->
 		</el-card>
 	</div>
 </template>
