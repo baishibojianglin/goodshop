@@ -32,7 +32,7 @@ class GoodsCate extends Base
             if (isset($param['parent_id']) && $param['parent_id'] != '') { // 上级ID
                 $map['gc.parent_id'] = intval($param['parent_id']);
             }
-            if (isset($param['size'])) { // 上级ID
+            if (isset($param['size'])) { // 每页条数
                 $param['size'] = intval($param['size']);
             }
 
