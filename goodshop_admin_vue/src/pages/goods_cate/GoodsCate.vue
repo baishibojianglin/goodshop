@@ -45,12 +45,22 @@
 					</el-table-column>
 				</el-table>
 				<!-- 商品类别列表 e -->
-			</div>
 				
-				<!-- <el-pagination
-				    layout="prev, pager, next"
-				    :total="2">
-				</el-pagination> -->
+				<!-- 分页 s -->
+				<div class="block">
+					<el-pagination
+						background
+						:page-sizes="[5, 10, 15, 20]"
+						:page-size="goodsCatePagination.per_page"
+						:total="goodsCatePagination.total"
+						:current-page="goodsCatePagination.current_page"
+						layout="total, sizes, prev, pager, next, jumper"
+						@size-change="handleSizeChange"
+						@current-change="handleCurrentChange">
+					</el-pagination>
+				</div>
+				<!-- 分页 e -->
+			</div>
 		</el-card>
 	</div>
 </template>
@@ -63,8 +73,9 @@
 					cate_name: '' // 商品类别名称
 				},
 				goodsCateList: [], // 商品类别列表，如 [{cate_id: 1, cate_name: '油盐酱醋茶', parent_id: 0, audit_status: 0, audit_status_msg: '待审核'}, {…}, …]
+				goodsCatePagination: {}, // 商品类别列表分页参数
 				grandparentId: '', // 上上级ID
-				parentId: 0, // 上级ID，默认为 0 查看顶级类别
+				parentId: 0, // 上级ID，默认为 0 查看一级类别
 				isBack: false, // 是否显示返回按钮
 			}
 		},
@@ -82,11 +93,11 @@
 				// 当参数 row 存在时，执行 查看下级 、 返回上级  或 查询 操作
 				this.isBack = row ? true : false;
 				if (row) {
-					if (row.cate_id && typeof(row.cate_id) == 'number') { // 当为 查看下级 操作时
+					if (row.cate_id && typeof(row.cate_id) == 'number') { // 当为 查看下级 操作时，row 为当前行数据
 						this.parentId = row.cate_id;
-					} else if (typeof(row) == 'number') { // 当为 返回上级 操作时
+					} else if (typeof(row) == 'number') { // 当为 返回上级 操作时，row 为上上级ID
 						this.parentId = row;
-					} else if (typeof(row) == 'string') { // 查询操作
+					} else if (typeof(row) == 'string') { // 查询操作，row 为查询关键词，如：此处为商品类别名称 cate_name
 						this.formInline.cate_name = row;
 						this.parentId = '';
 					}
@@ -98,20 +109,18 @@
 				this.$axios.get(this.$url + 'goods_cate', {
 					params: {
 						cate_name: this.formInline.cate_name,
-						parent_id: this.parentId
+						parent_id: this.parentId,
+						page: this.goodsCatePagination.current_page,
+						size: this.goodsCatePagination.per_page
 					}
 				})
 				.then(function(res) {
 					if (res.data.status == 1) {
-						let goodsCateList = res.data.data;
-						if (goodsCateList.length == 0) {
-							self.$message({
-								message: '不存在下级分类',
-								type: 'warning'
-							});
-							return;
-						}
+						// 商品类别列表分页参数
+						self.goodsCatePagination = res.data.data;
 						
+						// 商品类别列表
+						let goodsCateList = res.data.data.data;
 						goodsCateList.forEach((item, index) => {
 							item.index = index; // 定义index
 							item.id = index + 1; // 定义编号ID
@@ -134,6 +143,24 @@
 						type: 'warning'
 					});
 				});
+			},
+			
+			/**
+			 * pageSize 改变时会触发
+			 * @param {Object} page_size
+			 */
+			handleSizeChange(page_size) {
+				this.goodsCatePagination.per_page = page_size; // 每页条数
+				this.getGoodsCateList(this.parentId);
+			},
+			
+			/**
+			 * currentPage 改变时会触发
+			 * @param {Object} current_page
+			 */
+			handleCurrentChange(current_page) {
+				this.goodsCatePagination.current_page = current_page; // 当前页数
+				this.getGoodsCateList(this.parentId);
 			},
 			
 			/**
