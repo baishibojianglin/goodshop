@@ -162,9 +162,15 @@ class GoodsCate extends Base
             // 传入的数据
             $param = input('param.');
 
-            // validate验证数据合法性
+            // validate验证数据合法性：判断是审核状态还是更新其他数据
             $validate = validate('GoodsCate');
-            if (!$validate->check($param, [], 'update')) {
+            $rules = [];
+            $scene = 'update';
+            if (isset($param['audit_status'])) {
+                $rules = ['audit_status' => 'require'];
+                $scene = [];
+            }
+            if (!$validate->check($param, $rules, $scene)) {
                 return show(config('code.error'), $validate->getError(), [], 403);
             }
 
@@ -181,6 +187,9 @@ class GoodsCate extends Base
             }
             if (isset($param['sort'])) { // 排序
                 $data['sort'] = input('param.sort', null, 'intval');
+            }
+            if (isset($param['audit_status'])) { // 审核状态
+                $data['audit_status'] = input('param.audit_status', null, 'intval');
             }
 
             if (empty($data)) {
