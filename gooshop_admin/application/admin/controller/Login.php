@@ -87,12 +87,14 @@ class Login
       return json($result);     
     }
 
+
     /**
     *test
     */
       public function test()
       {
-        $lsittoken=model('Companyuser')->savetoken(1,'abc');   
+        $a=[1,2,3];
+        return json($a); 
       }
 
 }
