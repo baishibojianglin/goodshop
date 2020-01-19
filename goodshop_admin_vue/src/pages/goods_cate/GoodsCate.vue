@@ -150,15 +150,29 @@
 						parent_id: this.parentId,
 						page: this.goodsCatePagination.current_page,
 						size: this.goodsCatePagination.per_page
+					},
+					headers: {
+						'companyid': JSON.parse(localStorage.getItem('company')).id,
+						'companytoken': JSON.parse(localStorage.getItem('company')).token
 					}
 				})
-				.then(function(res) {
+				.then(function(res) {console.log('res', res);
+				 
 					if (res.data.status == 1) {
 						// 商品类别列表分页参数
 						self.goodsCatePagination = res.data.data;
 						
+						// 当数据为空时
+						if (self.goodsCatePagination.total == 0) {
+							self.$message({
+								message: '数据不存在',
+								type: 'warning'
+							});
+							return;
+						}
+						
 						// 商品类别列表
-						let goodsCateList = res.data.data.data;
+						let goodsCateList = self.goodsCatePagination.data;
 						goodsCateList.forEach((item, index) => {
 							if (index == 0) { // 0表示第1条数据
 								self.grandparentId = item.grandparent_id; // 上上级ID是否存在时赋值
