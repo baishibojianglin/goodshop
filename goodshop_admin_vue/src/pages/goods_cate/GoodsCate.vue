@@ -37,14 +37,14 @@
 					<el-table-column prop="parent_name" label="上级类别" width="180"></el-table-column>
 					<!-- <el-table-column prop="parent_id" label="上级ID" width="90"></el-table-column> -->
 					<!-- <el-table-column prop="grandparent_id" label="上上级ID" width="100"></el-table-column> -->
-					<el-table-column prop="audit_status" label="审核状态" width="140" :filters="[{ text: '待审核', value: 0 }, { text: '正常', value: 1 }, { text: '驳回', value: 2 }]" :filter-method="filterAuditStatus" filter-placement="bottom-end">
+					<el-table-column prop="audit_status" label="审核状态" width="90" :filters="[{ text: '待审核', value: 0 }, { text: '正常', value: 1 }, { text: '驳回', value: 2 }]" :filter-method="filterAuditStatus" filter-placement="bottom-end">
 						<template slot-scope="scope">
 							<el-tag :type="scope.row.audit_status === 0 ? 'info' : (scope.row.audit_status === 1 ? 'success' : 'danger')" size="mini">{{scope.row.audit_status_msg}}</el-tag>
 						</template>
 					</el-table-column>
-					<el-table-column label="操作" fixed="right" min-width="140">
+					<el-table-column label="操作" fixed="right" min-width="120">
 						<template slot-scope="scope">
-							<el-button type="primary" size="mini" plain @click="dialogFormVisible = true; form.cate_id = scope.row.cate_id" style="margin-left: 0.5rem;">审核</el-button>
+							<el-button type="primary" size="mini" plain @click="dialogFormVisible = true; form.cate_id = scope.row.cate_id; tableRowIndex = scope.$index" style="margin-left: 0.5rem;">审核</el-button>
 							<el-button size="mini" plain @click="getGoodsCateList(scope.row)">下级</el-button>
 							<el-button type="primary" size="mini" plain @click="toGoodsCateEdit(scope.row)">编辑</el-button>
 							<el-button type="danger" size="mini" plain @click="deleteGoodsCate(scope)">删除</el-button>
@@ -69,18 +69,18 @@
 				<!-- 分页 e -->
 				
 				<!-- 审核商品类别 Dialog 对话框 s，放在“审核”按钮后边交互效果差 -->
-				<el-dialog title="审核" :visible.sync="dialogFormVisible" width="30%">
+				<el-dialog title="审核" :visible.sync="dialogFormVisible" width="30%" :destroy-on-close="true">
 					<el-form ref="ruleForm" :model="form" :rules="rules" size="small">
 						<el-form-item label="审核状态" prop="audit_status" label-width="120px">
 							<el-select v-model="form.audit_status" placeholder="请选择…">
-								<el-option label="通过" value="1"></el-option>
-								<el-option label="驳回" value="2"></el-option>
+								<el-option :key="1" label="通过" :value="1"></el-option>
+								<el-option :key="2" label="驳回" :value="2"></el-option>
 							</el-select>
 						</el-form-item>
 					</el-form>
 					<div slot="footer" class="dialog-footer">
 						<el-button size="small" plain @click="dialogFormVisible = false">取 消</el-button>
-						<el-button type="primary" size="small" plain @click="auditGoodsCate('ruleForm', form)">确 定</el-button>
+						<el-button type="primary" size="small" plain @click="auditGoodsCate('ruleForm')">确 定</el-button>
 					</div>
 				</el-dialog>
 				<!-- 审核商品类别 Dialog 对话框 e -->
@@ -112,7 +112,8 @@
 					audit_status: [
 						{ required: true, message: '请选择审核状态', trigger: 'change' }
 					]
-				}
+				},
+				tableRowIndex: '' // 表格行序号
 				/* Dialog 对话框 e */
 			}
 		},
@@ -210,9 +211,8 @@
 			/**
 			 * 审核商品类别
 			 * @param {Object} formName
-			 * @param {Object} form
 			 */
-			auditGoodsCate(formName, form) {console.log('form', form)
+			auditGoodsCate(formName) {
 				let self = this;
 				this.$refs[formName].validate((valid) => {
 					if (valid) {
@@ -225,7 +225,9 @@
 								message: res.data.message,
 								type: type
 							});
-							self.dialogFormVisible = false;
+							self.goodsCateList[self.tableRowIndex].audit_status = self.form.audit_status; // 静态改变审核状态
+							self.goodsCateList[self.tableRowIndex].audit_status_msg = (self.form.audit_status === 0 ? '待审核' : (self.form.audit_status === 1 ? '正常' : '驳回')); // 静态改变审核状态信息
+							self.dialogFormVisible = false; // 隐藏 Dialog 对话框
 						})
 						.catch(function (error) {
 							self.$message({
