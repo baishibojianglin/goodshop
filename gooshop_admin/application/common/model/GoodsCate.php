@@ -14,9 +14,10 @@ class GoodsCate extends Base
     /**
      * 获取商品类别列表数据
      * @param array $map
+     * @param int $size
      * @return \think\Paginator
      */
-    public function getGoodsCate($map = [])
+    public function getGoodsCate($map = [], $size = 5)
     {
         /*if(!isset($map['gc.parent_id'])) { // 父级ID
             $map['gc.parent_id'] = 0;
@@ -25,7 +26,7 @@ class GoodsCate extends Base
         $result = $this->alias('gc')
             ->field('gc.*, pgc.cate_name parent_name, pgc.parent_id grandparent_id')
             ->join('__GOODS_CATE__ pgc', 'gc.parent_id = pgc.cate_id', 'LEFT') // 上级
-            ->where($map)->cache(true, 10)->select();
+            ->where($map)->cache(true, 10)->paginate($size);
         return $result;
     }
 

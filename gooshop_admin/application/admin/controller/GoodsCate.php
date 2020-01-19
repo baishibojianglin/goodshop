@@ -32,10 +32,16 @@ class GoodsCate extends Base
             if (isset($param['parent_id']) && $param['parent_id'] != '') { // 上级ID
                 $map['gc.parent_id'] = intval($param['parent_id']);
             }
+            if (isset($param['size'])) { // 每页条数
+                $param['size'] = intval($param['size']);
+            }
+
+            // 获取分页page、size
+            $this->getPageAndSize($param);
 
             // 获取商品类别列表数据
             try {
-                $data = model('GoodsCate')->getGoodsCate($map);
+                $data = model('GoodsCate')->getGoodsCate($map, $this->size);
             } catch (\Exception $e) {
                 return show(config('code.error'), '网络忙，请重试', [], 500); // $e->getMessage()
             }
@@ -45,7 +51,7 @@ class GoodsCate extends Base
                 $auditStatus = config('code.audit_status'); // 审核状态：0待审核，1通过，2驳回
                 foreach ($data as $key => $value) {
                     $data[$key]['audit_status_msg'] = $auditStatus[$value['audit_status']]; // 定义审核状态信息
-                    $data[$key]['parent_name'] = $value['parent_id'] == 0 ? '顶级类别' : $value['parent_name']; // 上级类别名称
+                    $data[$key]['parent_name'] = $value['parent_id'] == 0 ? '一级类别' : $value['parent_name']; // 上级类别名称
                 }
 
                 return show(config('code.success'), 'OK', $data);
@@ -156,9 +162,15 @@ class GoodsCate extends Base
             // 传入的数据
             $param = input('param.');
 
-            // validate验证数据合法性
+            // validate验证数据合法性：判断是审核状态还是更新其他数据
             $validate = validate('GoodsCate');
-            if (!$validate->check($param, [], 'update')) {
+            $rules = [];
+            $scene = 'update';
+            if (isset($param['audit_status'])) {
+                $rules = ['audit_status' => 'require'];
+                $scene = [];
+            }
+            if (!$validate->check($param, $rules, $scene)) {
                 return show(config('code.error'), $validate->getError(), [], 403);
             }
 
@@ -175,6 +187,9 @@ class GoodsCate extends Base
             }
             if (isset($param['sort'])) { // 排序
                 $data['sort'] = input('param.sort', null, 'intval');
+            }
+            if (isset($param['audit_status'])) { // 审核状态
+                $data['audit_status'] = input('param.audit_status', null, 'intval');
             }
 
             if (empty($data)) {

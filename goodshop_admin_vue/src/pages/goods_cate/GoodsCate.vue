@@ -30,27 +30,61 @@
 			<div class="">
 				<!-- 商品类别列表 s -->
 				<el-table :data="goodsCateList" border style="width: 100%">
-					<el-table-column prop="id" label="ID" fixed width="90"></el-table-column>
+					<el-table-column label="ID" fixed width="90">
+						<template slot-scope="scope"><span>{{scope.$index + 1}}</span></template>
+					</el-table-column>
 					<el-table-column prop="cate_name" label="类别名称" fixed min-width="180"></el-table-column>
 					<el-table-column prop="parent_name" label="上级类别" width="180"></el-table-column>
 					<!-- <el-table-column prop="parent_id" label="上级ID" width="90"></el-table-column> -->
 					<!-- <el-table-column prop="grandparent_id" label="上上级ID" width="100"></el-table-column> -->
-					<el-table-column prop="audit_status_msg" label="审核状态" width="120"></el-table-column>
-					<el-table-column label="操作" fixed="right" width="210">
+					<el-table-column prop="audit_status" label="审核状态" width="90" :filters="[{ text: '待审核', value: 0 }, { text: '正常', value: 1 }, { text: '驳回', value: 2 }]" :filter-method="filterAuditStatus" filter-placement="bottom-end">
 						<template slot-scope="scope">
-							<el-button size="mini" @click="getGoodsCateList(scope.row)">下级</el-button>
+							<el-tag :type="scope.row.audit_status === 0 ? 'info' : (scope.row.audit_status === 1 ? 'success' : 'danger')" size="mini">{{scope.row.audit_status_msg}}</el-tag>
+						</template>
+					</el-table-column>
+					<el-table-column label="操作" fixed="right" min-width="120">
+						<template slot-scope="scope">
+							<el-button type="primary" size="mini" plain @click="dialogFormVisible = true; form.cate_id = scope.row.cate_id; tableRowIndex = scope.$index" style="margin-left: 0.5rem;">审核</el-button>
+							<el-button size="mini" plain @click="getGoodsCateList(scope.row)">下级</el-button>
 							<el-button type="primary" size="mini" plain @click="toGoodsCateEdit(scope.row)">编辑</el-button>
-							<el-button type="danger" size="mini" plain @click="deleteGoodsCate(scope.row)">删除</el-button>
+							<el-button type="danger" size="mini" plain @click="deleteGoodsCate(scope)">删除</el-button>
 						</template>
 					</el-table-column>
 				</el-table>
 				<!-- 商品类别列表 e -->
-			</div>
 				
-				<!-- <el-pagination
-				    layout="prev, pager, next"
-				    :total="2">
-				</el-pagination> -->
+				<!-- 分页 s -->
+				<div>
+					<el-pagination
+						background
+						:page-sizes="[5, 10, 15, 20]"
+						:page-size="goodsCatePagination.per_page"
+						:total="goodsCatePagination.total"
+						:current-page="goodsCatePagination.current_page"
+						layout="total, sizes, prev, pager, next, jumper"
+						@size-change="handleSizeChange"
+						@current-change="handleCurrentChange">
+					</el-pagination>
+				</div>
+				<!-- 分页 e -->
+				
+				<!-- 审核商品类别 Dialog 对话框 s，放在“审核”按钮后边交互效果差 -->
+				<el-dialog title="审核" :visible.sync="dialogFormVisible" width="30%" :destroy-on-close="true">
+					<el-form ref="ruleForm" :model="form" :rules="rules" size="small">
+						<el-form-item label="审核状态" prop="audit_status" label-width="120px">
+							<el-select v-model="form.audit_status" placeholder="请选择…">
+								<el-option :key="1" label="通过" :value="1"></el-option>
+								<el-option :key="2" label="驳回" :value="2"></el-option>
+							</el-select>
+						</el-form-item>
+					</el-form>
+					<div slot="footer" class="dialog-footer">
+						<el-button size="small" plain @click="dialogFormVisible = false">取 消</el-button>
+						<el-button type="primary" size="small" plain @click="auditGoodsCate('ruleForm')">确 定</el-button>
+					</div>
+				</el-dialog>
+				<!-- 审核商品类别 Dialog 对话框 e -->
+			</div>
 		</el-card>
 	</div>
 </template>
@@ -63,9 +97,24 @@
 					cate_name: '' // 商品类别名称
 				},
 				goodsCateList: [], // 商品类别列表，如 [{cate_id: 1, cate_name: '油盐酱醋茶', parent_id: 0, audit_status: 0, audit_status_msg: '待审核'}, {…}, …]
+				goodsCatePagination: {}, // 商品类别列表分页参数
 				grandparentId: '', // 上上级ID
-				parentId: 0, // 上级ID，默认为 0 查看顶级类别
+				parentId: 0, // 上级ID，默认为 0 查看一级类别
 				isBack: false, // 是否显示返回按钮
+				
+				/* Dialog 对话框 s */
+				dialogFormVisible: false, // 是否显示 Dialog
+				form: { // Dialog 嵌套审核商品类别操作的表单数据对象
+					cate_id: '',
+					audit_status: ''
+				},
+				rules: { // 验证规则
+					audit_status: [
+						{ required: true, message: '请选择审核状态', trigger: 'change' }
+					]
+				},
+				tableRowIndex: '' // 表格行序号
+				/* Dialog 对话框 e */
 			}
 		},
 		mounted() {
@@ -82,11 +131,11 @@
 				// 当参数 row 存在时，执行 查看下级 、 返回上级  或 查询 操作
 				this.isBack = row ? true : false;
 				if (row) {
-					if (row.cate_id && typeof(row.cate_id) == 'number') { // 当为 查看下级 操作时
+					if (row.cate_id && typeof(row.cate_id) == 'number') { // 当为 查看下级 操作时，row 为当前行数据
 						this.parentId = row.cate_id;
-					} else if (typeof(row) == 'number') { // 当为 返回上级 操作时
+					} else if (typeof(row) == 'number') { // 当为 返回上级 操作时，row 为上上级ID
 						this.parentId = row;
-					} else if (typeof(row) == 'string') { // 查询操作
+					} else if (typeof(row) == 'string') { // 查询操作，row 为查询关键词，如：此处为商品类别名称 cate_name
 						this.formInline.cate_name = row;
 						this.parentId = '';
 					}
@@ -98,23 +147,19 @@
 				this.$axios.get(this.$url + 'goods_cate', {
 					params: {
 						cate_name: this.formInline.cate_name,
-						parent_id: this.parentId
+						parent_id: this.parentId,
+						page: this.goodsCatePagination.current_page,
+						size: this.goodsCatePagination.per_page
 					}
 				})
 				.then(function(res) {
 					if (res.data.status == 1) {
-						let goodsCateList = res.data.data;
-						if (goodsCateList.length == 0) {
-							self.$message({
-								message: '不存在下级分类',
-								type: 'warning'
-							});
-							return;
-						}
+						// 商品类别列表分页参数
+						self.goodsCatePagination = res.data.data;
 						
+						// 商品类别列表
+						let goodsCateList = res.data.data.data;
 						goodsCateList.forEach((item, index) => {
-							item.index = index; // 定义index
-							item.id = index + 1; // 定义编号ID
 							if (index == 0) { // 0表示第1条数据
 								self.grandparentId = item.grandparent_id; // 上上级ID是否存在时赋值
 								return;
@@ -137,6 +182,70 @@
 			},
 			
 			/**
+			 * 分页 pageSize 改变时会触发
+			 * @param {Object} page_size
+			 */
+			handleSizeChange(page_size) {
+				this.goodsCatePagination.per_page = page_size; // 每页条数
+				this.getGoodsCateList(this.parentId);
+			},
+			
+			/**
+			 * 分页 currentPage 改变时会触发
+			 * @param {Object} current_page
+			 */
+			handleCurrentChange(current_page) {
+				this.goodsCatePagination.current_page = current_page; // 当前页数
+				this.getGoodsCateList(this.parentId);
+			},
+			
+			/**
+			 * 筛选商品类别审核状态
+			 * @param {Object} value
+			 * @param {Object} row
+			 */
+			filterAuditStatus(value, row) {
+				return row.audit_status === value;
+			},
+			
+			/**
+			 * 审核商品类别
+			 * @param {Object} formName
+			 */
+			auditGoodsCate(formName) {
+				let self = this;
+				this.$refs[formName].validate((valid) => {
+					if (valid) {
+						this.$axios.put(this.$url + 'goods_cate/' + this.form.cate_id, {
+							audit_status: this.form.audit_status
+						})
+						.then(function(res) {
+							let type = res.data.status == 1 ? 'success' : 'warning';
+							self.$message({
+								message: res.data.message,
+								type: type
+							});
+							self.goodsCateList[self.tableRowIndex].audit_status = self.form.audit_status; // 静态改变审核状态
+							self.goodsCateList[self.tableRowIndex].audit_status_msg = (self.form.audit_status === 0 ? '待审核' : (self.form.audit_status === 1 ? '正常' : '驳回')); // 静态改变审核状态信息
+							self.dialogFormVisible = false; // 隐藏 Dialog 对话框
+						})
+						.catch(function (error) {
+							self.$message({
+								message: error.response.data.message,
+								type: 'warning'
+							});
+						});
+					} else {
+						self.$message({
+							message: 'error submit!!',
+							type: 'warning',
+						});
+						return false;
+					}
+				});
+			},
+			
+			/**
 			 * 跳转商品类别编辑页
 			 * @param {Object} row
 			 */
@@ -146,9 +255,9 @@
 			
 			/**
 			 * 删除商品类别
-			 * @param {Object} row
+			 * @param {Object} scope
 			 */
-			deleteGoodsCate(row) {
+			deleteGoodsCate(scope) {
 				this.$confirm('此操作将永久删除该商品类别, 是否继续?', '删除', {
 					confirmButtonText: '确定',
 					cancelButtonText: '取消',
@@ -156,10 +265,10 @@
 				}).then(() => {
 					// 调用删除接口
 					let self = this;
-					this.$axios.delete(this.$url + 'goods_cate/' + row.cate_id)
+					this.$axios.delete(this.$url + 'goods_cate/' + scope.row.cate_id)
 					.then(function(res) {
 						// 移除元素
-						self.goodsCateList.splice(row.index, 1);
+						self.goodsCateList.splice(scope.$index, 1);
 						
 						let type = res.data.status == 1 ? 'success' : 'warning';
 						self.$message({
