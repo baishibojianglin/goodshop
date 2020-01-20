@@ -2,6 +2,7 @@
 
 namespace app\admin\controller;
 
+use app\common\lib\Aes;
 use think\Controller;
 use think\Request;
 
@@ -13,38 +14,58 @@ use think\Request;
 class Base extends Common
 {
     /**
+     * 登录用户的基本信息
+     * @var array
+     */
+    public $companyUser = [];
+
+    /**
      * 初始化方法
      */
     public function _initialize()
     {
+        parent::_initialize();
+
         // 判断是否登录
-        /*if (!($this->$this->loginstatus())) {
+        if (!($this->isLogin())) {
             return show(config('code.error'), '未登录', '', 401);
-        }*/
+        }
     }
 
     /**
-     * 检查操作是否合法和登录是否过期
+     * 判断是否登录
      * @return bool
      */
-    public function loginstatus()
+    public function isLogin()
     {
-        $header=request()->header();
-        $lsit=model('Companyuser')->loginstatus();
-        //验证token
-        if(empty($lsit)){
+        // 判断 token 是否存在
+        if (empty($this->headers['company-token'])) {
             return false;
         }
-        //验证过期时间
-        $time=time();
-        if($time-$lsit['tokentime']>3600*24){
+
+        // 判断 token 合法性
+        $aes = new Aes();
+        $companyToken = $aes->decrypt($this->headers['company-token']); // AES解密
+        if (empty($companyToken)) {
             return false;
         }
-        //验证通过,重置过期时间
-        model('Companyuser')->setlogintime();
+
+        // 查询用户是否存在或启用
+        $companyUser = model('Companyuser')->loginstatus($companyToken);
+        if(!$companyUser || $companyUser['status'] != config('code.status_enable')){
+            return false;
+        }
+
+        // 验证 token 过期时间
+        $time = time();
+        if($time - $companyUser['tokentime'] > 3600*24){
+            return false;
+        }
+
+        // 验证通过，重置过期时间
+        model('Companyuser')->setlogintime($companyToken);
+        // 赋值登录用户的基本信息
+        $this->companyUser = $companyUser;
         return true;
     }
-
-
-
 }

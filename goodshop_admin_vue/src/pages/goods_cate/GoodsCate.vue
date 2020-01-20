@@ -137,8 +137,8 @@
 						size: this.goodsCatePagination.per_page
 					},
 					headers: {
-						'companyid': JSON.parse(localStorage.getItem('company')).id,
-						'companytoken': JSON.parse(localStorage.getItem('company')).token
+						'company-id': JSON.parse(localStorage.getItem('company')).id,
+						'company-token': JSON.parse(localStorage.getItem('company')).token
 					}
 				})
 				.then(function(res) {
@@ -172,6 +172,18 @@
 					}
 				})
 				.catch(function (error) {
+					// 错误处理
+					if (error.response) {
+						console.log(error.response.data);
+						console.log(error.response.status);
+						console.log(error.response.headers);
+					} else if (error.request) {
+						console.log('error.request', error.request)
+					} else {
+						console.log('error.message', error.message)
+					}
+					console.log('error.config', error.config)
+					
 					self.$message({
 						message: error.response.data.message,
 						type: 'warning'

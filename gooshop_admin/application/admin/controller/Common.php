@@ -2,6 +2,7 @@
 
 namespace app\admin\controller;
 
+use app\common\lib\exception\ApiException;
 use think\Cache;
 use think\Controller;
 
@@ -52,7 +53,28 @@ class Common extends Controller
      */
     public function _initialize()
     {
-        //$this->checkRequestAuth(); // TODO：生产环境必须检查数据的合法性
+        $this->checkRequestAuth(); // TODO：生产环境必须检查数据的合法性
+    }
+
+    /**
+     * 检查每次app请求的数据是否合法
+     */
+    public function checkRequestAuth()
+    {
+        // 首先需要获取headers
+        $headers = request()->header();
+
+        // TODO：校验 headers 信息
+        // 校验基础参数
+        if (!$headers) {
+            throw new ApiException('headers参数错误', 400);
+        }
+        /*if (empty($headers['sign'])) {
+            throw new ApiException('sign不存在', 400);
+        }*/
+
+        // headers信息校验成功后，便以其他继承该类的子类使用headers数据
+        $this->headers = $headers;
     }
 
     /**
