@@ -9,7 +9,7 @@
 						<el-form :inline="true" :model="formInline" size="mini" class="demo-form-inline">
 							<el-form-item label="">
 								<el-input placeholder="查询商品类别" v-model="formInline.cate_name" clearable>
-									<el-button slot="append" icon="el-icon-search" @click="getGoodsCateList(formInline.cate_name)"></el-button>
+									<el-button slot="append" icon="el-icon-search" @click="getGoodsCateList()"></el-button>
 								</el-input>
 							</el-form-item>
 						</el-form>
@@ -21,8 +21,8 @@
 						<!-- 新增 e -->
 					</el-col>
 					<el-col :span="6">
-						<el-button size="mini" icon="el-icon-back" title="返回" @click="getGoodsCateList()" v-if="isBack">顶级</el-button>
-						<el-button size="mini" icon="el-icon-back" title="返回" @click="getGoodsCateList(grandparentId)" v-if="isBack">上级</el-button>
+						<el-button size="mini" icon="el-icon-back" title="返回顶级类别" @click="getTopGoodsCateList()" v-if="isBack">顶级类别</el-button>
+						<el-button size="mini" icon="el-icon-back" title="返回上级类别" @click="getParentGoodsCateList(grandparentId)" v-if="isBack">上级类别</el-button>
 						<!-- <el-button size="mini" icon="el-icon-refresh" title="刷新" @click="getGoodsCateList(parentId)">刷新</el-button> -->
 					</el-col>
 				</el-row>
@@ -45,7 +45,7 @@
 					<el-table-column label="操作" fixed="right" min-width="120">
 						<template slot-scope="scope">
 							<el-button type="primary" size="mini" plain @click="dialogFormVisible = true; form.cate_id = scope.row.cate_id; tableRowIndex = scope.$index" style="margin-left: 0.5rem;">审核</el-button>
-							<el-button size="mini" plain @click="getGoodsCateList(scope.row)">下级</el-button>
+							<el-button size="mini" plain @click="getSonGoodsCateList(scope.row)">下级</el-button>
 							<el-button type="primary" size="mini" plain @click="toGoodsCateEdit(scope.row)">编辑</el-button>
 							<el-button type="danger" size="mini" plain @click="deleteGoodsCate(scope)">删除</el-button>
 						</template>
@@ -123,26 +123,11 @@
 		methods: {
 			/**
 			 * 获取商品类别列表
-			 * @param {Object} row
 			 */
-			getGoodsCateList(row) {
+			getGoodsCateList() {
 				let self = this;
-				
-				// 当参数 row 存在时，执行 查看下级 、 返回上级  或 查询 操作
-				this.isBack = row ? true : false;
-				if (row) {
-					if (row.cate_id && typeof(row.cate_id) == 'number') { // 当为 查看下级 操作时，row 为当前行数据
-						this.parentId = row.cate_id;
-					} else if (typeof(row) == 'number') { // 当为 返回上级 操作时，row 为上上级ID
-						this.parentId = row;
-					} else if (typeof(row) == 'string') { // 查询操作，row 为查询关键词，如：此处为商品类别名称 cate_name
-						this.formInline.cate_name = row;
-						this.parentId = '';
-					}
-				} else { // 加载页面或从第二级类别返回上级操作时
-					this.formInline.cate_name = '';
-					this.parentId = 0;
-				}
+				this.parentId = this.formInline.cate_name ? '' : this.parentId; // 查询时不区分商品类别等级
+				this.isBack = this.parentId ? true : false; // 非一级商品类别时显示返回按钮
 				
 				this.$axios.get(this.$url + 'goods_cate', {
 					params: {
@@ -150,6 +135,10 @@
 						parent_id: this.parentId,
 						page: this.goodsCatePagination.current_page,
 						size: this.goodsCatePagination.per_page
+					},
+					headers: {
+						'companyid': JSON.parse(localStorage.getItem('company')).id,
+						'companytoken': JSON.parse(localStorage.getItem('company')).token
 					}
 				})
 				.then(function(res) {
@@ -157,10 +146,19 @@
 						// 商品类别列表分页参数
 						self.goodsCatePagination = res.data.data;
 						
+						// 当数据为空时
+						if (self.goodsCatePagination.total == 0) {
+							self.$message({
+								message: '数据不存在',
+								type: 'warning'
+							});
+							return;
+						}
+						
 						// 商品类别列表
-						let goodsCateList = res.data.data.data;
+						let goodsCateList = self.goodsCatePagination.data;
 						goodsCateList.forEach((item, index) => {
-							if (index == 0) { // 0表示第1条数据
+							if (index == 0) { // 0表示第1条数据，因每一条数据的上上级ID都相同
 								self.grandparentId = item.grandparent_id; // 上上级ID是否存在时赋值
 								return;
 							}
@@ -182,12 +180,43 @@
 			},
 			
 			/**
+			 * 获取下级商品类别列表
+			 * @param {Object} row
+			 */
+			getSonGoodsCateList(row) {
+				this.parentId = row.cate_id;
+				if (this.parentId) {
+					this.formInline.cate_name = '';
+					this.goodsCatePagination.current_page = 1;
+					this.getGoodsCateList();
+				}
+			},
+			
+			/**
+			 * 返回顶级商品类别列表
+			 */
+			getTopGoodsCateList() {
+				this.formInline.cate_name = '';
+				this.parentId = 0;
+				this.getGoodsCateList();
+			},
+			
+			/**
+			 * 返回上级商品类别列表
+			 * @param {Object} grandparentId
+			 */
+			getParentGoodsCateList(grandparentId) {
+				this.parentId = grandparentId;
+				this.getGoodsCateList();
+			},
+			
+			/**
 			 * 分页 pageSize 改变时会触发
 			 * @param {Object} page_size
 			 */
 			handleSizeChange(page_size) {
 				this.goodsCatePagination.per_page = page_size; // 每页条数
-				this.getGoodsCateList(this.parentId);
+				this.getGoodsCateList();
 			},
 			
 			/**
@@ -196,7 +225,7 @@
 			 */
 			handleCurrentChange(current_page) {
 				this.goodsCatePagination.current_page = current_page; // 当前页数
-				this.getGoodsCateList(this.parentId);
+				this.getGoodsCateList();
 			},
 			
 			/**

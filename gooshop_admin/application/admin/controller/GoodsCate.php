@@ -19,6 +19,8 @@ class GoodsCate extends Base
      */
     public function index()
     {
+        // TODO：封装公用header
+        $data = request()->header();
         // 判断为GET请求
         if (request()->isGet()) {
             // 传入的参数
