@@ -14,5 +14,5 @@ Route::resource('region', 'admin/region');
 Route::resource('goods_cate', 'admin/goods_cate');
 Route::get('goods_cate_tree', 'admin/goods_cate/goodsCateTree');
 //test
-Route::GET('test','admin/Login/test');
+Route::POST('test','admin/Login/test');
 
