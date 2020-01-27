@@ -1,10 +1,15 @@
 <template>
 	<div class="create">
-		 <el-steps :active="active" finish-status="success">
-		   <el-step title="步骤 1"></el-step>
-		   <el-step title="步骤 2"></el-step>
-		   <el-step title="步骤 3"></el-step>
-		 </el-steps>
+		<el-row>
+		  <el-col :span="15">
+			 <el-steps :active="active" finish-status="success" style="margin-left: 50px;margin-bottom: 50px;">
+			   <el-step title="填写基本信息"></el-step>
+			   <el-step title="填写配置信息"></el-step>
+			   <el-step title="创建成功"></el-step>
+			 </el-steps>			  
+		  </el-col>
+		 </el-row>
+
 		
 		 <el-form  ref="ruleForm" :model="ruleForm" :rules="rules"  label-width="150px">
 			 
@@ -47,14 +52,12 @@
 		   </el-form-item>		   
 
 		   <el-form-item label="设置密码" prop="password">
-			 <el-input style="width:350px;"  v-model="ruleForm.password"></el-input>
+			 <el-input style="width:350px;" type="password" :show-password="true"   v-model="ruleForm.password"></el-input>
 		   </el-form-item>			   
-
-
 
 		   
 		   <el-form-item>
-			 <el-button type="primary" @click="submitForm('ruleForm')">立即创建</el-button>
+			 <el-button type="primary" @click="submitForm('ruleForm')">下一步</el-button>
 			 <el-button @click="resetForm('ruleForm')">重置</el-button>
 		   </el-form-item>
 		   
@@ -68,12 +71,15 @@
      data() {
 		   return {
 				ruleForm: {
-				   name: '',
-				   address:'',
-				   phone:'',
-				   license:'',
-				   creditcode:'',
-				   fileList: []
+				   name: '', //供应商名字
+				   address:'', //供应商地址
+				   phone:'', //供应商联系电话
+				   legalperson_idcard_image:'123', //法人身份证图片地址
+				   legalperson_name:'', //法人姓名
+				   legalperson_idcard_code:'', //法人身份证号码
+				   license_image:'123', //营业执照图片地址
+				   license_creditcode:'', //营业执照社会统一信用码
+				   password:'' //供应商密码
 				},
 				rules: {
 				  name: [
@@ -85,20 +91,20 @@
 				  phone:[
 					{ required: true, message: '请输入供应商电话', trigger: 'blur' }					  
 				  ],
-				  license_creditcode:[
-					{ required: true, message: '请输入社会统一信用码', trigger: 'blur' }	
+				  legalperson_idcard_image:[
+					{ required: true, message: '请上传法人身份证正面照', trigger: 'blur' }
 				  ],
 				  legalperson_name:[
 					{ required: true, message: '请输入法人姓名', trigger: 'blur' }
-				  ],
-				  legalperson_idcard_image:[
-					{ required: true, message: '请上传法人身份证正面照', trigger: 'blur' }
 				  ],
 				  legalperson_idcard_code:[
 					{ required: true, message: '请填写法人身份证号码', trigger: 'blur' }
 				  ],
 				  license_image:[
 					{ required: true, message: '请上传营业执照'}					  
+				  ],																		
+				  license_creditcode:[
+					{ required: true, message: '请输入社会统一信用码', trigger: 'blur' }	
 				  ],
 				  password:[
 					{ required: true, message: '请设置密码'}					  
@@ -116,7 +122,7 @@
 			this.$refs[formName].validate((valid) => {
 			  if (valid) {
 				alert('submit!');
-				console.log(filelist);
+
 				this.next();
 			  }else {
 				console.log(this.fileList);
@@ -147,6 +153,9 @@
 
 <style>
 	.create{
-		padding: 50px 0 20px 0;
+		padding:20px 0 20px 0;
+	}
+	.el-upload-list{
+		width: 180px;
 	}
 </style>

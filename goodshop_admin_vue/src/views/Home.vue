@@ -58,9 +58,9 @@
 						<span> {{menutwotitle}}</span>
 					</el-col>
 					
-					<div class="homemain">
+					<el-col :span='24' class="homemain">
 						<router-view></router-view>
-					</div>
+					</el-col>
 				</el-col> <!--main e-->
 			</el-col> <!--content e-->
 			
@@ -68,8 +68,9 @@
 	</div>
 </template>
 
+
 <script>
-	import aes from '@/assets/js/aes.js';
+	import wincontrol from '@/assets/js/wincontrol.js';
 	import { mapState } from 'vuex';
 	import { mapMutations } from 'vuex';
 	
@@ -100,6 +101,10 @@
 			 */
 			let account=JSON.parse(localStorage.getItem("company"));
 			this.name=account['name'];
+			/**
+			 * 控制窗口高度
+			 */
+			wincontrol.wincontrol();
 		},
 		methods: {
 			/**
@@ -156,6 +161,10 @@
 </script>
 
 <style>	
+    .homemain{
+		overflow-y:scroll;
+		padding-bottom: 50px;
+    }
 	.homeheader{
 		background-color:#003366;
 	}
