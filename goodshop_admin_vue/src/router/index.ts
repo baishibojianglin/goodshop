@@ -10,6 +10,7 @@ import RegionTown from '@/pages/region/RegionTown.vue'
 import GoodsCate from '@/pages/goods_cate/GoodsCate.vue'
 import GoodsCateAdd from '@/pages/goods_cate/GoodsCateAdd.vue'
 import GoodsCateEdit from '@/pages/goods_cate/GoodsCateEdit.vue'
+import GoodsBrand from '@/pages/goods_brand/GoodsBrand.vue'
 
 Vue.use(VueRouter)
 
@@ -43,6 +44,7 @@ const routes = [
 			{path: 'goodscate', name: 'goodscate', component: GoodsCate}, // 商品类别
 			{path: 'goodscateadd', name: 'goodscateadd', component: GoodsCateAdd}, // 新增商品类别
 			{path: 'goodscateedit', name: 'goodscateedit', component: GoodsCateEdit}, // 编辑商品类别
+			{path: 'goodsbrand', name: 'goodsbrand', component: GoodsBrand}, // 商品品牌
 		]
 	}
 ]

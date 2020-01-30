@@ -42,7 +42,7 @@
 								<div v-show="menuvalue[3]">
 									<!-- <router-link to="/"><dd id='menu31' :class="activevalue[31]?activeclass:''" @click="menuactive(31,3,1)">商品列表</dd></router-link> -->
 									<router-link to="/home/goodscate"><dd id='menu32' :class="activevalue[32]?activeclass:''" @click="menuactive(32,3,2)">商品类别</dd></router-link>
-									<!-- <router-link to="/"><dd id='menu33' :class="activevalue[33]?activeclass:''" @click="menuactive(33,3,3)">品牌管理</dd></router-link> -->
+									<router-link to="/home/goodsbrand"><dd id='menu33' :class="activevalue[33]?activeclass:''" @click="menuactive(33,3,3)">品牌管理</dd></router-link>
 								</div>
 							</el-collapse-transition>
 							
