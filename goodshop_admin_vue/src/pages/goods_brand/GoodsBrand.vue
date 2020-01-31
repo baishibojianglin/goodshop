@@ -25,21 +25,24 @@
 			<div class="">
 				<!-- 商品品牌列表 s -->
 				<el-table :data="goodsBrandList" border style="width: 100%">
-					<el-table-column label="ID" fixed width="90">
-						<template slot-scope="scope"><span>{{scope.$index + 1}}</span></template>
-					</el-table-column>
+					<el-table-column type="index" label="ID" fixed width="90"></el-table-column>
 					<el-table-column prop="brand_name" label="品牌名称" fixed min-width="180"></el-table-column>
-					<el-table-column prop="logo" label="logo" width="180"></el-table-column>
+					<el-table-column prop="logo" label="logo" width="180">
+						<template slot-scope="scope">
+							<img :src="scope.row.logo" :alt="scope.row.brand_name" :title="scope.row.brand_name" width="50" height="50" />
+						</template>
+					</el-table-column>
 					<el-table-column prop="audit_status" label="审核状态" width="90" :filters="[{ text: '待审核', value: 0 }, { text: '正常', value: 1 }, { text: '驳回', value: 2 }]" :filter-method="filterAuditStatus" filter-placement="bottom-end">
 						<template slot-scope="scope">
 							<el-tag :type="scope.row.audit_status === 0 ? 'info' : (scope.row.audit_status === 1 ? 'success' : 'danger')" size="mini">{{scope.row.audit_status_msg}}</el-tag>
 						</template>
 					</el-table-column>
-					<el-table-column label="操作" fixed="right" min-width="120">
+					<el-table-column prop="audit_time" label="审核时间" width="180"></el-table-column>
+					<el-table-column label="操作" fixed="right" min-width="90">
 						<template slot-scope="scope">
-							<el-button type="primary" size="mini" plain @click="dialogFormVisible = true; form.cate_id = scope.row.cate_id; tableRowIndex = scope.$index" style="margin-left: 0.5rem;">审核</el-button>
-							<el-button type="primary" size="mini" plain @click="toGoodsCateEdit(scope.row)">编辑</el-button>
-							<el-button type="danger" size="mini" plain @click="deleteGoodsCate(scope)">删除</el-button>
+							<el-button type="primary" size="mini" plain @click="dialogFormVisible = true; form.brand_id = scope.row.brand_id; tableRowIndex = scope.$index" style="margin-left: 0.5rem;">审核</el-button>
+							<el-button type="primary" size="mini" plain @click="toGoodsBrandEdit(scope.row)">编辑</el-button>
+							<el-button type="danger" size="mini" plain @click="deleteGoodsBrand(scope)">删除</el-button>
 						</template>
 					</el-table-column>
 				</el-table>
@@ -50,9 +53,9 @@
 					<el-pagination
 						background
 						:page-sizes="[5, 10, 15, 20]"
-						:page-size="goodsCatePagination.per_page"
-						:total="goodsCatePagination.total"
-						:current-page="goodsCatePagination.current_page"
+						:page-size="listPagination.per_page"
+						:total="listPagination.total"
+						:current-page="listPagination.current_page"
 						layout="total, sizes, prev, pager, next, jumper"
 						@size-change="handleSizeChange"
 						@current-change="handleCurrentChange">
@@ -72,7 +75,7 @@
 					</el-form>
 					<div slot="footer" class="dialog-footer">
 						<el-button size="small" plain @click="dialogFormVisible = false">取 消</el-button>
-						<el-button type="primary" size="small" plain @click="auditGoodsCate('ruleForm')">确 定</el-button>
+						<el-button type="primary" size="small" plain @click="auditGoodsBrand('ruleForm')">确 定</el-button>
 					</div>
 				</el-dialog>
 				<!-- 审核商品品牌 Dialog 对话框 e -->
@@ -89,11 +92,11 @@
 					brand_name: '' // 商品品牌名称
 				},
 				goodsBrandList: [], // 商品品牌列表
-				goodsBrandPagination: {}, // 商品类别列表分页参数
+				listPagination: {}, // 列表分页参数
 				
 				/* Dialog 对话框 s */
 				dialogFormVisible: false, // 是否显示 Dialog
-				form: { // Dialog 嵌套审核商品类别操作的表单数据对象
+				form: { // Dialog 嵌套审核商品品牌操作的表单数据对象
 					brand_id: '',
 					audit_status: ''
 				},
@@ -117,22 +120,22 @@
 				let self = this;
 				this.$axios.get(this.$url + 'goods_brand', {
 					params: {
-						cate_name: this.formInline.cate_name,
-						page: this.goodsCatePagination.current_page,
-						size: this.goodsCatePagination.per_page
+						brand_name: this.formInline.brand_name,
+						page: this.listPagination.current_page,
+						size: this.listPagination.per_page
 					},
 					headers: {
 						'company-id': JSON.parse(localStorage.getItem('company')).id,
 						'company-token': JSON.parse(localStorage.getItem('company')).token
 					}
 				})
-				.then(function(res) {console.log(res)
+				.then(function(res) {
 					if (res.data.status == 1) {
-						// 商品类别列表分页参数
-						self.goodsCatePagination = res.data.data;
+						// 商品品牌列表分页参数
+						self.listPagination = res.data.data;
 						
 						// 当数据为空时
-						if (self.goodsCatePagination.total == 0) {
+						if (self.listPagination.total == 0) {
 							self.$message({
 								message: '数据不存在',
 								type: 'warning'
@@ -140,15 +143,8 @@
 							return;
 						}
 						
-						// 商品类别列表
-						let goodsBrandList = self.goodsCatePagination.data;
-						goodsBrandList.forEach((item, index) => {
-							if (index == 0) { // 0表示第1条数据，因每一条数据的上上级ID都相同
-								self.grandparentId = item.grandparent_id; // 上上级ID是否存在时赋值
-								return;
-							}
-						});
-						self.goodsBrandList = goodsBrandList;
+						// 商品品牌列表
+						self.goodsBrandList = self.listPagination.data;
 					} else {
 						self.$message({
 							message: '网络忙，请重试',
@@ -157,18 +153,6 @@
 					}
 				})
 				.catch(function (error) {
-					// 错误处理
-					if (error.response) {
-						console.log(error.response.data);
-						console.log(error.response.status);
-						console.log(error.response.headers);
-					} else if (error.request) {
-						console.log('error.request', error.request)
-					} else {
-						console.log('error.message', error.message)
-					}
-					console.log('error.config', error.config)
-					
 					self.$message({
 						message: error.response.data.message,
 						type: 'warning'
@@ -181,8 +165,8 @@
 			 * @param {Object} page_size
 			 */
 			handleSizeChange(page_size) {
-				this.goodsCatePagination.per_page = page_size; // 每页条数
-				this.getGoodsCateList();
+				this.listPagination.per_page = page_size; // 每页条数
+				this.getGoodsBrandList();
 			},
 			
 			/**
@@ -190,8 +174,8 @@
 			 * @param {Object} current_page
 			 */
 			handleCurrentChange(current_page) {
-				this.goodsCatePagination.current_page = current_page; // 当前页数
-				this.getGoodsCateList();
+				this.listPagination.current_page = current_page; // 当前页数
+				this.getGoodsBrandList();
 			},
 			
 			/**
@@ -207,12 +191,19 @@
 			 * 审核商品品牌
 			 * @param {Object} formName
 			 */
-			auditGoodsCate(formName) {
+			auditGoodsBrand(formName) {
 				let self = this;
 				this.$refs[formName].validate((valid) => {
 					if (valid) {
-						this.$axios.put(this.$url + 'goods_cate/' + this.form.cate_id, {
+						this.$axios.put(this.$url + 'goods_brand/' + this.form.brand_id, {
+							// 参数
 							audit_status: this.form.audit_status
+						}, {
+							// 请求头配置
+							headers: {
+								'company-id': JSON.parse(localStorage.getItem('company')).id,
+								'company-token': JSON.parse(localStorage.getItem('company')).token
+							}
 						})
 						.then(function(res) {
 							let type = res.data.status == 1 ? 'success' : 'warning';
@@ -244,15 +235,15 @@
 			 * 跳转商品品牌编辑页
 			 * @param {Object} row
 			 */
-			toGoodsCateEdit(row) {
-				this.$router.push({path: "goodscateedit", query: {cate_id: row.cate_id, cate_name: row.cate_name, parent_id: row.parent_id}});
+			toGoodsBrandEdit(row) {
+				this.$router.push({path: "goodsbrandedit", query: {brand_id: row.brand_id, brand_name: row.brand_name}});
 			},
 			
 			/**
-			 * 删除商品类别
+			 * 删除商品品牌
 			 * @param {Object} scope
 			 */
-			deleteGoodsCate(scope) {
+			deleteGoodsBrand(scope) {
 				this.$confirm('此操作将永久删除该商品品牌, 是否继续?', '删除', {
 					confirmButtonText: '确定',
 					cancelButtonText: '取消',
@@ -260,7 +251,7 @@
 				}).then(() => {
 					// 调用删除接口
 					let self = this;
-					this.$axios.delete(this.$url + 'goods_cate/' + scope.row.cate_id)
+					this.$axios.delete(this.$url + 'goods_brand/' + scope.row.brand_id)
 					.then(function(res) {
 						// 移除元素
 						self.goodsBrandList.splice(scope.$index, 1);

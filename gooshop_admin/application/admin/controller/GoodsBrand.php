@@ -48,6 +48,7 @@ class GoodsBrand extends Base
                 $auditStatus = config('code.audit_status'); // 审核状态：0待审核，1通过，2驳回
                 foreach ($data as $key => $value) {
                     $data[$key]['audit_status_msg'] = $auditStatus[$value['audit_status']]; // 定义审核状态信息
+                    $data[$key]['audit_time'] = $value['audit_time'] ? date('Y-m-d H:i:s', $value['audit_time']) : ''; // 审核时间
                 }
 
                 return show(config('code.success'), 'OK', $data);
@@ -79,12 +80,12 @@ class GoodsBrand extends Base
 
             // 入库操作
             try {
-                $id = model('GoodsBrand')->add($data, 'cate_id');
+                $id = model('GoodsBrand')->add($data, 'brand_id');
             } catch (\Exception $e) {
                 return show(config('code.error'), '网络忙，请重试', [], 500); // $e->getMessage()
             }
             if ($id) {
-                return show(config('code.success'), '新增成功', ['cate_id' => $id], 201);
+                return show(config('code.success'), '新增成功', ['brand_id' => $id], 201);
             } else {
                 return show(config('code.error'), '新增失败', [], 403);
             }
@@ -155,6 +156,8 @@ class GoodsBrand extends Base
             }
             if (isset($param['audit_status'])) { // 审核状态
                 $data['audit_status'] = input('param.audit_status', null, 'intval');
+                $data['audit_id'] = $this->companyUser['id'];
+                $data['audit_time'] = time();
             }
 
             if (empty($data)) {
@@ -163,7 +166,7 @@ class GoodsBrand extends Base
 
             // 更新
             try {
-                $result = model('GoodsBrand')->save($data, ['cate_id' => $id]); // 更新
+                $result = model('GoodsBrand')->save($data, ['brand_id' => $id]); // 更新
             } catch (\Exception $e) {
                 return show(config('code.error'), '网络忙，请重试', [], 500); // $e->getMessage()
             }
@@ -195,7 +198,7 @@ class GoodsBrand extends Base
             }
 
             // 判断数据是否存在
-            if ($data['cate_id'] != $id) {
+            if ($data['brand_id'] != $id) {
                 return show(config('code.error'), '数据不存在');
             }
 

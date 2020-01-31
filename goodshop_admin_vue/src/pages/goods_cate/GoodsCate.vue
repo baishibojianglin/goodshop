@@ -30,9 +30,7 @@
 			<div class="">
 				<!-- 商品类别列表 s -->
 				<el-table :data="goodsCateList" border style="width: 100%">
-					<el-table-column label="ID" fixed width="90">
-						<template slot-scope="scope"><span>{{scope.$index + 1}}</span></template>
-					</el-table-column>
+					<el-table-column type="index" label="ID" fixed width="90"></el-table-column>
 					<el-table-column prop="cate_name" label="类别名称" fixed min-width="180"></el-table-column>
 					<el-table-column prop="parent_name" label="上级类别" width="180"></el-table-column>
 					<!-- <el-table-column prop="parent_id" label="上级ID" width="90"></el-table-column> -->
@@ -42,6 +40,7 @@
 							<el-tag :type="scope.row.audit_status === 0 ? 'info' : (scope.row.audit_status === 1 ? 'success' : 'danger')" size="mini">{{scope.row.audit_status_msg}}</el-tag>
 						</template>
 					</el-table-column>
+					<el-table-column prop="audit_time" label="审核时间" width="180"></el-table-column>
 					<el-table-column label="操作" fixed="right" min-width="120">
 						<template slot-scope="scope">
 							<el-button type="primary" size="mini" plain @click="dialogFormVisible = true; form.cate_id = scope.row.cate_id; tableRowIndex = scope.$index" style="margin-left: 0.5rem;">审核</el-button>
@@ -58,9 +57,9 @@
 					<el-pagination
 						background
 						:page-sizes="[5, 10, 15, 20]"
-						:page-size="goodsCatePagination.per_page"
-						:total="goodsCatePagination.total"
-						:current-page="goodsCatePagination.current_page"
+						:page-size="listPagination.per_page"
+						:total="listPagination.total"
+						:current-page="listPagination.current_page"
 						layout="total, sizes, prev, pager, next, jumper"
 						@size-change="handleSizeChange"
 						@current-change="handleCurrentChange">
@@ -97,7 +96,7 @@
 					cate_name: '' // 商品类别名称
 				},
 				goodsCateList: [], // 商品类别列表，如 [{cate_id: 1, cate_name: '油盐酱醋茶', parent_id: 0, audit_status: 0, audit_status_msg: '待审核'}, {…}, …]
-				goodsCatePagination: {}, // 商品类别列表分页参数
+				listPagination: {}, // 列表分页参数
 				grandparentId: '', // 上上级ID
 				parentId: 0, // 上级ID，默认为 0 查看一级类别
 				isBack: false, // 是否显示返回按钮
@@ -133,8 +132,8 @@
 					params: {
 						cate_name: this.formInline.cate_name,
 						parent_id: this.parentId,
-						page: this.goodsCatePagination.current_page,
-						size: this.goodsCatePagination.per_page
+						page: this.listPagination.current_page,
+						size: this.listPagination.per_page
 					},
 					headers: {
 						'company-id': JSON.parse(localStorage.getItem('company')).id,
@@ -144,10 +143,10 @@
 				.then(function(res) {
 					if (res.data.status == 1) {
 						// 商品类别列表分页参数
-						self.goodsCatePagination = res.data.data;
+						self.listPagination = res.data.data;
 						
 						// 当数据为空时
-						if (self.goodsCatePagination.total == 0) {
+						if (self.listPagination.total == 0) {
 							self.$message({
 								message: '数据不存在',
 								type: 'warning'
@@ -156,7 +155,7 @@
 						}
 						
 						// 商品类别列表
-						let goodsCateList = self.goodsCatePagination.data;
+						let goodsCateList = self.listPagination.data;
 						goodsCateList.forEach((item, index) => {
 							if (index == 0) { // 0表示第1条数据，因每一条数据的上上级ID都相同
 								self.grandparentId = item.grandparent_id; // 上上级ID是否存在时赋值
@@ -199,7 +198,7 @@
 				this.parentId = row.cate_id;
 				if (this.parentId) {
 					this.formInline.cate_name = '';
-					this.goodsCatePagination.current_page = 1;
+					this.listPagination.current_page = 1;
 					this.getGoodsCateList();
 				}
 			},
@@ -227,7 +226,7 @@
 			 * @param {Object} page_size
 			 */
 			handleSizeChange(page_size) {
-				this.goodsCatePagination.per_page = page_size; // 每页条数
+				this.listPagination.per_page = page_size; // 每页条数
 				this.getGoodsCateList();
 			},
 			
@@ -236,7 +235,7 @@
 			 * @param {Object} current_page
 			 */
 			handleCurrentChange(current_page) {
-				this.goodsCatePagination.current_page = current_page; // 当前页数
+				this.listPagination.current_page = current_page; // 当前页数
 				this.getGoodsCateList();
 			},
 			
@@ -258,7 +257,14 @@
 				this.$refs[formName].validate((valid) => {
 					if (valid) {
 						this.$axios.put(this.$url + 'goods_cate/' + this.form.cate_id, {
+							// 参数
 							audit_status: this.form.audit_status
+						}, {
+							// 请求头配置
+							headers: {
+									'company-id': JSON.parse(localStorage.getItem('company')).id,
+									'company-token': JSON.parse(localStorage.getItem('company')).token
+							}
 						})
 						.then(function(res) {
 							let type = res.data.status == 1 ? 'success' : 'warning';

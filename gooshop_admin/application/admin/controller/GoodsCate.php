@@ -51,6 +51,7 @@ class GoodsCate extends Base
                 $auditStatus = config('code.audit_status'); // 审核状态：0待审核，1通过，2驳回
                 foreach ($data as $key => $value) {
                     $data[$key]['audit_status_msg'] = $auditStatus[$value['audit_status']]; // 定义审核状态信息
+                    $data[$key]['audit_time'] = $value['audit_time'] ? date('Y-m-d H:i:s', $value['audit_time']) : ''; // 审核时间
                     $data[$key]['parent_name'] = $value['parent_id'] == 0 ? '一级类别' : $value['parent_name']; // 上级类别名称
                 }
 
@@ -190,6 +191,8 @@ class GoodsCate extends Base
             }
             if (isset($param['audit_status'])) { // 审核状态
                 $data['audit_status'] = input('param.audit_status', null, 'intval');
+                $data['audit_id'] = $this->companyUser['id'];
+                $data['audit_time'] = time();
             }
 
             if (empty($data)) {
