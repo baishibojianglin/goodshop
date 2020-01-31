@@ -27,7 +27,7 @@ class GoodsBrand extends Base
             // 查询条件
             $map = [];
             if (!empty($param['brand_name'])) { // 商品品牌名称
-                $map['brand_name'] = ['like', '%' . trim($param['brand_name']) . '%'];
+                $map['gb.brand_name'] = ['like', '%' . trim($param['brand_name']) . '%'];
             }
             if (isset($param['size'])) { // 每页条数
                 $param['size'] = intval($param['size']);
@@ -71,6 +71,7 @@ class GoodsBrand extends Base
         // 判断为POST请求
         if(request()->isPost()){
             $data = input('post.');
+            $data['company_id'] = $this->companyUser['id']; // 创建者(供应商)ID
 
             // validate验证数据合法性
             $validate = validate('GoodsBrand');
@@ -202,10 +203,9 @@ class GoodsBrand extends Base
                 return show(config('code.error'), '数据不存在');
             }
 
-            // 判断删除条件：判断是否存在下级商品品牌
-            $goodsCateList = model('GoodsCate')->where(['parent_id' => $id])->select();
-            if (!empty($goodsCateList)) {
-                return show(config('code.error'), '删除失败：存在下级商品品牌', [], 403);
+            // 判断删除条件：判断商品品牌审核状态
+            if ($data['audit_status'] == config('code.status_enable')) { // 审核通过
+                return show(config('code.error'), '删除失败：商品品牌已审核通过', [], 403);
             }
 
             // 真删除

@@ -32,6 +32,7 @@
 							<img :src="scope.row.logo" :alt="scope.row.brand_name" :title="scope.row.brand_name" width="50" height="50" />
 						</template>
 					</el-table-column>
+					<el-table-column prop="create_name" label="创建者" width="180"></el-table-column>
 					<el-table-column prop="audit_status" label="审核状态" width="90" :filters="[{ text: '待审核', value: 0 }, { text: '正常', value: 1 }, { text: '驳回', value: 2 }]" :filter-method="filterAuditStatus" filter-placement="bottom-end">
 						<template slot-scope="scope">
 							<el-tag :type="scope.row.audit_status === 0 ? 'info' : (scope.row.audit_status === 1 ? 'success' : 'danger')" size="mini">{{scope.row.audit_status_msg}}</el-tag>

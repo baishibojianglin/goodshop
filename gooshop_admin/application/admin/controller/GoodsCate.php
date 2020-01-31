@@ -100,6 +100,7 @@ class GoodsCate extends Base
         // 判断为POST请求
         if(request()->isPost()){
             $data = input('post.');
+            $data['company_id'] = $this->companyUser['id']; // 创建者(平台管理员)ID
 
             // validate验证数据合法性
             $validate = validate('GoodsCate');
@@ -237,10 +238,15 @@ class GoodsCate extends Base
                 return show(config('code.error'), '数据不存在');
             }
 
-            // 判断删除条件：判断是否存在下级商品类别
+            // 判断删除条件
+            // 判断是否存在下级商品类别
             $goodsCateList = model('GoodsCate')->where(['parent_id' => $id])->select();
             if (!empty($goodsCateList)) {
                 return show(config('code.error'), '删除失败：存在下级商品类别', [], 403);
+            }
+            // 判断商品类别审核状态
+            if ($data['audit_status'] == config('code.status_enable')) { // 审核通过
+                return show(config('code.error'), '删除失败：商品类别已审核通过', [], 403);
             }
 
             // 真删除

@@ -19,7 +19,29 @@ class GoodsBrand extends Base
      */
     public function getGoodsBrand($map = [], $size = 5)
     {
-        $result = $this->field('desc', true)->where($map)->cache(true, 10)->paginate($size);
+        $result = $this->alias('gb')
+            ->field($this->_getListField())
+            ->join('__COMPANYUSER__ cu', 'gb.company_id = cu.id', 'LEFT') // 创建者
+            ->where($map)->cache(true, 10)->paginate($size);
         return $result;
+    }
+
+    /**
+     * 通用化获取参数的数据字段
+     * @return array
+     */
+    private function _getListField()
+    {
+        return [
+            'gb.brand_id',
+            'gb.brand_name',
+            'gb.logo',
+            'gb.company_id',
+            'gb.create_time',
+            'gb.audit_id',
+            'gb.audit_status',
+            'gb.audit_time',
+            'cu.name create_name'
+        ];
     }
 }

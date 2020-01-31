@@ -1,9 +1,9 @@
 <template>
-	<div class="goods_cate_add">
+	<div class="goods_brand_add">
 		<el-card class="main-card">
 			<div slot="header" class="clearfix">
 				<el-row :gutter="20" type="flex" justify="space-between">
-					<el-col :span="6"><span>新增商品类别</span></el-col>
+					<el-col :span="6"><span>编辑商品品牌</span></el-col>
 					<el-col :span="3">
 						<el-button size="mini" icon="el-icon-back" title="返回" @click="back()">返回</el-button>
 					</el-col>
@@ -12,19 +12,15 @@
 			<div class="">
 				<!-- Form 表单 s -->
 				<el-form ref="ruleForm" :model="form" :rules="rules" label-width="100px" size="small" class="demo-form-inline">
-					<el-form-item label="商品类别" prop="cate_name">
-						<el-input v-model="form.cate_name" placeholder="输入商品类别名称" clearable style="width:350px;"></el-input>
+					<el-form-item prop="brand_name" label="商品品牌">
+						<el-input v-model="form.brand_name" placeholder="输入商品品牌名称" clearable style="width:350px;"></el-input>
 					</el-form-item>
-					<el-form-item label="上级类别" prop="parent_id">
-						<el-select v-model="form.parent_id" placeholder="请选择…" filterable>
-							<el-option :key="0" label="一级类别" :value="0"></el-option>
-							<el-option
-								v-for="item in options"
-								:key="item.cate_id"
-								:label="item.cate_name"
-								:value="item.cate_id">
-							</el-option>
-						</el-select>
+					<el-form-item prop="logo" label="logo">
+						<el-input v-model="form.logo" v-show="false" style="width:350px;"></el-input>
+						<el-upload :action="this.$url+'upload'" name="logo" :on-success="handleUploadSuccess" :limit="1">
+						<el-button size="medium" type="primary" plain>上传logo</el-button>
+						</el-upload>
+						<img :src="form.logo" :alt="form.brand_name" :title="form.brand_name" width="50" height="50" />
 					</el-form-item>
 					<el-form-item>
 						<el-button type="primary" plain @click="submitForm('ruleForm')">提交</el-button>
@@ -41,62 +37,47 @@
 	export default {
 		data() {
 			return {
-				options: [], // 上级类别下拉框列表，如 [{value: '选项1', label: '黄金糕'}, {…}, …]
 				form: {
-					cate_name: '', // 商品类别名称
-					parent_id: '', // 上级ID
+					brand_id: '', // 商品品牌ID
+					brand_name: '', // 商品品牌名称
+					logo: '', // 品牌logo
 				},
 				rules: { // 验证规则
-					cate_name: [
-						{ required: true, message: '请输入商品类别名称', trigger: 'blur' },
+					brand_name: [
+						{ required: true, message: '请输入商品品牌名称', trigger: 'blur' },
 						{ min: 1, max: 20, message: '长度在 1 到 20 个字符', trigger: 'blur' }
 					],
-					parent_id: [
-						{ required: true, message: '请选择上级类别', trigger: 'change' }
-					]
+					/* logo: [
+						{ required: true, message: '请上传商品品牌logo', trigger: 'change' }
+					] */
 				}
 			}
 		},
 		created() {
-			this.getGoodsCateTree(); // 获取商品类别列表树
+			this.getParams();
 		},
 		methods: {
 			/**
-			 * 获取商品类别列表树
+			 * 获取路由带过来的参数
 			 */
-			getGoodsCateTree() {
-				let self = this;
-				this.$axios.get(this.$url + 'goods_cate_tree')
-				.then(function(res) {
-					if (res.data.status == 1) {
-						self.options = res.data.data;
-					} else {
-						self.$message({
-							message: '网络忙，请重试',
-							type: 'warning'
-						});
-					}
-				})
-				.catch(function (error) {
-					self.$message({
-						message: error.response.data.message,
-						type: 'warning'
-					});
-				});
+			getParams() {
+				this.form.brand_id = this.$route.query.brand_id;
+				this.form.brand_name = this.$route.query.brand_name;
+				this.form.logo = this.$route.query.logo;
 			},
 			
 			/**
-			 * 新增商品类别提交表单
+			 * 编辑商品品牌提交表单
 			 * @param {Object} formName
 			 */
 			submitForm(formName) {
 				let self = this;
 				this.$refs[formName].validate((valid) => {
 					if (valid) {
-						this.$axios.post(this.$url + 'goods_cate', {
+						this.$axios.put(this.$url + 'goods_brand/' + this.form.brand_id, {
 							// 参数
-							cate_name: this.form.cate_name,
-							parent_id: this.form.parent_id
+							brand_name: this.form.brand_name,
+							logo: this.form.logo
 						}, {
 							// 请求头配置
 							headers: {
@@ -141,6 +122,16 @@
 			 */
 			back(){
 				this.$router.go(-1);
+			},
+			
+			/**
+			 * 文件上传成功时的钩子
+			 * @param {Object} response
+			 * @param {Object} file
+			 * @param {Object} fileList
+			 */
+			handleUploadSuccess(response, file, fileList){
+				console.log(file);
 			}
 		},
 	}
