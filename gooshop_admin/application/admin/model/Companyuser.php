@@ -13,11 +13,15 @@ class Companyuser extends  Model
     protected $connection = ['prefix'=>'goodshop_'];
 
     /**
-	 * 分公司登录
-	 */ 
-	 public function checklogin($account,$password){
-         $map['account']=$account;
-         $map['password']=$password;
+     * 分公司登录
+     * @param $account
+     * @param $password
+     * @return array|false|\PDOStatement|string|Model
+     */
+	 public function checklogin($account, $password){
+         $map['account'] = $account;
+         $map['password'] = $password;
+         $map['status'] = config('code.status_enable'); // 启用状态
          $list=$this->where($map)->field('password,tokentime',true)->find();
          return $list;
 	 }  

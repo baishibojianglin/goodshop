@@ -3,7 +3,7 @@
 		<el-card class="main-card">
 			<div slot="header" class="clearfix">
 				<el-row :gutter="20" type="flex" justify="space-between">
-					<el-col :span="6"><span>新增商品类别</span></el-col>
+					<el-col :span="6"><span>编辑商品类别</span></el-col>
 					<el-col :span="3">
 						<el-button size="mini" icon="el-icon-back" title="返回" @click="back()">返回</el-button>
 					</el-col>
@@ -13,7 +13,7 @@
 				<!-- Form 表单 s -->
 				<el-form ref="ruleForm" :model="form" :rules="rules" label-width="100px" size="small" class="demo-form-inline">
 					<el-form-item label="商品类别" prop="cate_name">
-						<el-input v-model="form.cate_name" placeholder="输入商品类别名称" clearable></el-input>
+						<el-input v-model="form.cate_name" placeholder="输入商品类别名称" clearable style="width:350px;"></el-input>
 					</el-form-item>
 					<el-form-item label="上级类别" prop="parent_id">
 						<el-select v-model="form.parent_id" placeholder="请选择…" filterable>
@@ -113,8 +113,15 @@
 				this.$refs[formName].validate((valid) => {
 					if (valid) {
 						this.$axios.put(this.$url + 'goods_cate/' + this.form.cate_id, {
+							// 参数
 							cate_name: this.form.cate_name,
 							parent_id: this.form.parent_id
+						}, {
+							// 请求头配置
+							headers: {
+								'company-id': JSON.parse(localStorage.getItem('company')).id,
+								'company-token': JSON.parse(localStorage.getItem('company')).token
+							}
 						})
 						.then(function(res) {
 							let type = res.data.status == 1 ? 'success' : 'warning';
