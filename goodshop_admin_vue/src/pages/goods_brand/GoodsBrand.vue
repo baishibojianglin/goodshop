@@ -33,6 +33,7 @@
 						</template>
 					</el-table-column>
 					<el-table-column prop="create_name" label="创建者" width="180"></el-table-column>
+					<el-table-column prop="is_on_sale_msg" label="是否上架" width="90" :filters="[{ text: '下架', value: 0 }, { text: '上架', value: 1 }]" :filter-method="filterIsOnSale" filter-placement="bottom-end"></el-table-column>
 					<el-table-column prop="audit_status" label="审核状态" width="90" :filters="[{ text: '待审核', value: 0 }, { text: '正常', value: 1 }, { text: '驳回', value: 2 }]" :filter-method="filterAuditStatus" filter-placement="bottom-end">
 						<template slot-scope="scope">
 							<el-tag :type="scope.row.audit_status === 0 ? 'info' : (scope.row.audit_status === 1 ? 'success' : 'danger')" size="mini">{{scope.row.audit_status_msg}}</el-tag>
@@ -41,6 +42,7 @@
 					<el-table-column prop="audit_time" label="审核时间" width="180"></el-table-column>
 					<el-table-column label="操作" fixed="right" min-width="90">
 						<template slot-scope="scope">
+							<el-button type="warning" size="mini" plain @click="isOnSale(scope)">{{scope.row.is_on_sale ? '下架' : '上架'}}</el-button>
 							<el-button type="primary" size="mini" plain @click="dialogFormVisible = true; form.brand_id = scope.row.brand_id; tableRowIndex = scope.$index" style="margin-left: 0.5rem;">审核</el-button>
 							<el-button type="primary" size="mini" plain @click="toGoodsBrandEdit(scope.row)">编辑</el-button>
 							<el-button type="danger" size="mini" plain @click="deleteGoodsBrand(scope)">删除</el-button>
@@ -273,6 +275,48 @@
 					this.$message({
 						type: 'info',
 						message: '已取消删除'
+					});
+				});
+			},
+			
+			/**
+			 * 筛选上下架状态
+			 * @param {Object} value
+			 * @param {Object} row
+			 */
+			filterIsOnSale(value, row) {
+				return row.is_on_sale === value;
+			},
+			
+			/**
+			 * 上下架
+			 */
+			isOnSale(scop) {
+				let self = this;
+				let is_on_sale = scop.row.is_on_sale;
+				this.$axios.put(this.$url + 'goods_brand/' + scop.row.brand_id, {
+					// 参数
+					is_on_sale: is_on_sale
+				}, {
+					// 请求头配置
+					headers: {
+						'company-id': JSON.parse(localStorage.getItem('company')).id,
+						'company-token': JSON.parse(localStorage.getItem('company')).token
+					}
+				})
+				.then(function(res) {
+					let type = res.data.status == 1 ? 'success' : 'warning';
+					self.$message({
+						message: res.data.status == 1 ? (is_on_sale === 1 ? '已下架' : '已上架') : res.data.message,
+						type: type
+					});
+					scop.row.is_on_sale = is_on_sale === 1 ? 0 : 1; // 静态改变上下架状态
+					scop.row.is_on_sale_msg = is_on_sale === 1 ? '下架' : '上架'; // 静态改变上下架状态信息
+				})
+				.catch(function (error) {
+					self.$message({
+						message: error.response.data.message,
+						type: 'warning'
 					});
 				});
 			}

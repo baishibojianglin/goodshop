@@ -49,10 +49,12 @@ class GoodsCate extends Base
             if ($data) {
                 // 处理数据
                 $auditStatus = config('code.audit_status'); // 审核状态：0待审核，1通过，2驳回
+                $isOnSale = config('code.is_on_sale'); // 是否上架：0下架，1上架
                 foreach ($data as $key => $value) {
                     $data[$key]['audit_status_msg'] = $auditStatus[$value['audit_status']]; // 定义审核状态信息
                     $data[$key]['audit_time'] = $value['audit_time'] ? date('Y-m-d H:i:s', $value['audit_time']) : ''; // 审核时间
                     $data[$key]['parent_name'] = $value['parent_id'] == 0 ? '一级类别' : $value['parent_name']; // 上级类别名称
+                    $data[$key]['is_on_sale_msg'] = $isOnSale[$value['is_on_sale']]; // 是否上架状态信息
                 }
 
                 return show(config('code.success'), 'OK', $data);
@@ -168,8 +170,12 @@ class GoodsCate extends Base
             $validate = validate('GoodsCate');
             $rules = [];
             $scene = 'update';
-            if (isset($param['audit_status'])) {
+            if (isset($param['audit_status'])) { // 审核操作
                 $rules = ['audit_status' => 'require'];
+                $scene = [];
+            }
+            if (isset($param['is_on_sale'])) { // 是否上架操作
+                $rules = ['is_on_sale' => 'require'];
                 $scene = [];
             }
             if (!$validate->check($param, $rules, $scene)) {
@@ -194,6 +200,10 @@ class GoodsCate extends Base
                 $data['audit_status'] = input('param.audit_status', null, 'intval');
                 $data['audit_id'] = $this->companyUser['id'];
                 $data['audit_time'] = time();
+            }
+            if (isset($param['is_on_sale'])) { // 是否上架
+                $data['is_on_sale'] = input('param.is_on_sale', null, 'intval');
+                $data['is_on_sale'] = $data['is_on_sale'] ? 0 : 1;
             }
 
             if (empty($data)) {

@@ -18,7 +18,7 @@
 					<el-form-item prop="logo" label="logo">
 						<el-input v-model="form.logo" v-show="false" style="width:350px;"></el-input>
 						<el-upload :action="this.$url+'upload'" name="logo" :on-success="handleUploadSuccess" :limit="1">
-						<el-button size="medium" type="primary" plain>上传logo</el-button>
+						<el-button size="medium" type="primary" plain icon="el-icon-upload">上传logo</el-button>
 						</el-upload>
 					</el-form-item>
 					<el-form-item>

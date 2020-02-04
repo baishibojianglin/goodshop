@@ -41,6 +41,7 @@ class GoodsBrand extends Base
             'gb.audit_id',
             'gb.audit_status',
             'gb.audit_time',
+            'gb.is_on_sale',
             'cu.name create_name'
         ];
     }
