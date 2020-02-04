@@ -153,7 +153,7 @@
 
 <style>
 	.create{
-		padding:20px 0 20px 0;
+		padding:20px 0 50px 0;
 	}
 	.el-upload-list{
 		width: 180px;

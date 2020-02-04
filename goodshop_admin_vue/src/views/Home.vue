@@ -163,7 +163,6 @@
 <style>	
     .homemain{
 		overflow-y:scroll;
-		padding-bottom: 50px;
     }
 	.homeheader{
 		background-color:#003366;
