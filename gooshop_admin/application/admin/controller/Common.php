@@ -105,13 +105,13 @@ class Common extends Controller
         // 存储空间名称
         $bucket = "goodshopimages";
         // 文件名称
-        $object = $info['name'];
+        $object =time().mt_rand(10000,99999).$info['name'];
         // <yourLocalFile>由本地文件路径加文件名包括后缀组成，例如/users/local/myfile.txt
         $filePath = $info['tmp_name'];
 
         try{
             $ossClient = new OssClient($accessKeyId, $accessKeySecret, $endpoint);
-            $ossClient->uploadFile($bucket, $object, $filePath);
+            $result=$ossClient->uploadFile($bucket, $object, $filePath);
         } catch(OssException $e) {
             printf(__FUNCTION__ . ": FAILED\n");
             printf($e->getMessage() . "\n");
@@ -119,38 +119,38 @@ class Common extends Controller
         }
         //print(__FUNCTION__ . ": OK" . "\n");
 
-        // return json($info);
+        //返回图片地址
+        return $result['info']['url'];
 
 
-        //回调
 
 
-
+        //回调(暂时不用)
 
         // 上传文件时设置回调。
         // callbackUrl为回调服务器地址，如http://oss-demo.aliyuncs.com:23450或http://127.0.0.1:9090。
         // callbackHost为回调请求消息头中Host的值，如oss-cn-hangzhou.aliyuncs.com。
-        $url =
-            '{
-                "callbackUrl":"http://www.goodshop.com/index.php/test",
-                "callbackHost":"oss-cn-chengdu.aliyuncs.com",
-                "callbackBody":"bucket=${bucket}&object=${object}&etag=${etag}&size=${size}&mimeType=${mimeType}&imageInfo.height=${imageInfo.height}&imageInfo.width=${imageInfo.width}&imageInfo.format=${imageInfo.format}&my_var1=${x:var1}&my_var2=${x:var2}",
-                "callbackBodyType":"application/x-www-form-urlencoded"
-            }';
+        // $url =
+        //     '{
+        //         "callbackUrl":"http://west.dilinsat.com/index.php/testapi",
+        //         "callbackHost":"oss-cn-chengdu.aliyuncs.com",
+        //         "callbackBody":"bucket=${bucket}&object=${object}&etag=${etag}&size=${size}&mimeType=${mimeType}&imageInfo.height=${imageInfo.height}&imageInfo.width=${imageInfo.width}&imageInfo.format=${imageInfo.format}&my_var1=${x:var1}&my_var2=${x:var2}",
+        //         "callbackBodyType":"application/x-www-form-urlencoded"
+        //     }';
 
-        // 设置发起回调请求的自定义参数，由Key和Value组成，Key必须以x:开始。
-        $var =
-            '{
-                "x:var1":"value1",
-                "x:var2":"值2"
-            }';
-        $options = array(
-            OssClient::OSS_CALLBACK => $url,
-            OssClient::OSS_CALLBACK_VAR => $var
-        );
-        $result = $ossClient->putObject($bucket, $object, file_get_contents(__FILE__), $options);
-        print_r($result['body']);
-        print_r($result['info']['http_code']);
+        // // 设置发起回调请求的自定义参数，由Key和Value组成，Key必须以x:开始。
+        // $var =
+        //     '{
+        //         "x:var1":"value1",
+        //         "x:var2":"值2"
+        //     }';
+        // $options = array(
+        //     OssClient::OSS_CALLBACK => $url,
+        //     OssClient::OSS_CALLBACK_VAR => $var
+        // );
+        // $result = $ossClient->putObject($bucket, $object, file_get_contents(__FILE__), $options);
+        // print_r($result['body']);
+        // print_r($result['info']['http_code']);
 
 
 

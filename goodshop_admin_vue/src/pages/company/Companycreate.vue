@@ -25,13 +25,16 @@
 			 <el-input style="width:350px;"  v-model="ruleForm.phone"></el-input>
 		   </el-form-item>
 
-		   <el-form-item label="法人身份证" prop="legalperson_idcard_image">
-			   <el-input v-show='false' style="width:350px;"  v-model="ruleForm.legalperson_idcard"></el-input>
-			   <el-upload :action="this.$url+'upload'" :limit="1" :on-success="test" name='image'>
-				  <el-button size="medium" type="primary" plain>上传身份证件正面图片</el-button>
+		   <el-form-item label="法人身份证" prop="url_idcard">
+			   <el-input v-show='false' style="width:350px;"  v-model="ruleForm.url_idcard"></el-input>
+			   <el-upload list-type="picture-card" :action="this.$url+'upload'" :limit="2" :on-success="uploadimage" :on-preview="handlePictureCardPreview" :on-remove="handleRemove" name='image'>
+				     <i class="el-icon-plus"></i>
 			   </el-upload>
+			   <el-dialog :visible.sync="dialogVisible">
+			     <img width="100%" :src="dialogImageUrl" alt="">
+			   </el-dialog>
 		   </el-form-item>
-		   
+	   
 		   <el-form-item label="法人姓名" prop="legalperson_name">
 		   			 <el-input style="width:350px;"  v-model="ruleForm.legalperson_name"></el-input>
 		   </el-form-item>
@@ -42,7 +45,7 @@
 		   
 		   <el-form-item label="营业执照" prop="license_image">
 			   <el-input v-show='false' style="width:350px;"  v-model="ruleForm.license_image"></el-input>
-			   <el-upload :action="this.$url+'upload'" :limit="1" :on-success="test" name='image'>
+			   <el-upload :action="this.$url+'upload'" :limit="1" :on-success="uploadimage" name='image'>
 				  <el-button size="medium" type="primary" plain>上传营业执照副本图片</el-button>
 			   </el-upload>
 		   </el-form-item>
@@ -74,13 +77,16 @@
 				   name: '', //供应商名字
 				   address:'', //供应商地址
 				   phone:'', //供应商联系电话
-				   legalperson_idcard_image:'123', //法人身份证图片地址
+			       url_idcard:'', //身份证正面图片地址
 				   legalperson_name:'', //法人姓名
 				   legalperson_idcard_code:'', //法人身份证号码
 				   license_image:'123', //营业执照图片地址
 				   license_creditcode:'', //营业执照社会统一信用码
-				   password:'' //供应商密码
+				   password:'' ,//供应商密码
+	
 				},
+				dialogImageUrl: '',
+				dialogVisible: false,
 				rules: {
 				  name: [
 					{ required: true, message: '请输入供应商名称', trigger: 'blur' }
@@ -91,7 +97,7 @@
 				  phone:[
 					{ required: true, message: '请输入供应商电话', trigger: 'blur' }					  
 				  ],
-				  legalperson_idcard_image:[
+				  url_idcard:[
 					{ required: true, message: '请上传法人身份证正面照', trigger: 'blur' }
 				  ],
 				  legalperson_name:[
@@ -110,7 +116,8 @@
 					{ required: true, message: '请设置密码'}					  
 				  ]													  
 				},
-				active: 0 //步骤条
+				active: 0  //步骤条
+
 		   }
      },
      methods: {
@@ -125,7 +132,6 @@
 
 				this.next();
 			  }else {
-				console.log(this.fileList);
 				this.next();
 				return false;
 			  }
@@ -144,9 +150,31 @@
 		  next(){
 			if (this.active++ > 2) this.active = 0;
 		  },
-		  test(response, file, fileList){
-			  console.log(file);
-		  }
+		  /**
+		   * 上传图片
+		   * @param {string} response  返回图片地址
+		   * @param {Object} file
+		   * @param {Object} fileList
+		   */
+		  uploadimage(response, file, fileList){
+			  this.ruleForm.url_idcard=response;
+		  },
+		  /**
+		   * 删除图片
+		   * @param {Object} file
+		   * @param {Object} fileList
+		   */
+		   handleRemove(file, fileList) {
+			  console.log(file, fileList);
+		   },
+		   /**
+			* 放大图片
+			* @param {Object} file
+			*/
+		   handlePictureCardPreview(file) {
+			  this.dialogImageUrl = file.url;
+			  this.dialogVisible = true;
+		   }
      }
    }
  </script>  
