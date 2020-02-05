@@ -23,6 +23,9 @@ class GoodsCate extends Base
         if (request()->isGet()) {
             // 传入的参数
             $param = input('param.');
+            if (isset($param['size'])) { // 每页条数
+                $param['size'] = intval($param['size']);
+            }
 
             // 查询条件
             $map = [];
@@ -31,9 +34,6 @@ class GoodsCate extends Base
             }
             if (isset($param['parent_id']) && $param['parent_id'] != '') { // 上级ID
                 $map['gc.parent_id'] = intval($param['parent_id']);
-            }
-            if (isset($param['size'])) { // 每页条数
-                $param['size'] = intval($param['size']);
             }
 
             // 获取分页page、size
@@ -102,7 +102,7 @@ class GoodsCate extends Base
         // 判断为POST请求
         if(request()->isPost()){
             $data = input('post.');
-            $data['company_id'] = $this->companyUser['id']; // 创建者(平台管理员)ID
+            $data['company_id'] = $this->companyUser['user_id']; // 创建者(平台管理员)ID
 
             // validate验证数据合法性
             $validate = validate('GoodsCate');
@@ -198,7 +198,7 @@ class GoodsCate extends Base
             }
             if (isset($param['audit_status'])) { // 审核状态
                 $data['audit_status'] = input('param.audit_status', null, 'intval');
-                $data['audit_id'] = $this->companyUser['id'];
+                $data['audit_id'] = $this->companyUser['user_id'];
                 $data['audit_time'] = time();
             }
             if (isset($param['is_on_sale'])) { // 是否上架

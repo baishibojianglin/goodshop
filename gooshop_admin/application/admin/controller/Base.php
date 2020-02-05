@@ -51,19 +51,19 @@ class Base extends Common
         }
 
         // 查询用户是否存在或启用
-        $companyUser = model('Companyuser')->loginstatus($companyToken);
+        $companyUser = model('CompanyUser')->loginstatus($companyToken);
         if(!$companyUser || $companyUser['status'] != config('code.status_enable')){
             return false;
         }
 
         // 验证 token 过期时间
         $time = time();
-        if($time - $companyUser['tokentime'] > 3600*24){
+        if($time - $companyUser['token_time'] > 3600*24){
             return false;
         }
 
         // 验证通过，重置过期时间
-        model('Companyuser')->setlogintime($companyToken);
+        model('CompanyUser')->setlogintime($companyToken);
         // 赋值登录用户的基本信息
         $this->companyUser = $companyUser;
         return true;

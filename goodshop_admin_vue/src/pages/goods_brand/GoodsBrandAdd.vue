@@ -119,7 +119,7 @@
 			handleUploadSuccess(response, file, fileList){
 				console.log(file);
 			}
-		},
+		}
 	}
 </script>
 

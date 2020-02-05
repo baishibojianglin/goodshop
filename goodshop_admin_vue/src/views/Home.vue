@@ -110,7 +110,7 @@
 			 * 获取供应商名称
 			 */
 			let account=JSON.parse(localStorage.getItem("company"));
-			this.name=account['name'];
+			this.name=account['user_name'];
 			/**
 			 * 控制窗口高度
 			 */
