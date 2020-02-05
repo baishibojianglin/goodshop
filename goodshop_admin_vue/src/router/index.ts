@@ -2,17 +2,25 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Login from '@/views/Login.vue'
 import Home from '@/views/Home.vue'
+// 供应商管理
 import Companycreate from '@/pages/company/Companycreate.vue'
+// 区域管理
 import Region from '@/pages/region/Region.vue'
 import RegionCity from '@/pages/region/RegionCity.vue'
 import RegionCounty from '@/pages/region/RegionCounty.vue'
 import RegionTown from '@/pages/region/RegionTown.vue'
+// 商品管理·商品类别
 import GoodsCate from '@/pages/goods_cate/GoodsCate.vue'
 import GoodsCateAdd from '@/pages/goods_cate/GoodsCateAdd.vue'
 import GoodsCateEdit from '@/pages/goods_cate/GoodsCateEdit.vue'
+// 商品管理·商品品牌
 import GoodsBrand from '@/pages/goods_brand/GoodsBrand.vue'
 import GoodsBrandAdd from '@/pages/goods_brand/GoodsBrandAdd.vue'
 import GoodsBrandEdit from '@/pages/goods_brand/GoodsBrandEdit.vue'
+// 员工管理·用户组管理
+import AuthGroup from '@/pages/auth_group/AuthGroup.vue'
+// 员工管理·供应商用户
+import CompanyUser from '@/pages/company_user/CompanyUser.vue'
 
 Vue.use(VueRouter)
 
@@ -49,6 +57,9 @@ const routes = [
 			{path: 'goodsbrand', name: 'goodsbrand', component: GoodsBrand}, // 商品品牌
 			{path: 'goodsbrandadd', name: 'goodsbrandadd', component: GoodsBrandAdd}, // 新增商品品牌
 			{path: 'goodsbrandedit', name: 'goodsbrandedit', component: GoodsBrandEdit}, // 编辑商品品牌
+			// 4--员工管理
+			{path: 'auth_group', name: 'auth_group', component: AuthGroup}, // 用户组管理
+			{path: 'company_user', name: 'company_user', component: CompanyUser}, // 供应商用户
 		]
 	}
 ]
