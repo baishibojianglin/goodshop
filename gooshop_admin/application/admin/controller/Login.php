@@ -60,7 +60,7 @@ class Login
         return json($result);         
       }
       //通过验证,生成token
-      $token=md5(uniqid(mt_rand(), true)).mt_rand();
+      $token=md5(uniqid(mt_rand(),true)).mt_rand();
       //将token存入分公司用户表
       $lsittoken=model('Companyuser')->savetoken($list['id'],$token);
       //用aes加密token

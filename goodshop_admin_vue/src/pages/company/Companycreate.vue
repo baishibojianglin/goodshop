@@ -25,10 +25,10 @@
 			 <el-input style="width:350px;"  v-model="ruleForm.phone"></el-input>
 		   </el-form-item>
 
-		   <el-form-item label="法人身份证" prop="url_idcard">
+		   <el-form-item label="法人身份证" prop="url_idcard" class="idcard">
 			   <el-input v-show='false' style="width:350px;"  v-model="ruleForm.url_idcard"></el-input>
-			   <el-upload list-type="picture-card" :action="this.$url+'upload'" :limit="2" :on-success="uploadimage" :on-preview="handlePictureCardPreview" :on-remove="handleRemove" name='image'>
-				     <i class="el-icon-plus"></i>
+			   <el-upload :class="{hide:hideUpload}" list-type="picture-card" :action="this.$url+'upload'" :limit="1" :on-success="returnUrl" :on-preview="handlePictureCardPreview" :on-remove="function (file,fileList) { return handleRemove(file,fileList,1)}" :on-change="function (file,fileList) { return delePlusButton(file,fileList,1)}"  name='image'>
+				     <i class="el-icon-circle-plus-outline" style="font-size: 16px;"> 上传正面照</i>
 			   </el-upload>
 			   <el-dialog :visible.sync="dialogVisible">
 			     <img width="100%" :src="dialogImageUrl" alt="">
@@ -45,7 +45,7 @@
 		   
 		   <el-form-item label="营业执照" prop="license_image">
 			   <el-input v-show='false' style="width:350px;"  v-model="ruleForm.license_image"></el-input>
-			   <el-upload :action="this.$url+'upload'" :limit="1" :on-success="uploadimage" name='image'>
+			   <el-upload :action="this.$url+'upload'" :limit="1" :on-success="returnUrl" name='image'>
 				  <el-button size="medium" type="primary" plain>上传营业执照副本图片</el-button>
 			   </el-upload>
 		   </el-form-item>
@@ -85,8 +85,6 @@
 				   password:'' ,//供应商密码
 	
 				},
-				dialogImageUrl: '',
-				dialogVisible: false,
 				rules: {
 				  name: [
 					{ required: true, message: '请输入供应商名称', trigger: 'blur' }
@@ -116,7 +114,11 @@
 					{ required: true, message: '请设置密码'}					  
 				  ]													  
 				},
-				active: 0  //步骤条
+				dialogImageUrl: '',
+				dialogVisible: false, //放大预览图片
+				active: 0,  //步骤条
+				hideUpload:false, //隐藏图片添加按钮
+
 
 		   }
      },
@@ -156,16 +158,25 @@
 		   * @param {Object} file
 		   * @param {Object} fileList
 		   */
-		  uploadimage(response, file, fileList){
+		  returnUrl(response, file, fileList){	
 			  this.ruleForm.url_idcard=response;
+		  },
+          /**
+		   * 删除图片上传完后的添加按钮
+		   * @param {Object} file
+		   * @param {Object} fileList
+		   * @param {Object} num 允许上传的图片张数
+		   */
+		  delePlusButton(file, fileList,num){
+			  this.hideUpload = fileList.length >= num;
 		  },
 		  /**
 		   * 删除图片
 		   * @param {Object} file
 		   * @param {Object} fileList
 		   */
-		   handleRemove(file, fileList) {
-			  console.log(file, fileList);
+		   handleRemove(file, fileList,num) {
+               this.hideUpload = fileList.length >= num;
 		   },
 		   /**
 			* 放大图片
@@ -185,5 +196,17 @@
 	}
 	.el-upload-list{
 		width: 180px;
+	}
+	.idcard .el-upload-list--picture-card .el-upload-list__item{
+		width: 190px;
+		height: 120px;
+	}
+	.idcard .el-upload--picture-card {
+		width: 190px;
+		height: 120px;
+		line-height: 120px;
+	}
+	.hide .el-upload--picture-card {
+		display: none;
 	}
 </style>
