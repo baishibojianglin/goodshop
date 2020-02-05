@@ -15,6 +15,8 @@ Route::resource('goods_cate', 'admin/goods_cate');
 Route::get('goods_cate_tree', 'admin/goods_cate/goodsCateTree');
 // 商品品牌
 Route::resource('goods_brand', 'admin/goods_brand');
+// 用户组
+Route::resource('auth_group', 'admin/auth_group');
 //test
 Route::POST('test','admin/Login/test');
 
