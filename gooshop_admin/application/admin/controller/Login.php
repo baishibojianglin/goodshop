@@ -88,13 +88,6 @@ class Login
     }
 
 
-    /**
-    *test
-    */
-      public function test()
-      {
-        $a=[1,2,3];
-        return json($a); 
-      }
+
 
 }

@@ -17,6 +17,3 @@ Route::get('goods_cate_tree', 'admin/goods_cate/goodsCateTree');
 Route::resource('goods_brand', 'admin/goods_brand');
 // 用户组
 Route::resource('auth_group', 'admin/auth_group');
-//test
-Route::POST('test','admin/Login/test');
-
