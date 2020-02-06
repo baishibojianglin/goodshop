@@ -1,9 +1,9 @@
 <template>
-	<div class="goods_cate_edit">
+	<div class="auth_group_edit">
 		<el-card class="main-card">
 			<div slot="header" class="clearfix">
 				<el-row :gutter="20" type="flex" justify="space-between">
-					<el-col :span="6"><span>编辑商品类别</span></el-col>
+					<el-col :span="6"><span>编辑用户组</span></el-col>
 					<el-col :span="3">
 						<el-button size="mini" icon="el-icon-back" title="返回" @click="back()">返回</el-button>
 					</el-col>
@@ -12,20 +12,14 @@
 			<div class="">
 				<!-- Form 表单 s -->
 				<el-form ref="ruleForm" :model="form" :rules="rules" label-width="100px" size="small" class="demo-form-inline">
-					<el-form-item label="商品类别" prop="cate_name">
-						<el-input v-model="form.cate_name" placeholder="输入商品类别名称" clearable style="width:350px;"></el-input>
+					<el-form-item prop="title" label="用户组名称">
+						<el-input v-model="form.title" placeholder="输入用户组名称" clearable style="width:350px;"></el-input>
 					</el-form-item>
-					<el-form-item label="上级类别" prop="parent_id">
-						<el-select v-model="form.parent_id" placeholder="请选择…" filterable>
-							<el-option :key="0" label="一级类别" :value="0"></el-option>
-							<el-option
-								v-for="item in options"
-								:key="item.cate_id"
-								:label="item.cate_name"
-								:value="item.cate_id"
-								:disabled="item.disabled">
-							</el-option>
-						</el-select>
+					<el-form-item prop="status" label="状态">
+						<el-radio-group v-model="form.status">
+							<el-radio :label="1">启用</el-radio>
+							<el-radio :label="0">禁用</el-radio>
+						</el-radio-group>
 					</el-form-item>
 					<el-form-item>
 						<el-button type="primary" plain @click="submitForm('ruleForm')">提交</el-button>
@@ -42,80 +36,44 @@
 	export default {
 		data() {
 			return {
-				options: [], // 上级类别下拉框列表，如 [{value: '选项1', label: '黄金糕'}, {…}, …]
 				form: {
-					cate_id: '', // 商品类别ID
-					cate_name: '', // 商品类别名称
-					parent_id: '', // 上级ID
+					id: '', // 用户组ID
+					title: '', // 用户组名称
+					status: '' // 状态
 				},
 				rules: { // 验证规则
-					cate_name: [
-						{ required: true, message: '请输入商品类别名称', trigger: 'blur' },
+					title: [
+						{ required: true, message: '请输入用户组名称', trigger: 'blur' },
 						{ min: 1, max: 20, message: '长度在 1 到 20 个字符', trigger: 'blur' }
-					],
-					parent_id: [
-						{ required: true, message: '请选择上级类别', trigger: 'change' }
 					]
 				}
 			}
 		},
 		created() {
 			this.getParams();
-			this.getGoodsCateTree(); // 获取商品类别列表树
 		},
 		methods: {
 			/**
 			 * 获取路由带过来的参数
 			 */
 			getParams() {
-				this.form.cate_id = this.$route.query.cate_id;
-				this.form.cate_name = this.$route.query.cate_name;
-				this.form.parent_id = this.$route.query.parent_id;
+				this.form.id = this.$route.query.id;
+				this.form.title = this.$route.query.title;
+				this.form.status = this.$route.query.status;
 			},
 			
 			/**
-			 * 获取商品类别列表树
-			 */
-			getGoodsCateTree() {
-				let self = this;
-				this.$axios.get(this.$url + 'goods_cate_tree')
-				.then(function(res) {
-					if (res.data.status == 1) {
-						let options = res.data.data;
-						options.forEach((item, index) => {
-							// 禁用商品分类自身选项
-							if (self.form.cate_id == item.cate_id) {
-								item.disabled = true;
-							}
-						})
-						self.options = options;
-					} else {
-						self.$message({
-							message: '网络忙，请重试',
-							type: 'warning'
-						});
-					}
-				})
-				.catch(function (error) {
-					self.$message({
-						message: error.response.data.message,
-						type: 'warning'
-					});
-				});
-			},
-			
-			/**
-			 * 编辑商品类别提交表单
+			 * 编辑用户组提交表单
 			 * @param {Object} formName
 			 */
 			submitForm(formName) {
 				let self = this;
 				this.$refs[formName].validate((valid) => {
 					if (valid) {
-						this.$axios.put(this.$url + 'goods_cate/' + this.form.cate_id, {
+						this.$axios.put(this.$url + 'auth_group/' + this.form.id, {
 							// 参数
-							cate_name: this.form.cate_name,
-							parent_id: this.form.parent_id
+							title: this.form.title,
+							status: this.form.status
 						}, {
 							// 请求头配置
 							headers: {

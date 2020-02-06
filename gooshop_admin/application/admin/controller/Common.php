@@ -91,6 +91,7 @@ class Common extends Controller
   /**
   *上传图片
   */
+
     public function uploadimg()
     {
         //上传
@@ -119,6 +120,7 @@ class Common extends Controller
         }
 
         //返回图片地址
+
         $data['name']=$object;
         $data['url']=$result['info']['url'];
         return json($data);
@@ -160,9 +162,6 @@ class Common extends Controller
         //return json($result);
 
       }
-
-
-
 
 
 

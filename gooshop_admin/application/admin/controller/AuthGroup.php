@@ -23,7 +23,9 @@ class AuthGroup extends Base
         if (request()->isGet()) {
             // 传入的数据
             $param = input('param.');
-            $query = http_build_query($param); // 生成 URL-encode 之后的请求字符串 //halt($query);
+            if (isset($param['size'])) { // 每页条数
+                $param['size'] = intval($param['size']);
+            }
 
             // 查询条件
             $map = [];
@@ -64,7 +66,7 @@ class AuthGroup extends Base
             }
 
             // 处理数据
-            $data['status'] = isset($data['status']) ? $data['status'] : config('code.status_enable');
+            $data['status'] = isset($data['status']) ? $data['status'] : config('code.status_disable');
             $data['rules'] = isset($data['rules']) ? implode(',', $data['rules'] = [1,2,3,4]) : '';
 
             // 新增
@@ -72,11 +74,11 @@ class AuthGroup extends Base
             try {
                 $id = model('AuthGroup')->add($data, 'id'); // 新增
             } catch (\Exception $e) {
-                throw new ApiException($e->getMessage(), 500, config('code.error'));
+                return show(config('code.error'), '网络忙，请重试', '', 500);
             }
             // 判断是否新增成功：获取id
             if ($id) {
-                return show(config('code.success'), 'id = ' . $id . '的Auth用户组新增成功', [], 201);
+                return show(config('code.success'), '用户组新增成功', [], 201);
             } else {
                 return show(config('code.error'), '用户组新增失败', [], 403);
             }
@@ -96,7 +98,7 @@ class AuthGroup extends Base
             try {
                 $data = model('AuthGroup')->find($id);
             } catch (\Exception $e) {
-                throw new ApiException($e->getMessage(), 500, config('code.error'));
+                return show(config('code.error'), '网络忙，请重试', '', 500);
             }
 
             if ($data) {
@@ -136,8 +138,8 @@ class AuthGroup extends Base
         if (isset($param['status'])) { // 不能用 !empty() ，否则 status = 0 时也判断为空
             $data['status'] = input('param.status', null, 'intval');
         }
-        if (!empty($data['rules'])) {
-            $data['rules'] = implode(',', $data['rules']);
+        if (!empty($param['rules'])) {
+            $data['rules'] = implode(',', $param['rules']);
         }
 
         if (empty($data)) {
@@ -148,7 +150,7 @@ class AuthGroup extends Base
         try {
             $result = model('AuthGroup')->save($data, ['id' => $id]); // 更新
         } catch (\Exception $e) {
-            throw new ApiException($e->getMessage(), 500, config('code.error'));
+            return show(config('code.error'), '网络忙，请重试', '', 500);
         }
         if (false === $result) {
             return show(config('code.error'), '更新失败', [], 403);

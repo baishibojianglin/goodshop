@@ -1,5 +1,5 @@
 <template>
-	<div class="goods_brand_add">
+	<div class="goods_brand_edit">
 		<el-card class="main-card">
 			<div slot="header" class="clearfix">
 				<el-row :gutter="20" type="flex" justify="space-between">
@@ -133,7 +133,7 @@
 			handleUploadSuccess(response, file, fileList){
 				console.log(file);
 			}
-		},
+		}
 	}
 </script>
 

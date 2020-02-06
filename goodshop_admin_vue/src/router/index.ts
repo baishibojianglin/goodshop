@@ -19,6 +19,8 @@ import GoodsBrandAdd from '@/pages/goods_brand/GoodsBrandAdd.vue'
 import GoodsBrandEdit from '@/pages/goods_brand/GoodsBrandEdit.vue'
 // 员工管理·用户组管理
 import AuthGroup from '@/pages/auth_group/AuthGroup.vue'
+import AuthGroupAdd from '@/pages/auth_group/AuthGroupAdd.vue'
+import AuthGroupEdit from '@/pages/auth_group/AuthGroupEdit.vue'
 // 员工管理·供应商用户
 import CompanyUser from '@/pages/company_user/CompanyUser.vue'
 
@@ -59,6 +61,8 @@ const routes = [
 			{path: 'goodsbrandedit', name: 'goodsbrandedit', component: GoodsBrandEdit}, // 编辑商品品牌
 			// 4--员工管理
 			{path: 'auth_group', name: 'auth_group', component: AuthGroup}, // 用户组管理
+			{path: 'auth_group_add', name: 'auth_group_add', component: AuthGroupAdd}, // 新增用户组
+			{path: 'auth_group_edit', name: 'auth_group_edit', component: AuthGroupEdit}, // 编辑用户组
 			{path: 'company_user', name: 'company_user', component: CompanyUser}, // 供应商用户
 		]
 	}
