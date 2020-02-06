@@ -8,6 +8,8 @@ Route::POST('login','admin/Login/login');
 Route::GET('code','admin/Login/createverifycode');
 //上传图片
 Route::POST('upload','admin/Common/uploadimg');
+//删除图片
+Route::POST('deleteimages','admin/Common/deleteimg');
 // 区域
 Route::resource('region', 'admin/region');
 // 商品类别

@@ -90,12 +90,12 @@ class Common extends Controller
 
   /**
   *上传图片
-  *$name string file表单name属性
   */
     public function uploadimg()
     {
         //上传
-        $file = request()->file('image');
+        $data=input();
+        $file = request()->file($data['name']);
         $info=$file->getInfo();
         // 阿里云RAM账号AccessKey
         $accessKeyId = "LTAI4FkCSGwQHirzGvdvWqiG";
@@ -119,9 +119,48 @@ class Common extends Controller
         }
 
         //返回图片地址
-        return $result['info']['url'];
+        $data['name']=$object;
+        $data['url']=$result['info']['url'];
+        return json($data);
 
       }
+
+
+
+  /**
+  *删除图片
+  */
+    public function deleteimg()
+    {
+        //上传
+        $data=input();
+        // 阿里云RAM账号AccessKey
+        $accessKeyId = "LTAI4FkCSGwQHirzGvdvWqiG";
+        $accessKeySecret = "ACpMHxZXPkkl23ont4mQfzjCZKtL3L";
+        // Endpoint以成都为例，其它Region请按实际情况填写。
+        $endpoint = "http://oss-cn-chengdu.aliyuncs.com";
+        // 存储空间名称
+        $bucket = "goodshopimages";
+        // 文件名称
+        $object =$data['name'];
+
+
+        try{
+            $ossClient = new OssClient($accessKeyId, $accessKeySecret, $endpoint);
+
+            $result=$ossClient->deleteObject($bucket, $object);
+        } catch(OssException $e) {
+            printf(__FUNCTION__ . ": FAILED\n");
+            printf($e->getMessage() . "\n");
+            return;
+        }
+        //print(__FUNCTION__ . ": OK" . "\n");
+
+        //返回图片地址
+        //return json($result);
+
+      }
+
 
 
 
