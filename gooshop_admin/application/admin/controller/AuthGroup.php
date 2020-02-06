@@ -138,8 +138,8 @@ class AuthGroup extends Base
         if (isset($param['status'])) { // 不能用 !empty() ，否则 status = 0 时也判断为空
             $data['status'] = input('param.status', null, 'intval');
         }
-        if (!empty($data['rules'])) {
-            $data['rules'] = implode(',', $data['rules']);
+        if (!empty($param['rules'])) {
+            $data['rules'] = implode(',', $param['rules']);
         }
 
         if (empty($data)) {

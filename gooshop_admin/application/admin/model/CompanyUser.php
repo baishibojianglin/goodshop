@@ -41,7 +41,9 @@ class CompanyUser extends Base
     {
         $map['user_id'] = $id;
         $data['token'] = $token;
-        $data['token_time'] = time();
+        $data['token_time'] = time(); // token失效时间
+        $data['login_time'] = time(); // 登录时间
+        $data['login_ip'] = request()->ip(); // 登录IP
         $list = $this->save($data, $map);
         return $list;
     }
