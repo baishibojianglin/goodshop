@@ -7,14 +7,14 @@ use think\Controller;
 use think\Request;
 
 /**
- * admin模块Auth权限认证用户组控制器类
- * Class AuthGroup
+ * admin模块供应商用户控制器类
+ * Class CompanyUser
  * @package app\admin\controller
  */
-class AuthGroup extends Base
+class CompanyUser extends Base
 {
     /**
-     * 显示Auth用户组资源列表
+     * 显示供应商用户资源列表
      * @return \think\response\Json
      */
     public function index()
@@ -29,15 +29,19 @@ class AuthGroup extends Base
 
             // 查询条件
             $map = [];
-            if (!empty($param['title'])) {
-                $map['title'] = ['like', '%' . $param['title'] . '%'];
+            if (!empty($param['user_name'])) {
+                $map['cu.user_name'] = ['like', '%' . $param['user_name'] . '%'];
             }
 
             // 获取分页page、size
             $this->getPageAndSize($param);
 
             // 获取分页列表数据 模式一：基于paginate()自动化分页
-            $data = model('AuthGroup')->getAuthGroup($map, $this->size);
+            try {
+                $data = model('CompanyUser')->getCompanyUser($map, $this->size);
+            } catch (\Exception $e) {
+                return show(config('code.error'), '网络忙，请重试', '', 500); // $e->getMessage()
+            }
             $status = config('code.status');
             foreach ($data as $key => $value) {
                 $data[$key]['status_msg'] = $status[$value['status']];
@@ -49,7 +53,7 @@ class AuthGroup extends Base
     }
 
     /**
-     * 保存新建的Auth用户组资源
+     * 保存新建的供应商用户资源
      * @param Request $request
      * @return \think\response\Json
      * @throws ApiException
@@ -62,7 +66,7 @@ class AuthGroup extends Base
             $data = input('post.');
 
             // validate验证
-            $validate = validate('AuthGroup');
+            $validate = validate('CompanyUser');
             if (!$validate->check($data)) {
                 return show(config('code.error'), $validate->getError(), [], 403);
             }
@@ -74,15 +78,15 @@ class AuthGroup extends Base
             // 新增
             // 捕获异常
             try {
-                $id = model('AuthGroup')->add($data, 'id'); // 新增
+                $id = model('CompanyUser')->add($data, 'user_id'); // 新增
             } catch (\Exception $e) {
                 return show(config('code.error'), '网络忙，请重试', '', 500);
             }
             // 判断是否新增成功：获取id
             if ($id) {
-                return show(config('code.success'), '用户组新增成功', [], 201);
+                return show(config('code.success'), '供应商用户新增成功', [], 201);
             } else {
-                return show(config('code.error'), '用户组新增失败', [], 403);
+                return show(config('code.error'), '供应商用户新增失败', [], 403);
             }
         } else {
             return show(config('code.error'), '请求不合法', '', 400);
@@ -90,7 +94,7 @@ class AuthGroup extends Base
     }
 
     /**
-     * 显示指定的Auth用户组资源
+     * 显示指定的供应商用户资源
      * @param int $id
      * @return \think\response\Json
      * @throws ApiException
@@ -100,7 +104,7 @@ class AuthGroup extends Base
         // 判断为GET请求
         if (request()->isGet()) {
             try {
-                $data = model('AuthGroup')->find($id);
+                $data = model('CompanyUser')->find($id);
             } catch (\Exception $e) {
                 return show(config('code.error'), '网络忙，请重试', '', 500);
             }
@@ -119,7 +123,7 @@ class AuthGroup extends Base
     }
 
     /**
-     * 保存更新的Auth用户组资源
+     * 保存更新的供应商用户资源
      * @param Request $request
      * @param int $id
      * @return \think\response\Json
@@ -131,7 +135,7 @@ class AuthGroup extends Base
         $param = input('param.');
 
         // validate验证
-        $validate = validate('AuthGroup');
+        $validate = validate('CompanyUser');
         if (!$validate->check($param, [], '')) {
             return show(config('code.error'), $validate->getError(), [], 403);
         }
@@ -154,7 +158,7 @@ class AuthGroup extends Base
 
         // 更新
         try {
-            $result = model('AuthGroup')->save($data, ['id' => $id]); // 更新
+            $result = model('CompanyUser')->save($data, ['id' => $id]); // 更新
         } catch (\Exception $e) {
             return show(config('code.error'), '网络忙，请重试', '', 500);
         }
@@ -166,7 +170,7 @@ class AuthGroup extends Base
     }
 
     /**
-     * 删除指定Auth用户组资源
+     * 删除指定供应商用户资源
      * @param int $id
      * @return \think\response\Json
      * @throws ApiException
@@ -175,7 +179,7 @@ class AuthGroup extends Base
     {
         // 显示指定的店鋪比赛场次模板
         try {
-            $data = model('AuthGroup')->find($id);
+            $data = model('CompanyUser')->find($id);
             //return show(config('code.success'), 'ok', $data);
         } catch (\Exception $e) {
             return show(config('code.error'), '网络忙，请重试', '', 500);
@@ -190,7 +194,7 @@ class AuthGroup extends Base
         // 真删除
         if ($data['status'] == config('code.status_disable') && empty($data['rules'])) {
             try {
-                $result = model('AuthGroup')->destroy($id);
+                $result = model('CompanyUser')->destroy($id);
             } catch (\Exception $e) {
                 return show(config('code.error'), '网络忙，请重试', '', 500);
             }
@@ -200,7 +204,7 @@ class AuthGroup extends Base
                 return show(config('code.success'), '删除成功');
             }
         } else {
-            return show(config('code.error'), '删除失败：用户组启用或用户组规则不为空', '', 403);
+            return show(config('code.error'), '删除失败：供应商用户已启用或存在下级用户', '', 403);
         }
     }
 }

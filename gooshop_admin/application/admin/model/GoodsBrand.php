@@ -21,7 +21,7 @@ class GoodsBrand extends Base
     {
         $result = $this->alias('gb')
             ->field($this->_getListField())
-            ->join('__COMPANY_USER__ cu', 'gb.company_id = cu.user_id', 'LEFT') // 创建者
+            ->join('__COMPANY_USER__ cu', 'gb.company_user_id = cu.user_id', 'LEFT') // 创建者
             ->where($map)->cache(true, 10)->paginate($size);
         return $result;
     }
@@ -36,7 +36,7 @@ class GoodsBrand extends Base
             'gb.brand_id',
             'gb.brand_name',
             'gb.logo',
-            'gb.company_id',
+            'gb.company_user_id',
             'gb.create_time',
             'gb.audit_id',
             'gb.audit_status',

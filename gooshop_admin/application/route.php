@@ -19,3 +19,5 @@ Route::get('goods_cate_tree', 'admin/goods_cate/goodsCateTree');
 Route::resource('goods_brand', 'admin/goods_brand');
 // 用户组
 Route::resource('auth_group', 'admin/auth_group');
+// 供应商用户
+Route::resource('company_user', 'admin/company_user');

@@ -69,4 +69,51 @@ class CompanyUser extends Base
         $data['token_time'] = time();
         $list = $this->save($data, $map);
     }
+
+    /**
+     * 获取供应商用户列表数据（基于paginate()自动化分页）
+     * @param array $map
+     * @param int $size
+     * @return \think\Paginator
+     */
+    public function getCompanyUser($map = [], $size = 5)
+    {
+        if(!isset($map['cu.is_delete'])) {
+            $map['cu.is_delete'] = ['neq', config('code.is_delete')];
+        }
+
+        $result = $this->alias('cu')
+            ->field($this->_getListField())
+            ->join('__COMPANY_USER__ pcu', 'cu.parent_id = pcu.user_id', 'LEFT') // 供应商
+            ->join('__COMPANYUSER__ c', 'cu.company_id = c.id', 'LEFT') // 供应商
+            ->where($map)
+            ->cache(true, 10)
+            ->paginate($size);
+        return $result;
+    }
+
+    /**
+     * 通用化获取参数的数据字段
+     * @return array
+     */
+    private function _getListField()
+    {
+        return [
+            'cu.user_id',
+            'cu.company_id',
+            'cu.parent_id',
+            'cu.user_name',
+            'cu.account',
+            'cu.phone',
+            'cu.avatar',
+            'cu.status',
+            'cu.create_time',
+            'cu.create_ip',
+            'cu.login_time',
+            'cu.login_ip',
+            'pcu.user_name parent_name',
+            'c.name company_name',
+            'c.account company_account'
+        ];
+    }
 }

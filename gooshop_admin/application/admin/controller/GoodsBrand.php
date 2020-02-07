@@ -73,7 +73,7 @@ class GoodsBrand extends Base
         // 判断为POST请求
         if(request()->isPost()){
             $data = input('post.');
-            $data['company_id'] = $this->companyUser['user_id']; // 创建者(供应商)ID
+            $data['company_user_id'] = $this->companyUser['user_id']; // 创建者(供应商)ID
 
             // validate验证数据合法性
             $validate = validate('GoodsBrand');
