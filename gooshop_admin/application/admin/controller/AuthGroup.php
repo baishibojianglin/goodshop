@@ -173,22 +173,38 @@ class AuthGroup extends Base
      */
     public function delete($id)
     {
-        // 显示指定的店鋪比赛场次模板
-        try {
-            $data = model('AuthGroup')->find($id);
-            //return show(config('code.success'), 'ok', $data);
-        } catch (\Exception $e) {
-            return show(config('code.error'), '网络忙，请重试', '', 500);
-            //throw new ApiException($e->getMessage(), 500, config('code.error'));
-        }
+        // 判断为DELETE请求
+        if (request()->isDelete()) {
+            // 获取指定的用户组
+            try {
+                $data = model('AuthGroup')->find($id);
+                //return show(config('code.success'), 'ok', $data);
+            } catch (\Exception $e) {
+                return show(config('code.error'), '网络忙，请重试', '', 500);
+                //throw new ApiException($e->getMessage(), 500, config('code.error'));
+            }
 
-        // 判断数据是否存在
-        if ($data['id'] != $id) {
-            return show(config('code.error'), '数据不存在', '', 404);
-        }
+            // 判断数据是否存在
+            if ($data['id'] != $id) {
+                return show(config('code.error'), '数据不存在', '', 404);
+            }
 
-        // 真删除
-        if ($data['status'] == config('code.status_disable') && empty($data['rules'])) {
+            // 判断删除条件
+            // 判断是否存在下级用户组
+            $authGroupList = model('AuthGroup')->where(['parent_id' => $id])->select();
+            if (!empty($authGroupList)) {
+                return show(config('code.error'), '删除失败：存在下级用户组', '', 403);
+            }
+            // 判断用户组状态
+            if ($data['status'] == config('code.status_enable')) { // 启用
+                return show(config('code.error'), '删除失败：用户组已启用', '', 403);
+            }
+            // 判断用户组规则是否为空
+            if (!empty($data['rules'])) {
+                return show(config('code.error'), '删除失败：用户组规则不为空', '', 403);
+            }
+
+            // 真删除
             try {
                 $result = model('AuthGroup')->destroy($id);
             } catch (\Exception $e) {
@@ -200,7 +216,7 @@ class AuthGroup extends Base
                 return show(config('code.success'), '删除成功');
             }
         } else {
-            return show(config('code.error'), '删除失败：用户组启用或用户组规则不为空', '', 403);
+            return show(config('code.error'), '请求不合法', '', 400);
         }
     }
 }

@@ -23,6 +23,8 @@ import AuthGroupAdd from '@/pages/auth_group/AuthGroupAdd.vue'
 import AuthGroupEdit from '@/pages/auth_group/AuthGroupEdit.vue'
 // 员工管理·供应商用户
 import CompanyUser from '@/pages/company_user/CompanyUser.vue'
+import CompanyUserAdd from '@/pages/company_user/CompanyUserAdd.vue'
+import CompanyUserEdit from '@/pages/company_user/CompanyUserEdit.vue'
 
 Vue.use(VueRouter)
 
@@ -64,6 +66,8 @@ const routes = [
 			{path: 'auth_group_add', name: 'auth_group_add', component: AuthGroupAdd}, // 新增用户组
 			{path: 'auth_group_edit', name: 'auth_group_edit', component: AuthGroupEdit}, // 编辑用户组
 			{path: 'company_user', name: 'company_user', component: CompanyUser}, // 供应商用户
+			{path: 'company_user_add', name: 'company_user_add', component: CompanyUserAdd}, // 新增供应商用户
+			{path: 'company_user_edit', name: 'company_user_edit', component: CompanyUserEdit}, // 编辑供应商用户
 		]
 	}
 ]

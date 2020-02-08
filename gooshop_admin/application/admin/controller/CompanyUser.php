@@ -44,7 +44,8 @@ class CompanyUser extends Base
             }
             $status = config('code.status');
             foreach ($data as $key => $value) {
-                $data[$key]['status_msg'] = $status[$value['status']];
+                $data[$key]['status_msg'] = $status[$value['status']]; // 定义状态信息
+                $data[$key]['login_time'] = $value['login_time'] ? date('Y-m-d H:i:s', $value['login_time']) : ''; // 登录时间
             }
             return show(config('code.success'), 'OK', $data);
         } else {
@@ -73,7 +74,6 @@ class CompanyUser extends Base
 
             // 处理数据
             $data['status'] = isset($data['status']) ? $data['status'] : config('code.status_disable');
-            $data['rules'] = isset($data['rules']) ? implode(',', $data['rules'] = [1,2,3,4]) : '';
 
             // 新增
             // 捕获异常
@@ -148,9 +148,6 @@ class CompanyUser extends Base
         if (isset($param['status'])) { // 不能用 !empty() ，否则 status = 0 时也判断为空
             $data['status'] = input('param.status', null, 'intval');
         }
-        if (!empty($param['rules'])) {
-            $data['rules'] = implode(',', $param['rules']);
-        }
 
         if (empty($data)) {
             return show(config('code.error'), '数据不合法', [], 404);
@@ -158,7 +155,7 @@ class CompanyUser extends Base
 
         // 更新
         try {
-            $result = model('CompanyUser')->save($data, ['id' => $id]); // 更新
+            $result = model('CompanyUser')->save($data, ['user_id' => $id]); // 更新
         } catch (\Exception $e) {
             return show(config('code.error'), '网络忙，请重试', '', 500);
         }
@@ -177,22 +174,34 @@ class CompanyUser extends Base
      */
     public function delete($id)
     {
-        // 显示指定的店鋪比赛场次模板
-        try {
-            $data = model('CompanyUser')->find($id);
-            //return show(config('code.success'), 'ok', $data);
-        } catch (\Exception $e) {
-            return show(config('code.error'), '网络忙，请重试', '', 500);
-            //throw new ApiException($e->getMessage(), 500, config('code.error'));
-        }
+        // 判断为DELETE请求
+        if (request()->isDelete()) {
+            // 显示指定的店鋪比赛场次模板
+            try {
+                $data = model('CompanyUser')->find($id);
+                //return show(config('code.success'), 'ok', $data);
+            } catch (\Exception $e) {
+                return show(config('code.error'), '网络忙，请重试', '', 500);
+                //throw new ApiException($e->getMessage(), 500, config('code.error'));
+            }
 
-        // 判断数据是否存在
-        if ($data['id'] != $id) {
-            return show(config('code.error'), '数据不存在', '', 404);
-        }
+            // 判断数据是否存在
+            if ($data['user_id'] != $id) {
+                return show(config('code.error'), '数据不存在', '', 404);
+            }
 
-        // 真删除
-        if ($data['status'] == config('code.status_disable') && empty($data['rules'])) {
+            // 判断删除条件
+            // 判断是否存在下级供应商用户
+            $companyUserList = model('CompanyUser')->where(['parent_id' => $id])->select();
+            if (!empty($companyUserList)) {
+                return show(config('code.error'), '删除失败：存在下级供应商用户', '', 403);
+            }
+            // 判断供应商用户状态
+            if ($data['status'] == config('code.status_enable')) { // 启用
+                return show(config('code.error'), '删除失败：供应商用户已启用', '', 403);
+            }
+
+            // 真删除
             try {
                 $result = model('CompanyUser')->destroy($id);
             } catch (\Exception $e) {
@@ -204,7 +213,7 @@ class CompanyUser extends Base
                 return show(config('code.success'), '删除成功');
             }
         } else {
-            return show(config('code.error'), '删除失败：供应商用户已启用或存在下级用户', '', 403);
+            return show(config('code.error'), '请求不合法', '', 400);
         }
     }
 }

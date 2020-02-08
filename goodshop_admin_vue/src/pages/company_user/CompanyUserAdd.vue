@@ -1,0 +1,127 @@
+<template>
+	<div class="company_user_add">
+		<el-card class="main-card">
+			<div slot="header" class="clearfix">
+				<el-row :gutter="20" type="flex" justify="space-between">
+					<el-col :span="6"><span>新增供应商用户</span></el-col>
+					<el-col :span="3">
+						<el-button size="mini" icon="el-icon-back" title="返回" @click="back()">返回</el-button>
+					</el-col>
+				</el-row>
+			</div>
+			<div class="">
+				<!-- Form 表单 s -->
+				<el-form ref="ruleForm" :model="form" :rules="rules" label-width="100px" size="small" class="demo-form-inline">
+					<el-form-item prop="user_name" label="供应商用户名称">
+						<el-input v-model="form.user_name" placeholder="输入供应商用户名称" clearable style="width:350px;"></el-input>
+					</el-form-item>
+					<el-form-item prop="avatar" label="证件照(头像)">
+						<el-input v-model="form.avatar" v-show="false" style="width:350px;"></el-input>
+						<el-upload :action="this.$url+'upload'" name="avatar" :on-success="handleUploadSuccess" :limit="1">
+						<el-button size="medium" type="primary" plain icon="el-icon-upload">上传证件照</el-button>
+						</el-upload>
+					</el-form-item>
+					<el-form-item>
+						<el-button type="primary" plain @click="submitForm('ruleForm')">提交</el-button>
+						<el-button plain @click="resetForm('ruleForm')">重置</el-button>
+					</el-form-item>
+				</el-form>
+				<!-- Form 表单 e -->
+			</div>
+		</el-card>
+	</div>
+</template>
+
+<script>
+	export default {
+		data() {
+			return {
+				form: {
+					user_name: '', // 供应商用户名称
+					avatar: '', // 供应商用户证件照
+				},
+				rules: { // 验证规则
+					user_name: [
+						{ required: true, message: '请输入供应商用户名称', trigger: 'blur' },
+						{ min: 2, max: 20, message: '长度在 2 到 20 个字符', trigger: 'blur' }
+					],
+					/* avatar: [
+						{ required: true, message: '请上传供应商用户证件照', trigger: 'blur' }
+					] */
+				}
+			}
+		},
+		methods: {
+			/**
+			 * 新增供应商用户提交表单
+			 * @param {Object} formName
+			 */
+			submitForm(formName) {
+				let self = this;
+				this.$refs[formName].validate((valid) => {
+					if (valid) {
+						this.$axios.post(this.$url + 'company_user', {
+							// 参数
+							user_name: this.form.user_name,
+							avatar: this.form.avatar
+						}, {
+							// 请求头配置
+							headers: {
+								'company-id': JSON.parse(localStorage.getItem('company')).id,
+								'company-token': JSON.parse(localStorage.getItem('company')).token
+							}
+						})
+						.then(function(res) {
+							let type = res.data.status == 1 ? 'success' : 'warning';
+							self.$message({
+								message: res.data.message,
+								type: type
+							});
+							self.$router.go(-1); // 返回上一页
+						})
+						.catch(function (error) {
+							self.$message({
+								message: error.response.data.message,
+								type: 'warning'
+							});
+						});
+					} else {
+						self.$message({
+							message: 'error submit!!',
+							type: 'warning',
+						});
+						return false;
+					}
+				});
+			},
+			
+			/**
+			 * 重置表单
+			 * @param {Object} formName
+			 */
+			resetForm(formName) {
+				this.$refs[formName].resetFields();
+			},
+			
+			/**
+			 * 返回上一页
+			 */
+			back(){
+				this.$router.go(-1);
+			},
+			
+			/**
+			 * 文件上传成功时的钩子
+			 * @param {Object} response
+			 * @param {Object} file
+			 * @param {Object} fileList
+			 */
+			handleUploadSuccess(response, file, fileList){
+				console.log(file);
+			}
+		}
+	}
+</script>
+
+<style>
+</style>

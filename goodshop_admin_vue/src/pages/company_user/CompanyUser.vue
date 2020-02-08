@@ -41,6 +41,8 @@
 							<el-tag :type="scope.row.status === 0 ? 'info' : (scope.row.status === 1 ? 'success' : 'danger')" size="mini">{{scope.row.status_msg}}</el-tag>
 						</template>
 					</el-table-column>
+					<el-table-column prop="login_time" label="登录时间" width="180"></el-table-column>
+					<el-table-column prop="login_ip" label="登录IP" width="180"></el-table-column>
 					<el-table-column label="操作" fixed="right" min-width="90">
 						<template slot-scope="scope">
 							<el-button type="primary" size="mini" plain @click="toCompanyUserEdit(scope.row)">编辑</el-button>
