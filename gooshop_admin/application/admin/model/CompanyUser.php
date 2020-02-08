@@ -84,7 +84,7 @@ class CompanyUser extends Base
 
         $result = $this->alias('cu')
             ->field($this->_getListField())
-            ->join('__COMPANY_USER__ pcu', 'cu.parent_id = pcu.user_id', 'LEFT') // 供应商
+            ->join('__COMPANY_USER__ pcu', 'cu.parent_id = pcu.user_id', 'LEFT') // 上级
             ->join('__COMPANYUSER__ c', 'cu.company_id = c.id', 'LEFT') // 供应商
             ->where($map)
             ->cache(true, 10)
