@@ -21,3 +21,6 @@ Route::resource('goods_brand', 'admin/goods_brand');
 Route::resource('auth_group', 'admin/auth_group');
 // 供应商用户
 Route::resource('company_user', 'admin/company_user');
+//创建供应商
+Route::POST('createCompany','admin/Company/submitCompany');
+

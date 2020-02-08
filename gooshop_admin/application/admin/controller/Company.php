@@ -5,10 +5,12 @@ use think\Request;
 
 class Company
 {
-
-	public function test(){
-		$header=request()->header();
-		return json($header);
+   /**
+   *创建供应商
+   */
+	public function submitCompany(){
+		$form=input();
+		return json($form['data']);
 	}
 
 

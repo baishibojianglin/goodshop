@@ -80,15 +80,15 @@
      data() {
 		   return {
 				ruleForm: {
-				   name: '', //供应商名字
-				   address:'', //供应商地址
-				   phone:'', //供应商联系电话
-			       url_idcard:'', //身份证正面图片地址
-				   legalperson_name:'', //法人姓名
-				   legalperson_idcard_code:'', //法人身份证号码
-				   url_license:'', //营业执照图片地址
-				   license_creditcode:'', //营业执照社会统一信用码
-				   password:'' ,//供应商密码
+				   name: '1', //供应商名字
+				   address:'1', //供应商地址
+				   phone:'1', //供应商联系电话
+			       url_idcard:'1', //身份证正面图片地址
+				   legalperson_name:'1', //法人姓名
+				   legalperson_idcard_code:'1', //法人身份证号码
+				   url_license:'1', //营业执照图片地址
+				   license_creditcode:'1', //营业执照社会统一信用码
+				   password:'1' ,//供应商密码
 	
 				},
 				rules: {
@@ -137,11 +137,13 @@
 		  submitForm(formName) {
 			this.$refs[formName].validate((valid) => {
 			  if (valid) {
-				alert('submit!');
-
+				this.$axios.post(this.$url+'createCompany',{
+				   data:this.ruleForm
+				}).then(function(res){	
+                   console.log(res.data)
+				})                
 				this.next();
 			  }else {
-				this.next();
 				return false;
 			  }
 			});
