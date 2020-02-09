@@ -8,7 +8,7 @@ use think\Model;
  * Class Company
  * @package app\admin\model
  */
-class Company
+class Company extends Base
 {
     /**
      * 表前缀
@@ -17,7 +17,8 @@ class Company
 
     /**
      * 创建供应商
-     * @param {object} 
+     * @param {object}
+     * @return array|false|\PDOStatement|string|Model
      */
     public function checklogin($account, $password)
     {
