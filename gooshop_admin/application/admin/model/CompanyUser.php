@@ -82,11 +82,14 @@ class CompanyUser extends Base
             $map['cu.is_delete'] = ['neq', config('code.is_delete')];
         }
 
+        $order = ['cu.user_id' => 'asc'];
+
         $result = $this->alias('cu')
             ->field($this->_getListField())
             ->join('__COMPANY_USER__ pcu', 'cu.parent_id = pcu.user_id', 'LEFT') // 上级
-            ->join('__COMPANYUSER__ c', 'cu.company_id = c.id', 'LEFT') // 供应商
+            ->join('__COMPANY__ c', 'cu.company_id = c.id', 'LEFT') // 供应商
             ->where($map)
+            ->order($order)
             ->cache(true, 10)
             ->paginate($size);
         return $result;
@@ -112,8 +115,7 @@ class CompanyUser extends Base
             'cu.login_time',
             'cu.login_ip',
             'pcu.user_name parent_name',
-            'c.name company_name',
-            'c.account company_account'
+            'c.name company_name'
         ];
     }
 }

@@ -138,8 +138,8 @@
 						size: this.listPagination.per_page
 					},
 					headers: {
-						'company-id': JSON.parse(localStorage.getItem('company')).id,
-						'company-token': JSON.parse(localStorage.getItem('company')).token
+						'company-user-id': JSON.parse(localStorage.getItem('company')).user_id,
+						'company-user-token': JSON.parse(localStorage.getItem('company')).token
 					}
 				})
 				.then(function(res) {
@@ -264,8 +264,8 @@
 						}, {
 							// 请求头配置
 							headers: {
-									'company-id': JSON.parse(localStorage.getItem('company')).id,
-									'company-token': JSON.parse(localStorage.getItem('company')).token
+									'company-user-id': JSON.parse(localStorage.getItem('company')).user_id,
+									'company-user-token': JSON.parse(localStorage.getItem('company')).token
 							}
 						})
 						.then(function(res) {
@@ -360,8 +360,8 @@
 				}, {
 					// 请求头配置
 					headers: {
-						'company-id': JSON.parse(localStorage.getItem('company')).id,
-						'company-token': JSON.parse(localStorage.getItem('company')).token
+						'company-user-id': JSON.parse(localStorage.getItem('company')).user_id,
+						'company-user-token': JSON.parse(localStorage.getItem('company')).token
 					}
 				})
 				.then(function(res) {
