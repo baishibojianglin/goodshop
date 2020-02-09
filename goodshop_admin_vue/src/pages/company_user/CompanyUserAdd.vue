@@ -21,6 +21,15 @@
 						<el-button size="medium" type="primary" plain icon="el-icon-upload">上传证件照</el-button>
 						</el-upload>
 					</el-form-item>
+					<el-form-item prop="account" label="供应商用户账号">
+						<el-input v-model="form.account" placeholder="输入供应商用户账号" clearable style="width:350px;"></el-input>
+					</el-form-item>
+					<el-form-item prop="phone" label="电话号码">
+						<el-input v-model="form.phone" placeholder="输入供应商用户电话号码" clearable style="width:350px;"></el-input>
+					</el-form-item>
+					<el-form-item prop="ratio" label="提成比例">
+						<el-input v-model="form.ratio" placeholder="输入供应商用户提成比例" clearable style="width:350px;"></el-input>
+					</el-form-item>
 					<el-form-item>
 						<el-button type="primary" plain @click="submitForm('ruleForm')">提交</el-button>
 						<el-button plain @click="resetForm('ruleForm')">重置</el-button>
@@ -39,10 +48,17 @@
 				form: {
 					user_name: '', // 供应商用户名称
 					avatar: '', // 供应商用户证件照
+					account: '', // 供应商用户账号
+					phone: '', // 电话号码
+					ratio: '', // 提成比例
 				},
 				rules: { // 验证规则
 					user_name: [
 						{ required: true, message: '请输入供应商用户名称', trigger: 'blur' },
+						{ min: 2, max: 20, message: '长度在 2 到 20 个字符', trigger: 'blur' }
+					],
+					account: [
+						{ required: true, message: '请输入供应商用户账号', trigger: 'blur' },
 						{ min: 2, max: 20, message: '长度在 2 到 20 个字符', trigger: 'blur' }
 					],
 					/* avatar: [
@@ -63,12 +79,15 @@
 						this.$axios.post(this.$url + 'company_user', {
 							// 参数
 							user_name: this.form.user_name,
-							avatar: this.form.avatar
+							avatar: this.form.avatar,
+							account: this.form.account,
+							phone: this.form.phone,
+							ratio: this.form.ratio
 						}, {
 							// 请求头配置
 							headers: {
-								'company-id': JSON.parse(localStorage.getItem('company')).id,
-								'company-token': JSON.parse(localStorage.getItem('company')).token
+								'company-user-id': JSON.parse(localStorage.getItem('company')).user_id,
+								'company-user-token': JSON.parse(localStorage.getItem('company')).token
 							}
 						})
 						.then(function(res) {

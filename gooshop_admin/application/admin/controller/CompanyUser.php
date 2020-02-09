@@ -69,11 +69,12 @@ class CompanyUser extends Base
             // validate验证
             $validate = validate('CompanyUser');
             if (!$validate->check($data)) {
-                return show(config('code.error'), $validate->getError(), [], 403);
+                return show(config('code.error'), $validate->getError(), '', 403);
             }
 
             // 处理数据
             $data['status'] = isset($data['status']) ? $data['status'] : config('code.status_disable');
+            $data['create_ip'] = request()->ip(); // 创建IP
 
             // 新增
             // 捕获异常
@@ -84,9 +85,9 @@ class CompanyUser extends Base
             }
             // 判断是否新增成功：获取id
             if ($id) {
-                return show(config('code.success'), '供应商用户新增成功', [], 201);
+                return show(config('code.success'), '供应商用户新增成功', '', 201);
             } else {
-                return show(config('code.error'), '供应商用户新增失败', [], 403);
+                return show(config('code.error'), '供应商用户新增失败', '', 403);
             }
         } else {
             return show(config('code.error'), '请求不合法', '', 400);
@@ -131,38 +132,73 @@ class CompanyUser extends Base
      */
     public function update(Request $request, $id)
     {
+        // 判断为PUT请求
+        if (!request()->isPut()) {
+            return show(config('code.error'), '请求不合法', '', 400);
+        }
+
         // 传入的数据
         $param = input('param.');
 
         // validate验证
         $validate = validate('CompanyUser');
-        if (!$validate->check($param, [], '')) {
-            return show(config('code.error'), $validate->getError(), [], 403);
+        if (!$validate->check($param, [], 'update')) {
+            return show(config('code.error'), $validate->getError(), '', 403);
         }
 
         // 判断数据是否存在
         $data = [];
-        if (!empty($param['title'])) {
-            $data['title'] = $param['title'];
+        if (!empty($param['user_name'])) { // 供应商用户名称
+            $data['user_name'] = trim($param['user_name']);
+
+            // 忽略唯一(unique)类型字段user_name对自身数据的唯一性验证
+            $_data = model('CompanyUser')->where(['user_id' => ['neq', $id], 'user_name' => $data['user_name']])->find();
+            if ($_data) {
+                return show(config('code.error'), '供应商用户名称已存在', '', 403);
+            }
         }
-        if (isset($param['status'])) { // 不能用 !empty() ，否则 status = 0 时也判断为空
+        if (!empty($param['avatar'])) {  // 供应商用户证件照
+            $data['avatar'] = trim($param['avatar']);
+        }
+        if (!empty($param['account'])) { // 供应商用户账号
+            $data['account'] = trim($param['account']);
+
+            // 忽略唯一(unique)类型字段account对自身数据的唯一性验证
+            $_data = model('CompanyUser')->where(['user_id' => ['neq', $id], 'account' => $data['account']])->find();
+            if ($_data) {
+                return show(config('code.error'), '供应商用户账号已存在', '', 403);
+            }
+        }
+        if (!empty($param['phone'])) { // 电话号码
+            $data['phone'] = trim($param['phone']);
+
+            // 忽略唯一(unique)类型字段phone对自身数据的唯一性验证
+            $_data = model('CompanyUser')->where(['user_id' => ['neq', $id], 'phone' => $data['phone']])->find();
+            if ($_data) {
+                return show(config('code.error'), '供应商用户电话号码已存在', '', 403);
+            }
+        }
+        if (isset($param['ratio'])) { // 提成比例
+            $data['ratio'] = trim($param['ratio']);
+        }
+        if (isset($param['status'])) { // 状态，不能用 !empty() ，否则 status = 0 时也判断为空
             $data['status'] = input('param.status', null, 'intval');
         }
 
         if (empty($data)) {
-            return show(config('code.error'), '数据不合法', [], 404);
+            return show(config('code.error'), '数据不合法', '', 404);
         }
 
-        // 更新
+        // 更新'网络忙，请重试'
         try {
-            $result = model('CompanyUser')->save($data, ['user_id' => $id]); // 更新
+            $result = model('CompanyUser')->allowField(true)->save($data, ['user_id' => $id]); // 更新
         } catch (\Exception $e) {
             return show(config('code.error'), '网络忙，请重试', '', 500);
         }
         if (false === $result) {
-            return show(config('code.error'), '更新失败', [], 403);
+            return show(config('code.error'), '更新失败', '', 403);
         } else {
-            return show(config('code.success'), '更新成功', [], 201);
+            return show(config('code.success'), '更新成功', '', 201);
         }
     }
 
