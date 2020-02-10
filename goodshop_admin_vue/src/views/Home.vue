@@ -47,13 +47,13 @@
 							</el-collapse-transition>
 							
 							<dt @click="menush(4)">
-								<span class="el-icon-user-solid" id="menu4"> 员工管理</span>
+								<span class="el-icon-user-solid" id="menu4"> 账户管理</span>
 								<span class="fr derection" :class="menuvalue[4]?derectionup:derectiondown"></span>
 							</dt>
 							<el-collapse-transition>
 								<div v-show="menuvalue[4]">
-									<router-link to="/home/auth_group"><dd id='menu41' :class="activevalue[41]?activeclass:''"  @click="menuactive(41,4,1)">用户组管理</dd></router-link>
-									<router-link to="/home/company_user"><dd id='menu42' :class="activevalue[42]?activeclass:''"  @click="menuactive(42,4,2)">供应商用户</dd></router-link>
+									<router-link to="/home/auth_group"><dd id='menu41' :class="activevalue[41]?activeclass:''"  @click="menuactive(41,4,1)">角色管理</dd></router-link>
+									<router-link to="/home/company_user"><dd id='menu42' :class="activevalue[42]?activeclass:''"  @click="menuactive(42,4,2)">供应商账户</dd></router-link>
 								</div>
 							</el-collapse-transition>
 						</dl>

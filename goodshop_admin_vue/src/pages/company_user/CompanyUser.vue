@@ -3,12 +3,12 @@
 		<el-card class="main-card">
 			<div slot="header" class="clearfix">
 				<el-row :gutter="20" type="flex" justify="space-between">
-					<el-col :span="6"><span>供应商用户</span></el-col>
+					<el-col :span="6"><span>供应商账户</span></el-col>
 					<el-col :span="6">
 						<!-- 查询 s -->
 						<el-form :inline="true" :model="formInline" size="mini" class="demo-form-inline">
 							<el-form-item label="">
-								<el-input placeholder="查询供应商用户" v-model="formInline.user_name" clearable>
+								<el-input placeholder="查询供应商账户" v-model="formInline.user_name" clearable>
 									<el-button slot="append" icon="el-icon-search" @click="getCompanyUserList()"></el-button>
 								</el-input>
 							</el-form-item>
@@ -17,22 +17,22 @@
 					</el-col>
 					<el-col :span="12">
 						<!-- 新增 s -->
-						<router-link to="company_user_add"><el-button size="mini" icon="el-icon-plus">新增供应商用户</el-button></router-link>
+						<router-link to="company_user_add"><el-button size="mini" icon="el-icon-plus">新增供应商账户</el-button></router-link>
 						<!-- 新增 e -->
 					</el-col>
 				</el-row>
 			</div>
 			<div class="">
-				<!-- 供应商用户列表 s -->
+				<!-- 供应商账户列表 s -->
 				<el-table :data="companyUserList" border style="width: 100%">
 					<el-table-column type="index" label="ID" fixed width="90"></el-table-column>
-					<el-table-column prop="user_name" label="供应商用户名称" fixed min-width="180"></el-table-column>
+					<el-table-column prop="user_name" label="供应商账户名称" fixed min-width="180"></el-table-column>
 					<el-table-column prop="avatar" label="头像" width="180">
 						<template slot-scope="scope">
 							<img :src="scope.row.avatar" :alt="scope.row.user_name" :title="scope.row.user_name" width="50" height="50" />
 						</template>
 					</el-table-column>
-					<el-table-column prop="account" label="供应商用户账号" width="180"></el-table-column>
+					<el-table-column prop="account" label="供应商账户账号" width="180"></el-table-column>
 					<el-table-column prop="parent_name" label="上级" width="180"></el-table-column>
 					<el-table-column prop="company_name" label="供应商名称" width="180"></el-table-column>
 					<el-table-column prop="phone" label="电话号码" width="180"></el-table-column>
@@ -50,7 +50,7 @@
 						</template>
 					</el-table-column>
 				</el-table>
-				<!-- 供应商用户列表 e -->
+				<!-- 供应商账户列表 e -->
 				
 				<!-- 分页 s -->
 				<div>
@@ -76,18 +76,18 @@
 		data() {
 			return {
 				formInline: {
-					user_name: '' // 供应商用户名称
+					user_name: '' // 供应商账户名称
 				},
-				companyUserList: [], // 供应商用户列表
+				companyUserList: [], // 供应商账户列表
 				listPagination: {} // 列表分页参数
 			}
 		},
 		mounted() {
-			this.getCompanyUserList(); // 获取供应商用户列表
+			this.getCompanyUserList(); // 获取供应商账户列表
 		},
 		methods: {
 			/**
-			 * 获取供应商用户列表
+			 * 获取供应商账户列表
 			 */
 			getCompanyUserList() {
 				let self = this;
@@ -104,7 +104,7 @@
 				})
 				.then(function(res) {
 					if (res.data.status == 1) {
-						// 供应商用户列表分页参数
+						// 供应商账户列表分页参数
 						self.listPagination = res.data.data;
 						
 						// 当数据为空时
@@ -116,7 +116,7 @@
 							return;
 						}
 						
-						// 供应商用户列表
+						// 供应商账户列表
 						self.companyUserList = self.listPagination.data;
 					} else {
 						self.$message({
@@ -152,7 +152,7 @@
 			},
 			
 			/**
-			 * 筛选供应商用户状态
+			 * 筛选供应商账户状态
 			 * @param {Object} value
 			 * @param {Object} row
 			 */
@@ -161,7 +161,7 @@
 			},
 			
 			/**
-			 * 跳转供应商用户编辑页
+			 * 跳转供应商账户编辑页
 			 * @param {Object} row
 			 */
 			toCompanyUserEdit(row) {
@@ -169,11 +169,11 @@
 			},
 			
 			/**
-			 * 删除供应商用户
+			 * 删除供应商账户
 			 * @param {Object} scope
 			 */
 			deleteCompanyUser(scope) {
-				this.$confirm('此操作将永久删除该供应商用户, 是否继续?', '删除', {
+				this.$confirm('此操作将永久删除该供应商账户, 是否继续?', '删除', {
 					confirmButtonText: '确定',
 					cancelButtonText: '取消',
 					type: 'warning'

@@ -23,9 +23,11 @@ class AuthGroup extends Base
             $map['is_delete'] = ['neq', config('code.is_delete')];
         }*/
 
-        $order = ['id' => 'asc'];
+        $order = ['ag.id' => 'asc'];
 
-        $result = $this->field(true)
+        $result = $this->alias('ag')
+            ->field('ag.*, pag.title parent_title')
+            ->join('__AUTH_GROUP__ pag', 'ag.parent_id = pag.id', 'LEFT')
             ->where($map)
             ->order($order)
             ->paginate($size);

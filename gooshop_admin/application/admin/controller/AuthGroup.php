@@ -30,7 +30,7 @@ class AuthGroup extends Base
             // 查询条件
             $map = [];
             if (!empty($param['title'])) {
-                $map['title'] = ['like', '%' . $param['title'] . '%'];
+                $map['ag.title'] = ['like', '%' . $param['title'] . '%'];
             }
 
             // 获取分页page、size

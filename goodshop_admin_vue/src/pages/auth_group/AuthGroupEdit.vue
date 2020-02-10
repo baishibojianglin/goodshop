@@ -3,7 +3,7 @@
 		<el-card class="main-card">
 			<div slot="header" class="clearfix">
 				<el-row :gutter="20" type="flex" justify="space-between">
-					<el-col :span="6"><span>编辑用户组</span></el-col>
+					<el-col :span="6"><span>编辑角色</span></el-col>
 					<el-col :span="3">
 						<el-button size="mini" icon="el-icon-back" title="返回" @click="back()">返回</el-button>
 					</el-col>
@@ -12,8 +12,8 @@
 			<div class="">
 				<!-- Form 表单 s -->
 				<el-form ref="ruleForm" :model="form" :rules="rules" label-width="100px" size="small" class="demo-form-inline">
-					<el-form-item prop="title" label="用户组名称">
-						<el-input v-model="form.title" placeholder="输入用户组名称" clearable style="width:350px;"></el-input>
+					<el-form-item prop="title" label="角色名称">
+						<el-input v-model="form.title" placeholder="输入角色名称" clearable style="width:350px;"></el-input>
 					</el-form-item>
 					<el-form-item prop="status" label="状态">
 						<el-radio-group v-model="form.status">
@@ -37,13 +37,13 @@
 		data() {
 			return {
 				form: {
-					id: '', // 用户组ID
-					title: '', // 用户组名称
+					id: '', // 角色ID
+					title: '', // 角色名称
 					status: '' // 状态
 				},
 				rules: { // 验证规则
 					title: [
-						{ required: true, message: '请输入用户组名称', trigger: 'blur' },
+						{ required: true, message: '请输入角色名称', trigger: 'blur' },
 						{ min: 1, max: 20, message: '长度在 1 到 20 个字符', trigger: 'blur' }
 					]
 				}
@@ -63,7 +63,7 @@
 			},
 			
 			/**
-			 * 编辑用户组提交表单
+			 * 编辑角色提交表单
 			 * @param {Object} formName
 			 */
 			submitForm(formName) {
