@@ -98,8 +98,8 @@
 						size: this.listPagination.per_page
 					},
 					headers: {
-						'company-id': JSON.parse(localStorage.getItem('company')).id,
-						'company-token': JSON.parse(localStorage.getItem('company')).token
+						'company-user-id': JSON.parse(localStorage.getItem('company')).user_id,
+						'company-user-token': JSON.parse(localStorage.getItem('company')).token
 					}
 				})
 				.then(function(res) {
@@ -125,7 +125,7 @@
 						});
 					}
 				})
-				.catch(function (error) {console.log(error.response);
+				.catch(function (error) {
 					self.$message({
 						message: error.response.data.message,
 						type: 'warning'
@@ -165,7 +165,7 @@
 			 * @param {Object} row
 			 */
 			toCompanyUserEdit(row) {
-				this.$router.push({path: "company_user_edit", query: {user_id: row.user_id, user_name: row.user_name}});
+				this.$router.push({path: "company_user_edit", query: {user_id: row.user_id}});
 			},
 			
 			/**

@@ -8,7 +8,7 @@ use think\Model;
  * Class Company
  * @package app\admin\model
  */
-class Company
+class Company extends Base
 {
     /**
      * 表前缀
@@ -17,6 +17,11 @@ class Company
 
     /**
      * 创建供应商
+<<<<<<< HEAD
+=======
+     * @param {object}
+     * @return array|false|\PDOStatement|string|Model
+>>>>>>> 66cd755b4c00ce39fd848d541829a689a6d9a694
      */
     public function inCompany($data)
     {

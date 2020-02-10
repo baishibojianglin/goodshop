@@ -68,6 +68,7 @@ class GoodsCate extends Base
 
     /**
      * 获取商品类别列表树
+     * @return \think\response\Json
      */
     public function goodsCateTree()
     {
