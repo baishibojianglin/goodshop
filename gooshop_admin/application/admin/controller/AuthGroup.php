@@ -49,6 +49,32 @@ class AuthGroup extends Base
     }
 
     /**
+     * 获取Auth用户组列表树
+     * @return \think\response\Json
+     */
+    public function authGroupTree()
+    {
+        // 获取商品类别列表树，用于页面下拉框列表
+        try {
+            $data = model('AuthGroup')->field('id, title')->select(); // TODO：待处理，暂时这样写
+        } catch (\Exception $e) {
+            return show(config('code.error'), '网络忙，请重试', [], 500); // $e->getMessage()
+        }
+
+        /*if ($data) {
+            // 处理数据
+            foreach ($data as $key => $value) {
+                if ($value['level'] != 0) {
+                    // level 用于定义 title 前面的空位符的长度
+                    $data[$key]['title'] = '└' . str_repeat('─', $value['level'] * 1). ' ' . $value['title']; // str_repeat(string,repeat) 函数把字符串重复指定的次数
+                }
+            }
+        }*/
+
+        return show(config('code.success'), 'OK', $data);
+    }
+
+    /**
      * 保存新建的Auth用户组资源
      * @param Request $request
      * @return \think\response\Json
@@ -80,9 +106,9 @@ class AuthGroup extends Base
             }
             // 判断是否新增成功：获取id
             if ($id) {
-                return show(config('code.success'), '用户组新增成功', [], 201);
+                return show(config('code.success'), '角色新增成功', [], 201);
             } else {
-                return show(config('code.error'), '用户组新增失败', [], 403);
+                return show(config('code.error'), '角色新增失败', [], 403);
             }
         } else {
             return show(config('code.error'), '请求不合法', '', 400);
@@ -137,12 +163,20 @@ class AuthGroup extends Base
         }
 
         // 判断数据是否存在
-        $data = [];
         if (!empty($param['title'])) {
             $data['title'] = $param['title'];
         }
         if (isset($param['status'])) { // 不能用 !empty() ，否则 status = 0 时也判断为空
             $data['status'] = input('param.status', null, 'intval');
+        }
+        if (isset($param['parent_id'])) { // 上级ID
+            $data['parent_id'] = input('param.parent_id', null, 'intval');
+        }
+        if (isset($param['type'])) { // 角色类型
+            $data['type'] = input('param.type', null, 'intval');
+        }
+        if (isset($param['auth_rules'])) { // 授权配置下级权限
+            $data['auth_rules'] = input('param.auth_rules', null, 'intval');
         }
         if (!empty($param['rules'])) {
             $data['rules'] = implode(',', $param['rules']);
@@ -193,15 +227,15 @@ class AuthGroup extends Base
             // 判断是否存在下级用户组
             $authGroupList = model('AuthGroup')->where(['parent_id' => $id])->select();
             if (!empty($authGroupList)) {
-                return show(config('code.error'), '删除失败：存在下级用户组', '', 403);
+                return show(config('code.error'), '删除失败：存在下级角色', '', 403);
             }
             // 判断用户组状态
             if ($data['status'] == config('code.status_enable')) { // 启用
-                return show(config('code.error'), '删除失败：用户组已启用', '', 403);
+                return show(config('code.error'), '删除失败：角色已启用', '', 403);
             }
             // 判断用户组规则是否为空
             if (!empty($data['rules'])) {
-                return show(config('code.error'), '删除失败：用户组规则不为空', '', 403);
+                return show(config('code.error'), '删除失败：角色规则不为空', '', 403);
             }
 
             // 真删除

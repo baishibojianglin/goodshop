@@ -12,14 +12,33 @@
 			<div class="">
 				<!-- Form 表单 s -->
 				<el-form ref="ruleForm" :model="form" :rules="rules" label-width="100px" size="small" class="demo-form-inline">
+					<el-form-item label="上级" prop="parent_id" v-if="form.id == 1 ? false : true"><!-- 供应商总管理员不更新parent_id、type、status、auth_rules字段 -->
+						<el-select v-model="form.parent_id" placeholder="请选择…" filterable>
+							<el-option
+								v-for="item in authGroupOptions"
+								:key="item.id"
+								:label="item.title"
+								:value="item.id">
+							</el-option>
+						</el-select>
+					</el-form-item>
 					<el-form-item prop="title" label="角色名称">
 						<el-input v-model="form.title" placeholder="输入角色名称" clearable style="width:350px;"></el-input>
 					</el-form-item>
+					<el-form-item prop="status" label="角色类型">
+						<el-radio-group v-model="form.type" :disabled="form.id == 1 ? true : false">
+							<el-radio :label="0">私有角色</el-radio>
+							<el-radio :label="1">通用角色</el-radio>
+						</el-radio-group>
+					</el-form-item>
 					<el-form-item prop="status" label="状态">
-						<el-radio-group v-model="form.status">
+						<el-radio-group v-model="form.status" :disabled="form.id == 1 ? true : false">
 							<el-radio :label="1">启用</el-radio>
 							<el-radio :label="0">禁用</el-radio>
 						</el-radio-group>
+					</el-form-item>
+					<el-form-item label="授权配置下级权限">
+						<el-switch v-model="form.auth_rules" :disabled="form.id == 1 ? true : false" active-text="允许" inactive-text="禁止" :active-value="1" :inactive-value="0"></el-switch>
 					</el-form-item>
 					<el-form-item>
 						<el-button type="primary" plain @click="submitForm('ruleForm')">提交</el-button>
@@ -39,18 +58,24 @@
 				form: {
 					id: '', // 角色ID
 					title: '', // 角色名称
-					status: '' // 状态
+					status: '', // 状态
+					parent_id: '', // 上级ID
+					type: '', // 角色类型
+					auth_rules: '' // 授权配置下级权限
 				},
 				rules: { // 验证规则
 					title: [
 						{ required: true, message: '请输入角色名称', trigger: 'blur' },
 						{ min: 1, max: 20, message: '长度在 1 到 20 个字符', trigger: 'blur' }
 					]
-				}
+				},
+				authGroupOptions: [], // 上级角色下拉框列表
 			}
 		},
 		created() {
 			this.getParams();
+			this.getAuthGroup(); // 获取指定的角色信息
+			this.getAuthGroupTree(); // 获取角色列表树
 		},
 		methods: {
 			/**
@@ -60,6 +85,60 @@
 				this.form.id = this.$route.query.id;
 				this.form.title = this.$route.query.title;
 				this.form.status = this.$route.query.status;
+			},
+			
+			/**
+			 * 获取指定的角色信息
+			 */
+			getAuthGroup() {
+				let self = this;
+				this.$axios.get(this.$url + 'auth_group/' + this.form.id, {
+					headers: {
+						'company-user-id': JSON.parse(localStorage.getItem('company')).user_id,
+						'company-user-token': JSON.parse(localStorage.getItem('company')).token
+					}
+				})
+				.then(function(res) {
+					if (res.data.status == 1) {
+						// 角色信息
+						self.form = res.data.data;
+					} else {
+						self.$message({
+							message: '网络忙，请重试',
+							type: 'warning'
+						});
+					}
+				})
+				.catch(function (error) {
+					self.$message({
+						message: error.response.data.message,
+						type: 'warning'
+					});
+				});
+			},
+			
+			/**
+			 * 获取角色列表树
+			 */
+			getAuthGroupTree() {
+				let self = this;
+				this.$axios.get(this.$url + 'auth_group_tree')
+				.then(function(res) {
+					if (res.data.status == 1) {
+						self.authGroupOptions = res.data.data;
+					} else {
+						self.$message({
+							message: '网络忙，请重试',
+							type: 'warning'
+						});
+					}
+				})
+				.catch(function (error) {
+					self.$message({
+						message: error.response.data.message,
+						type: 'warning'
+					});
+				});
 			},
 			
 			/**
@@ -73,7 +152,10 @@
 						this.$axios.put(this.$url + 'auth_group/' + this.form.id, {
 							// 参数
 							title: this.form.title,
-							status: this.form.status
+							status: this.form.status,
+							parent_id: this.form.parent_id,
+							type: this.form.type,
+							auth_rules: this.form.auth_rules,
 						}, {
 							// 请求头配置
 							headers: {

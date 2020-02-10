@@ -37,6 +37,12 @@
 							<el-tag :type="scope.row.status === 1 ? 'success' : 'info'" size="mini">{{scope.row.status_msg}}</el-tag>
 						</template>
 					</el-table-column>
+					<el-table-column prop="type" label="角色类型" width="90">
+						<template slot-scope="scope">{{scope.row.type == 0 ? "私有角色" : "通用角色"}}</template>
+					</el-table-column>
+					<el-table-column prop="auth_rules" label="授权配置下级权限" width="150">
+						<template slot-scope="scope">{{scope.row.auth_rules == 1 ? "允许" : "禁止"}}</template>
+					</el-table-column>
 					<el-table-column label="操作" fixed="right" min-width="90">
 						<template slot-scope="scope">
 							<el-button type="primary" size="mini" plain @click="toAuthGroupConfig(scope.row)">权限配置</el-button>

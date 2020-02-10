@@ -14,14 +14,14 @@ Route::POST('deleteimages','admin/Common/deleteimg');
 Route::resource('region', 'admin/region');
 // 商品类别
 Route::resource('goods_cate', 'admin/goods_cate');
-Route::get('goods_cate_tree', 'admin/goods_cate/goodsCateTree');
+Route::get('goods_cate_tree', 'admin/goods_cate/goodsCateTree'); // 商品类别列表树
 // 商品品牌
 Route::resource('goods_brand', 'admin/goods_brand');
-// 用户组
+// Auth用户组
 Route::resource('auth_group', 'admin/auth_group');
-// 供应商用户
+Route::get('auth_group_tree', 'admin/auth_group/authGroupTree'); // Auth用户组列表树
+// 供应商账户
 Route::resource('company_user', 'admin/company_user');
-// 供应商列表树
-Route::get('company_tree', 'admin/company/companyTree');
-//创建供应商
-Route::POST('createCompany','admin/Company/submitCompany');
+// 供应商
+Route::get('company_tree', 'admin/company/companyTree'); // 供应商列表树
+Route::POST('createCompany','admin/Company/submitCompany'); // 创建供应商
