@@ -3,14 +3,15 @@ namespace app\admin\controller;
 use think\Request;
 
 
-class Company
+class Company 
 {
    /**
    *创建供应商
    */
 	public function submitCompany(){
 		$form=input();
-		return json($form['data']);
+		$data=model('Company')->inCompany($form['data']);
+		//return json($data);
 	}
 
 

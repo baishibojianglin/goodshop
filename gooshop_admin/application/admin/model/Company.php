@@ -17,15 +17,29 @@ class Company
 
     /**
      * 创建供应商
-     * @param {object} 
      */
-    public function checklogin($account, $password)
+    public function inCompany($data)
     {
-        $map['account|phone'] = $account;
-        $map['password'] = $password;
-        $map['status'] = config('code.status_enable'); // 启用状态
-        $list = $this->where($map)->field('password,token_time', true)->find();
-        return $list;
+        //入库供应商基本信息表
+        $this->save([
+            'name'= $data['name'];  
+            'address' = $data['address'];
+            'role' = 1;
+            'upid' =  $data['upid'];
+            'status' =  1;
+            'type' =  1;
+            'license_creditcode' =  $data['license_creditcode'];
+            'url_license' =  $data['url_license'];
+            'legalperson_name' =  $data['legalperson_name'];
+            'url_idcard' =  $data['url_idcard'];
+            'legalperson_idcard_code' =  $data['legalperson_idcard_code'];
+        ]);
+
+
+
+        //return $data;
+
+
     }
 
 

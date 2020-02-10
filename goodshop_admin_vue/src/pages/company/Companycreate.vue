@@ -60,6 +60,10 @@
 			 <el-input style="width:350px;"  v-model="ruleForm.license_creditcode"></el-input>
 		   </el-form-item>		   
 
+		   <el-form-item label="登录账号" prop="account">
+			 <el-input style="width:350px;"  v-model="ruleForm.account"></el-input>
+		   </el-form-item>
+
 		   <el-form-item label="设置密码" prop="password">
 			 <el-input style="width:350px;" type="password" :show-password="true"   v-model="ruleForm.password"></el-input>
 		   </el-form-item>			   
@@ -88,8 +92,9 @@
 				   legalperson_idcard_code:'1', //法人身份证号码
 				   url_license:'1', //营业执照图片地址
 				   license_creditcode:'1', //营业执照社会统一信用码
+				   account:'2', //登录账号
 				   password:'1' ,//供应商密码
-	
+				   upid:'78'
 				},
 				rules: {
 				  name: [
@@ -116,6 +121,9 @@
 				  license_creditcode:[
 					{ required: true, message: '请输入社会统一信用码', trigger: 'blur' }	
 				  ],
+				  account:[
+				  	{ required: true, message: '请设置登录账号',trigger: 'blur'}					  
+				  ],
 				  password:[
 					{ required: true, message: '请设置密码',trigger: 'blur'}					  
 				  ]													  
@@ -125,16 +133,16 @@
 				active: 0,  //步骤条
 				img_name:[], //存储图片名字
 				hideUpload:[false,false] //隐藏图片添加按钮
-
-
 		   }
      },
      methods: {
-		 /**
+		  /**
 		  * 提交表单
 		  * @param {Object} formName
 		  */
 		  submitForm(formName) {
+			let company=JSON.parse(localStorage.getItem('company'));
+			//this.ruleForm['upid']=company.upid;
 			this.$refs[formName].validate((valid) => {
 			  if (valid) {
 				this.$axios.post(this.$url+'createCompany',{
