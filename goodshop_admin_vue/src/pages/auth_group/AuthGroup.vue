@@ -27,7 +27,7 @@
 				<el-table :data="authGroupList" border style="width: 100%">
 					<el-table-column prop="id" type="" label="ID" fixed width="90"></el-table-column>
 					<el-table-column prop="title" label="角色名称" fixed min-width="180"></el-table-column>
-					<el-table-column prop="parent_title" label="上级角色/上级ID" fixed width="180">
+					<el-table-column prop="parent_title" label="上级角色/上级ID" width="180">
 						<template slot-scope="scope">
 							{{scope.row.parent_id == 0 ? '（无）' : scope.row.parent_title + '/' + scope.row.parent_id}}
 						</template>
