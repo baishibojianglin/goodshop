@@ -21,8 +21,8 @@
 						<el-button size="medium" type="primary" plain icon="el-icon-upload">上传证件照</el-button>
 						</el-upload>
 					</el-form-item>
-					<el-form-item prop="account" label="供应商账户账号">
-						<el-input v-model="form.account" placeholder="输入供应商账户账号" clearable style="width:350px;"></el-input>
+					<el-form-item prop="account" label="供应商账户号">
+						<el-input v-model="form.account" placeholder="输入供应商账户号" clearable style="width:350px;"></el-input>
 					</el-form-item>
 					<el-form-item prop="phone" label="电话号码">
 						<el-input v-model="form.phone" placeholder="输入供应商账户电话号码" clearable style="width:350px;"></el-input>
@@ -54,7 +54,7 @@
 				form: {
 					/* user_name: '', // 供应商账户名称
 					avatar: '', // 供应商账户证件照
-					account: '', // 供应商账户账号
+					account: '', // 供应商账户号
 					phone: '', // 电话号码
 					ratio: '', // 提成比例
 					status: '', // 状态 */
@@ -65,7 +65,7 @@
 						{ min: 2, max: 20, message: '长度在 2 到 20 个字符', trigger: 'blur' }
 					],
 					account: [
-						{ required: true, message: '请输入供应商账户账号', trigger: 'blur' },
+						{ required: true, message: '请输入供应商账户号', trigger: 'blur' },
 						{ min: 2, max: 20, message: '长度在 2 到 20 个字符', trigger: 'blur' }
 					],
 					/* avatar: [

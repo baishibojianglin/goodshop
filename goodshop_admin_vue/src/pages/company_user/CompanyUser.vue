@@ -32,7 +32,7 @@
 							<img :src="scope.row.avatar" :alt="scope.row.user_name" :title="scope.row.user_name" width="50" height="50" />
 						</template>
 					</el-table-column>
-					<el-table-column prop="account" label="供应商账户账号" width="180"></el-table-column>
+					<el-table-column prop="account" label="供应商账户号" width="180"></el-table-column>
 					<el-table-column prop="parent_name" label="上级" width="180"></el-table-column>
 					<el-table-column prop="company_name" label="供应商名称" width="180"></el-table-column>
 					<el-table-column prop="phone" label="电话号码" width="180"></el-table-column>

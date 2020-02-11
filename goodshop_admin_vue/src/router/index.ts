@@ -21,7 +21,7 @@ import GoodsBrandEdit from '@/pages/goods_brand/GoodsBrandEdit.vue'
 import AuthGroup from '@/pages/auth_group/AuthGroup.vue'
 import AuthGroupAdd from '@/pages/auth_group/AuthGroupAdd.vue'
 import AuthGroupEdit from '@/pages/auth_group/AuthGroupEdit.vue'
-// 账户管理·供应商用户
+// 账户管理·供应商账户
 import CompanyUser from '@/pages/company_user/CompanyUser.vue'
 import CompanyUserAdd from '@/pages/company_user/CompanyUserAdd.vue'
 import CompanyUserEdit from '@/pages/company_user/CompanyUserEdit.vue'
@@ -65,9 +65,9 @@ const routes = [
 			{path: 'auth_group', name: 'auth_group', component: AuthGroup}, // 角色管理
 			{path: 'auth_group_add', name: 'auth_group_add', component: AuthGroupAdd}, // 新增角色
 			{path: 'auth_group_edit', name: 'auth_group_edit', component: AuthGroupEdit}, // 编辑角色
-			{path: 'company_user', name: 'company_user', component: CompanyUser}, // 供应商用户
-			{path: 'company_user_add', name: 'company_user_add', component: CompanyUserAdd}, // 新增供应商用户
-			{path: 'company_user_edit', name: 'company_user_edit', component: CompanyUserEdit}, // 编辑供应商用户
+			{path: 'company_user', name: 'company_user', component: CompanyUser}, // 供应商账户
+			{path: 'company_user_add', name: 'company_user_add', component: CompanyUserAdd}, // 新增供应商账户
+			{path: 'company_user_edit', name: 'company_user_edit', component: CompanyUserEdit}, // 编辑供应商账户
 		]
 	}
 ]
