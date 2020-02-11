@@ -9,7 +9,7 @@
 			 </el-steps>			  
 		  </el-col>
 		 </el-row>
-         
+
 		
 		 <el-form  ref="ruleForm" :model="ruleForm" :rules="rules"  label-width="150px">
 			 
@@ -112,7 +112,7 @@
 				},
 				dialogImageUrl: '',
 				dialogVisible: false, //放大预览图片
-				active: 0,  //步骤条
+				active: 1,  //步骤条
 				img_name:[], //存储图片名字
 				hideUpload:[false,false] //隐藏图片添加按钮
 		   }
@@ -124,21 +124,19 @@
 		  */
 		  submitForm(formName) {
 			let self=this;
-			let company=JSON.parse(localStorage.getItem('company')); //取出的缓存的登录账户信息
-			this.ruleForm.parent_id=company.company_id; //获取登录账号所属的供应商id，并赋值给表单
-			this.ruleForm.create_user=company.user_id; //获取登录账号的用户id，并赋值给表单
+			let company=JSON.parse(localStorage.getItem('company'));
+			this.ruleForm.parent_id=company.company_id; 
+			this.ruleForm.create_user=company.user_id;
 			this.$refs[formName].validate((valid) => {
 			  if (valid) {
 				this.$axios.post(this.$url+'createCompany',{
 				   data:this.ruleForm
-				}).then(function(res){
-					console.log(res.data)
+				}).then(function(res){	
                    if(res.data.status==1){
 					 self.$message({
 						 message:'基本信息添加成功',
 						 type: 'warning'
 					  });
-					  self.$router.push({path: "companyarea", query: {companyid:res.data.companyid}});
 					  self.next(); 
 				   }
 				})                

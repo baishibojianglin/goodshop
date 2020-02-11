@@ -11,8 +11,18 @@ class Company extends Base
    */
 	public function submitCompany(){
 		$form=input();
-		$data=model('Company')->inCompany($form['data']);
-		//return json($data);
+		//添加供应商基本信息
+		$listcompany=model('Company')->inCompany($form['data']);
+		
+		if($listcompany>0){
+			$message['companyid']=$listcompany;
+			$message['status']=1;
+			$message['words']='基本信息添加成功';
+		}else{
+			$message['status']=0;
+			$message['words']='基本信息添加失败';
+		}
+		return json($message);
 	}
 
 	/**

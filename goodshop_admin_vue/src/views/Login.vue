@@ -88,7 +88,6 @@
 					str:str,
 					sign:sign
 				}).then(function(res){
-					
 					if(res.data['status']==0){ //验证未通过
 					   self.$message({
 						 message:res.data['message'],
