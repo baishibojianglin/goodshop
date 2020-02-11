@@ -5,7 +5,7 @@ namespace app\admin\model;
 use think\Model;
 
 /**
- * 供应商用户模型类
+ * 供应商账户模型类
  * Class CompanyUser
  * @package app\admin\model
  */
@@ -17,7 +17,7 @@ class CompanyUser extends Base
     protected $connection = ['prefix' => 'goodshop_'];
 
     /**
-     * 供应商用户登录
+     * 供应商账户登录
      * @param $account
      * @param $password
      * @return array|false|\PDOStatement|string|Model
@@ -32,7 +32,7 @@ class CompanyUser extends Base
     }
 
     /**
-     * 存入token到供应商用户表
+     * 存入token到供应商账户表
      * @param $id
      * @param $token
      * @return false|int
@@ -49,7 +49,7 @@ class CompanyUser extends Base
     }
 
     /**
-     * 检查用户登录状态
+     * 检查账户登录状态
      * @param $token
      * @return array|false|\PDOStatement|string|Model
      */
@@ -71,7 +71,7 @@ class CompanyUser extends Base
     }
 
     /**
-     * 获取供应商用户列表数据（基于paginate()自动化分页）
+     * 获取供应商账户列表数据（基于paginate()自动化分页）
      * @param array $map
      * @param int $size
      * @return \think\Paginator

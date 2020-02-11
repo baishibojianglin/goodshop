@@ -1,6 +1,7 @@
 <?php
 
 namespace app\admin\model;
+
 use think\Model;
 
 /**
@@ -17,10 +18,12 @@ class Company extends Base
 
     /**
      * 创建供应商
+     * @param $data
      */
     public function inCompany($data)
     {
         //入库供应商基本信息表
+
         $data['role']=1;
         $data['status']=2;
         $data['type']=1;
@@ -29,6 +32,4 @@ class Company extends Base
         return $this->id;
 
     }
-
-
 }

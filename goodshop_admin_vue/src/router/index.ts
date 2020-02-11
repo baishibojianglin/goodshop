@@ -18,11 +18,11 @@ import GoodsCateEdit from '@/pages/goods_cate/GoodsCateEdit.vue'
 import GoodsBrand from '@/pages/goods_brand/GoodsBrand.vue'
 import GoodsBrandAdd from '@/pages/goods_brand/GoodsBrandAdd.vue'
 import GoodsBrandEdit from '@/pages/goods_brand/GoodsBrandEdit.vue'
-// 员工管理·用户组管理
+// 账户管理·角色管理
 import AuthGroup from '@/pages/auth_group/AuthGroup.vue'
 import AuthGroupAdd from '@/pages/auth_group/AuthGroupAdd.vue'
 import AuthGroupEdit from '@/pages/auth_group/AuthGroupEdit.vue'
-// 员工管理·供应商用户
+// 账户管理·供应商账户
 import CompanyUser from '@/pages/company_user/CompanyUser.vue'
 import CompanyUserAdd from '@/pages/company_user/CompanyUserAdd.vue'
 import CompanyUserEdit from '@/pages/company_user/CompanyUserEdit.vue'
@@ -45,7 +45,7 @@ const routes = [
 		children: [
 			// 2--供应商管理
 			{path: 'companycreate',name: 'companycreate',component:Companycreate}, //创建供应商
-			{path: 'companyconfig',name: 'companyconfig',component:Companyconfig}, //供应商配置信息
+			{path: 'companyarea',name: 'companyarea',component:Companyarea}, //供应商配置信息
 			// 2--区域管理
 			{path: 'region', name: 'region', component: Region}, // 省级区域
 			{path: 'regioncity', name: 'regioncity', component: RegionCity}, // 市级区域
@@ -58,13 +58,13 @@ const routes = [
 			{path: 'goodsbrand', name: 'goodsbrand', component: GoodsBrand}, // 商品品牌
 			{path: 'goodsbrandadd', name: 'goodsbrandadd', component: GoodsBrandAdd}, // 新增商品品牌
 			{path: 'goodsbrandedit', name: 'goodsbrandedit', component: GoodsBrandEdit}, // 编辑商品品牌
-			// 4--员工管理
-			{path: 'auth_group', name: 'auth_group', component: AuthGroup}, // 用户组管理
-			{path: 'auth_group_add', name: 'auth_group_add', component: AuthGroupAdd}, // 新增用户组
-			{path: 'auth_group_edit', name: 'auth_group_edit', component: AuthGroupEdit}, // 编辑用户组
-			{path: 'company_user', name: 'company_user', component: CompanyUser}, // 供应商用户
-			{path: 'company_user_add', name: 'company_user_add', component: CompanyUserAdd}, // 新增供应商用户
-			{path: 'company_user_edit', name: 'company_user_edit', component: CompanyUserEdit}, // 编辑供应商用户
+			// 4--账户管理
+			{path: 'auth_group', name: 'auth_group', component: AuthGroup}, // 角色管理
+			{path: 'auth_group_add', name: 'auth_group_add', component: AuthGroupAdd}, // 新增角色
+			{path: 'auth_group_edit', name: 'auth_group_edit', component: AuthGroupEdit}, // 编辑角色
+			{path: 'company_user', name: 'company_user', component: CompanyUser}, // 供应商账户
+			{path: 'company_user_add', name: 'company_user_add', component: CompanyUserAdd}, // 新增供应商账户
+			{path: 'company_user_edit', name: 'company_user_edit', component: CompanyUserEdit}, // 编辑供应商账户
 		]
 	}
 ]

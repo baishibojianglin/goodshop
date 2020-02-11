@@ -7,14 +7,14 @@ use think\Controller;
 use think\Request;
 
 /**
- * admin模块供应商用户控制器类
+ * admin模块供应商账户控制器类
  * Class CompanyUser
  * @package app\admin\controller
  */
 class CompanyUser extends Base
 {
     /**
-     * 显示供应商用户资源列表
+     * 显示供应商账户资源列表
      * @return \think\response\Json
      */
     public function index()
@@ -29,10 +29,10 @@ class CompanyUser extends Base
 
             // 查询条件
             $map = [];
-            if ($this->companyUser['company_id'] != 0) { // 平台可以查看所有用户，供应商只能查看自有用户
+            if ($this->companyUser['company_id'] != 0) { // 平台可以查看所有账户，供应商只能查看自有账户
                 $map['cu.company_id'] = $this->companyUser['company_id'];
             }
-            if (!empty($param['user_name'])) { // 供应商用户名称
+            if (!empty($param['user_name'])) { // 供应商账户名称
                 $map['cu.user_name'] = ['like', '%' . $param['user_name'] . '%'];
             }
 
@@ -57,7 +57,7 @@ class CompanyUser extends Base
     }
 
     /**
-     * 保存新建的供应商用户资源
+     * 保存新建的供应商账户资源
      * @param Request $request
      * @return \think\response\Json
      * @throws ApiException
@@ -76,22 +76,22 @@ class CompanyUser extends Base
             }
 
             // 处理数据
-            // 供应商ID：1.平台登录时，通过下拉框选择获取供应商ID；2.供应商用户登录时，新增的下级供应商用户的所属供应商ID为当前登录用户对应的供应商ID
+            // 供应商ID：1.平台登录时，通过下拉框选择获取供应商ID；2.供应商账户登录时，新增的下级供应商账户的所属供应商ID为当前登录账户对应的供应商ID
             if ($this->companyUser['company_id'] != 0) {
                 $data['company_id'] = $this->companyUser['company_id'];
             }
 
-            // 上级ID：1.平台只能新增每个供应商的总账户，该供应商的总账户上级ID为平台管理员user_id；2.供应商用户新增下级用户时，TODO：parent_id待处理
-            if ($this->companyUser['company_id'] == 0) { // 平台用户登录时
+            // 上级ID：1.平台只能新增每个供应商的总账户，该供应商的总账户上级ID为平台管理员user_id；2.供应商账户新增下级账户时，TODO：parent_id待处理
+            if ($this->companyUser['company_id'] == 0) { // 平台账户登录时
                 // 当平台管理员登录时
                 if ($this->companyUser['parent_id'] == 0) {
                     $data['parent_id'] = $this->companyUser['user_id'];
                 }
-                // 当平台非管理员用户登录时
+                // 当平台非管理员账户登录时
                 if ($this->companyUser['parent_id'] == 1) {
                     $data['parent_id'] = $this->companyUser['parent_id'];
                 }
-            } else { // 供应商用户登录时
+            } else { // 供应商账户登录时
                 $data['parent_id'] = $this->companyUser['user_id']; // TODO：parent_id待处理
             }
 
@@ -108,9 +108,9 @@ class CompanyUser extends Base
             }
             // 判断是否新增成功：获取id
             if ($id) {
-                return show(config('code.success'), '供应商用户新增成功', '', 201);
+                return show(config('code.success'), '供应商账户新增成功', '', 201);
             } else {
-                return show(config('code.error'), '供应商用户新增失败', '', 403);
+                return show(config('code.error'), '供应商账户新增失败', '', 403);
             }
         } else {
             return show(config('code.error'), '请求不合法', '', 400);
@@ -118,7 +118,7 @@ class CompanyUser extends Base
     }
 
     /**
-     * 显示指定的供应商用户资源
+     * 显示指定的供应商账户资源
      * @param int $id
      * @return \think\response\Json
      * @throws ApiException
@@ -147,7 +147,7 @@ class CompanyUser extends Base
     }
 
     /**
-     * 保存更新的供应商用户资源
+     * 保存更新的供应商账户资源
      * @param Request $request
      * @param int $id
      * @return \think\response\Json
@@ -171,25 +171,25 @@ class CompanyUser extends Base
 
         // 判断数据是否存在
         $data = [];
-        if (!empty($param['user_name'])) { // 供应商用户名称
+        if (!empty($param['user_name'])) { // 供应商账户名称
             $data['user_name'] = trim($param['user_name']);
 
             // 忽略唯一(unique)类型字段user_name对自身数据的唯一性验证
             $_data = model('CompanyUser')->where(['user_id' => ['neq', $id], 'user_name' => $data['user_name']])->find();
             if ($_data) {
-                return show(config('code.error'), '供应商用户名称已存在', '', 403);
+                return show(config('code.error'), '供应商账户名称已存在', '', 403);
             }
         }
-        if (!empty($param['avatar'])) {  // 供应商用户证件照
+        if (!empty($param['avatar'])) {  // 供应商账户证件照
             $data['avatar'] = trim($param['avatar']);
         }
-        if (!empty($param['account'])) { // 供应商用户账号
+        if (!empty($param['account'])) { // 供应商账户号
             $data['account'] = trim($param['account']);
 
             // 忽略唯一(unique)类型字段account对自身数据的唯一性验证
             $_data = model('CompanyUser')->where(['user_id' => ['neq', $id], 'account' => $data['account']])->find();
             if ($_data) {
-                return show(config('code.error'), '供应商用户账号已存在', '', 403);
+                return show(config('code.error'), '供应商账户号已存在', '', 403);
             }
         }
         if (!empty($param['phone'])) { // 电话号码
@@ -198,7 +198,7 @@ class CompanyUser extends Base
             // 忽略唯一(unique)类型字段phone对自身数据的唯一性验证
             $_data = model('CompanyUser')->where(['user_id' => ['neq', $id], 'phone' => $data['phone']])->find();
             if ($_data) {
-                return show(config('code.error'), '供应商用户电话号码已存在', '', 403);
+                return show(config('code.error'), '供应商账户电话号码已存在', '', 403);
             }
         }
         if (isset($param['ratio'])) { // 提成比例
@@ -207,9 +207,9 @@ class CompanyUser extends Base
         if (isset($param['status'])) { // 状态，不能用 !empty() ，否则 status = 0 时也判断为空
             $data['status'] = input('param.status', null, 'intval');
 
-            // 供应商用户已登录时，不能禁用
+            // 供应商账户已登录时，不能禁用
             if ($this->companyUser['user_id'] == $id && $data['status'] == config('code.status_disable')) {
-                return show(config('code.error'), '供应商用户已登录，不能禁用', '', 403);
+                return show(config('code.error'), '供应商账户已登录，不能禁用', '', 403);
             }
         }
 
@@ -231,7 +231,7 @@ class CompanyUser extends Base
     }
 
     /**
-     * 删除指定供应商用户资源
+     * 删除指定供应商账户资源
      * @param int $id
      * @return \think\response\Json
      * @throws ApiException
@@ -255,14 +255,14 @@ class CompanyUser extends Base
             }
 
             // 判断删除条件
-            // 判断是否存在下级供应商用户
+            // 判断是否存在下级供应商账户
             $companyUserList = model('CompanyUser')->where(['parent_id' => $id])->select();
             if (!empty($companyUserList)) {
-                return show(config('code.error'), '删除失败：存在下级供应商用户', '', 403);
+                return show(config('code.error'), '删除失败：存在下级供应商账户', '', 403);
             }
-            // 判断供应商用户状态
+            // 判断供应商账户状态
             if ($data['status'] == config('code.status_enable')) { // 启用
-                return show(config('code.error'), '删除失败：供应商用户已启用', '', 403);
+                return show(config('code.error'), '删除失败：供应商账户已启用', '', 403);
             }
 
             // 真删除

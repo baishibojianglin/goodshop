@@ -14,7 +14,7 @@ use think\Request;
 class Base extends Common
 {
     /**
-     * 登录用户的基本信息
+     * 登录账户的基本信息
      * @var array
      */
     public $companyUser = [];
@@ -50,7 +50,7 @@ class Base extends Common
             return false;
         }
 
-        // 查询用户是否存在或启用
+        // 查询账户是否存在或启用
         $companyUser = model('CompanyUser')->loginstatus($companyToken);
         if(!$companyUser || $companyUser['status'] != config('code.status_enable')){
             return false;
@@ -64,7 +64,7 @@ class Base extends Common
 
         // 验证通过，重置过期时间
         model('CompanyUser')->setlogintime($companyToken);
-        // 赋值登录用户的基本信息
+        // 赋值登录账户的基本信息
         $this->companyUser = $companyUser;
         return true;
     }

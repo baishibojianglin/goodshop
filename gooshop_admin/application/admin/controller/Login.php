@@ -67,7 +67,7 @@ class Login extends Common
         }
         // 通过验证,生成token
         $token = md5(uniqid(mt_rand(), true)) . mt_rand();
-        // 将token存入供应商用户表
+        // 将token存入供应商账户表
         $lsittoken = model('CompanyUser')->savetoken($list['user_id'], $token);
         // 用aes加密token
         $token = $aes->encrypt($token);
