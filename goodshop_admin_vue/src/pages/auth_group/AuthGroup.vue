@@ -166,7 +166,7 @@
 			 * @param {Object} row
 			 */
 			toAuthGroupEdit(row) {
-				this.$router.push({path: "auth_group_edit", query: {id: row.id, title: row.title, status: row.status}});
+				this.$router.push({path: "auth_group_edit", query: {id: row.id, title: row.title, status: row.status, parent_id: row.parent_id}});
 			},
 			
 			/**

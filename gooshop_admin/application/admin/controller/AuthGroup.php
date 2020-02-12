@@ -29,6 +29,11 @@ class AuthGroup extends Base
 
             // 查询条件
             $map = [];
+            // Auth用户组ID：供应商总管理员用户组（角色）可以查看所有Auth用户组，其他区域供应商管理员只能查看自有和通用Auth用户组
+            if ($this->companyUser['company_id'] != 0) {
+                $groupIds = model('AuthGroup')->getAuthGroupIdsByUserId($this->companyUser['user_id']);
+                $map['ag.id'] = ['in', $groupIds];
+            }
             if (!empty($param['title'])) {
                 $map['ag.title'] = ['like', '%' . $param['title'] . '%'];
             }
@@ -54,22 +59,38 @@ class AuthGroup extends Base
      */
     public function authGroupTree()
     {
+        // 传入的参数
+        $param = input('param.');
+
+        // 查询条件
+        $map = [];
+        if ($this->companyUser['company_id'] != 0) { // Auth用户组ID
+            $authGroupIds = model('AuthGroup')->getAuthGroupIdsByUserId($this->companyUser['user_id']);
+            if (isset($param['parent_id'])) { // Auth用户组上级ID
+                $param['parent_id'] = intval($param['parent_id']);
+                $authGroupIds[] = $param['parent_id'];
+                $authGroupIds = array_unique($authGroupIds);
+            }
+            $map['id'] = ['in', $authGroupIds];
+        }
+
         // 获取商品类别列表树，用于页面下拉框列表
         try {
-            $data = model('AuthGroup')->field('id, title')->select(); // TODO：待处理，暂时这样写
+            $data = model('AuthGroup')->field('id, title, type')->where($map)->select(); // TODO：待处理，暂时这样写
         } catch (\Exception $e) {
             return show(config('code.error'), '网络忙，请重试', [], 500); // $e->getMessage()
         }
 
-        /*if ($data) {
+        if ($data) {
             // 处理数据
             foreach ($data as $key => $value) {
-                if ($value['level'] != 0) {
+                $data[$key]['title'] = $value['title'] . '/' . ($value['type'] == 0 ? '私有角色' : '通用角色');
+                /*if ($value['level'] != 0) {
                     // level 用于定义 title 前面的空位符的长度
                     $data[$key]['title'] = '└' . str_repeat('─', $value['level'] * 1). ' ' . $value['title']; // str_repeat(string,repeat) 函数把字符串重复指定的次数
-                }
+                }*/
             }
-        }*/
+        }
 
         return show(config('code.success'), 'OK', $data);
     }

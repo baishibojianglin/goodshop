@@ -63,10 +63,14 @@
 					auth_rules: 0 // 授权配置下级权限
 				},
 				rules: { // 验证规则
+					parent_id: [
+						{ required: true, message: '请选择上级', trigger: 'change' }
+					],
 					title: [
 						{ required: true, message: '请输入角色名称', trigger: 'blur' },
 						{ min: 1, max: 20, message: '长度在 1 到 20 个字符', trigger: 'blur' }
 					]
+					
 				},
 				authGroupOptions: [], // 上级角色下拉框列表
 			}
@@ -80,7 +84,13 @@
 			 */
 			getAuthGroupTree() {
 				let self = this;
-				this.$axios.get(this.$url + 'auth_group_tree')
+				this.$axios.get(this.$url + 'auth_group_tree', {
+					// 请求头配置
+					headers: {
+						'company-user-id': JSON.parse(localStorage.getItem('company')).user_id,
+						'company-user-token': JSON.parse(localStorage.getItem('company')).token
+					}
+				})
 				.then(function(res) {
 					if (res.data.status == 1) {
 						self.authGroupOptions = res.data.data;
