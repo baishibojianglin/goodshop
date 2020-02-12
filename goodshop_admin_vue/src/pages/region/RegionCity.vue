@@ -34,7 +34,7 @@
 			<div class="">
 				<!-- 区域列表 s -->
 				<el-row :gutter="10">
-					<el-col :xs="12" :sm="8" :md="6" :lg="4" :xl="3" v-for="(item, index) in regionList" :key="index" style="margin-bottom: 1rem;">
+					<el-col :xs="12" :sm="8" :md="6" :lg="4" :xl="3" v-for="(item, index) in regionList" :key="index" style="margin-bottom: 1rem;height: 7rem;">
 						<el-card>
 							<span>{{item.region_name}}</span>
 							<div style="margin-top: 1rem;">
