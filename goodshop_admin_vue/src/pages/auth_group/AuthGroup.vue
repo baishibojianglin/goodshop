@@ -43,7 +43,7 @@
 					<el-table-column prop="auth_rules" label="授权配置下级权限" width="150">
 						<template slot-scope="scope">{{scope.row.auth_rules == 1 ? "允许" : "禁止"}}</template>
 					</el-table-column>
-					<el-table-column label="操作" fixed="right" min-width="90">
+					<el-table-column label="操作" fixed="right" min-width="160">
 						<template slot-scope="scope">
 							<el-button type="primary" size="mini" plain @click="toAuthGroupConfig(scope.row)">权限配置</el-button>
 							<el-button type="primary" size="mini" plain @click="toAuthGroupEdit(scope.row)">编辑</el-button>
@@ -166,7 +166,7 @@
 			 * @param {Object} row
 			 */
 			toAuthGroupEdit(row) {
-				this.$router.push({path: "auth_group_edit", query: {id: row.id, title: row.title, status: row.status}});
+				this.$router.push({path: "auth_group_edit", query: {id: row.id, title: row.title, status: row.status, parent_id: row.parent_id}});
 			},
 			
 			/**

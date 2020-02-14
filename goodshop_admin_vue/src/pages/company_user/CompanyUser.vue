@@ -25,7 +25,7 @@
 			<div class="">
 				<!-- 供应商账户列表 s -->
 				<el-table :data="companyUserList" border style="width: 100%">
-					<el-table-column type="index" label="ID" fixed width="90"></el-table-column>
+					<el-table-column prop="user_id" label="ID" fixed width="90"></el-table-column>
 					<el-table-column prop="user_name" label="供应商账户名称" fixed min-width="180"></el-table-column>
 					<el-table-column prop="avatar" label="头像" width="180">
 						<template slot-scope="scope">
@@ -33,7 +33,11 @@
 						</template>
 					</el-table-column>
 					<el-table-column prop="account" label="供应商账户号" width="180"></el-table-column>
-					<el-table-column prop="parent_name" label="上级" width="180"></el-table-column>
+					<el-table-column prop="parent_name" label="上级/上级ID" width="180">
+						<template slot-scope="scope">
+							{{scope.row.parent_id == 0 ? '（无）' : scope.row.parent_name + '/' + scope.row.parent_id}}
+						</template>
+					</el-table-column>
 					<el-table-column prop="company_name" label="供应商名称" width="180"></el-table-column>
 					<el-table-column prop="phone" label="电话号码" width="180"></el-table-column>
 					<el-table-column prop="status" label="状态" width="90" :filters="[{ text: '禁用', value: 0 }, { text: '正常', value: 1 }]" :filter-method="filterStatus" filter-placement="bottom-end">
@@ -43,7 +47,7 @@
 					</el-table-column>
 					<el-table-column prop="login_time" label="登录时间" width="180"></el-table-column>
 					<el-table-column prop="login_ip" label="登录IP" width="180"></el-table-column>
-					<el-table-column label="操作" fixed="right" min-width="90">
+					<el-table-column label="操作" fixed="right" min-width="160">
 						<template slot-scope="scope">
 							<el-button type="primary" size="mini" plain @click="toCompanyUserEdit(scope.row)">编辑</el-button>
 							<el-button type="danger" size="mini" plain @click="deleteCompanyUser(scope)">删除</el-button>

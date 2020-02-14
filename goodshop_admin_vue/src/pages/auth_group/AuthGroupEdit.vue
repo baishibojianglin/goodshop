@@ -64,6 +64,9 @@
 					auth_rules: '' // 授权配置下级权限
 				},
 				rules: { // 验证规则
+					parent_id: [
+						{ required: true, message: '请选择上级', trigger: 'change' }
+					],
 					title: [
 						{ required: true, message: '请输入角色名称', trigger: 'blur' },
 						{ min: 1, max: 20, message: '长度在 1 到 20 个字符', trigger: 'blur' }
@@ -85,6 +88,7 @@
 				this.form.id = this.$route.query.id;
 				this.form.title = this.$route.query.title;
 				this.form.status = this.$route.query.status;
+				this.form.parent_id = this.$route.query.parent_id;
 			},
 			
 			/**
@@ -122,7 +126,16 @@
 			 */
 			getAuthGroupTree() {
 				let self = this;
-				this.$axios.get(this.$url + 'auth_group_tree')
+				this.$axios.get(this.$url + 'auth_group_tree', {
+					params: {
+						parent_id: this.form.parent_id,
+					},
+					// 请求头配置
+					headers: {
+						'company-user-id': JSON.parse(localStorage.getItem('company')).user_id,
+						'company-user-token': JSON.parse(localStorage.getItem('company')).token
+					}
+				})
 				.then(function(res) {
 					if (res.data.status == 1) {
 						self.authGroupOptions = res.data.data;
