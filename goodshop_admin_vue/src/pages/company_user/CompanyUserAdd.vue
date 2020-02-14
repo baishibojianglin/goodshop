@@ -14,7 +14,6 @@
 				<el-form ref="ruleForm" :model="form" :rules="rules" label-width="100px" size="small" class="demo-form-inline">
 					<el-form-item label="供应商" prop="company_id">
 						<el-select v-model="form.company_id" :disabled="companySelectDisabled" placeholder="请选择…" filterable>
-							<el-option :key="0" label="供应商联盟平台" :value="0"></el-option>
 							<el-option
 								v-for="item in companyOptions"
 								:key="item.id"
@@ -123,7 +122,7 @@
 			
 			// 供应商ID
 			this.form.company_id = JSON.parse(localStorage.getItem('company')).company_id;
-			if (this.form.company_id != 0) {
+			if (this.form.company_id != 1) {
 				this.companySelectDisabled = true;
 			}
 		},

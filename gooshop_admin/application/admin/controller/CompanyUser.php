@@ -30,7 +30,7 @@ class CompanyUser extends Base
 
             // 查询条件
             $map = [];
-            if ($this->companyUser['company_id'] != 0) { // 平台可以查看所有账户，供应商只能查看自有账户
+            if ($this->companyUser['company_id'] != 1) { // 平台可以查看所有账户，供应商只能查看自有账户
                 $map['cu.company_id'] = $this->companyUser['company_id'];
             }
             if (!empty($param['user_name'])) { // 供应商账户名称
@@ -78,12 +78,12 @@ class CompanyUser extends Base
 
             // 处理数据
             // 供应商ID：1.平台登录时，通过下拉框选择获取供应商ID；2.供应商账户登录时，新增的下级供应商账户的所属供应商ID为当前登录账户对应的供应商ID
-            if ($this->companyUser['company_id'] != 0) {
+            if ($this->companyUser['company_id'] != 1) {
                 $data['company_id'] = $this->companyUser['company_id'];
             }
 
             // 上级ID：1.平台只能新增每个供应商的总账户，该供应商的总账户上级ID为平台管理员user_id；2.供应商账户新增下级账户时，TODO：parent_id待处理
-            if ($this->companyUser['company_id'] == 0) { // 平台账户登录时
+            if ($this->companyUser['company_id'] == 1) { // 平台账户登录时
                 // 当平台管理员登录时
                 if ($this->companyUser['parent_id'] == 0) {
                     $data['parent_id'] = $this->companyUser['user_id'];
@@ -312,7 +312,32 @@ class CompanyUser extends Base
                 return show(config('code.error'), '删除失败：供应商账户已启用', '', 403);
             }
 
-            // 真删除
+            /* 手动控制事务 s */
+            // 启动事务
+            Db::startTrans();
+            try {
+                // 真删除指定供应商账户
+                $res[0] = Db::name('company_user')->where(['user_id' => $id])->delete();
+                //$result = model('CompanyUser')->destroy($id);
+
+                // 真删除指定供应商账户角色
+                $res[1] = Db::name('auth_group_access')->where(['uid' => $id])->delete();
+
+                // 任意一个表写入失败都会抛出异常，TODO：是否可以不做该判断
+                if (in_array(0, $res)) {
+                    return show(config('code.error'), '删除失败', '', 403);
+                }
+
+                // 提交事务
+                Db::commit();
+                return show(config('code.success'), '删除成功');
+            } catch (\Exception $e) {
+                // 回滚事务
+                Db::rollback();
+                return show(config('code.error'), '网络忙，请重试', '', 500);
+            }
+            /* 手动控制事务 e */
+            /*// 真删除
             try {
                 $result = model('CompanyUser')->destroy($id);
             } catch (\Exception $e) {
@@ -322,7 +347,7 @@ class CompanyUser extends Base
                 return show(config('code.error'), '删除失败', '', 403);
             } else {
                 return show(config('code.success'), '删除成功');
-            }
+            }*/
         } else {
             return show(config('code.error'), '请求不合法', '', 400);
         }

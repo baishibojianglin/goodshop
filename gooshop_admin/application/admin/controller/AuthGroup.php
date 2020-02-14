@@ -30,7 +30,7 @@ class AuthGroup extends Base
             // 查询条件
             $map = [];
             // Auth用户组ID：供应商总管理员用户组（角色）可以查看所有Auth用户组，其他区域供应商管理员只能查看自有和通用Auth用户组
-            if ($this->companyUser['company_id'] != 0) {
+            if ($this->companyUser['company_id'] != 1) {
                 $groupIds = model('AuthGroup')->getAuthGroupIdsByUserId($this->companyUser['user_id']);
                 $map['ag.id'] = ['in', $groupIds];
             }
@@ -64,7 +64,7 @@ class AuthGroup extends Base
 
         // 查询条件
         $map = [];
-        if ($this->companyUser['company_id'] != 0) { // Auth用户组ID
+        if ($this->companyUser['company_id'] != 1) { // Auth用户组ID
             $authGroupIds = model('AuthGroup')->getAuthGroupIdsByUserId($this->companyUser['user_id']);
             if (isset($param['parent_id'])) { // Auth用户组上级ID
                 $param['parent_id'] = intval($param['parent_id']);
