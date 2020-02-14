@@ -4,7 +4,7 @@
 		  <el-col :span="15">
 			 <el-steps :active="active" finish-status="success" style="margin-left: 50px;margin-bottom: 50px;">
 			   <el-step title="填写基本信息"></el-step>
-			   <el-step title="填写配置信息"></el-step>
+			   <el-step title="配置销售地区"></el-step>
 			   <el-step title="创建成功"></el-step>
 			 </el-steps>			  
 		  </el-col>
@@ -132,7 +132,6 @@
 				this.$axios.post(this.$url+'createCompany',{
 				   data:this.ruleForm
 				}).then(function(res){
-					console.log(res.data)
                    if(res.data.status==1){
 					 self.$message({
 						 message:'基本信息添加成功',
