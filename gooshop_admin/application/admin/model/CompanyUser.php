@@ -88,6 +88,8 @@ class CompanyUser extends Base
             ->field($this->_getListField())
             ->join('__COMPANY_USER__ pcu', 'cu.parent_id = pcu.user_id', 'LEFT') // 上级
             ->join('__COMPANY__ c', 'cu.company_id = c.id', 'LEFT') // 供应商
+            ->join('__AUTH_GROUP_ACCESS__ aga', 'cu.user_id = aga.uid', 'LEFT') // 供应商账户角色
+            ->join('__AUTH_GROUP__ ag', 'aga.group_id = ag.id', 'LEFT') // Auth用户组
             ->where($map)
             ->order($order)
             ->cache(true, 10)
@@ -115,7 +117,8 @@ class CompanyUser extends Base
             'cu.login_time',
             'cu.login_ip',
             'pcu.user_name parent_name',
-            'c.name company_name'
+            'c.name company_name',
+            'ag.title auth_group_title'
         ];
     }
 }
