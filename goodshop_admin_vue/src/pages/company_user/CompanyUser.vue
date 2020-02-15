@@ -40,6 +40,7 @@
 					</el-table-column>
 					<el-table-column prop="company_name" label="供应商名称" width="180"></el-table-column>
 					<el-table-column prop="phone" label="电话号码" width="180"></el-table-column>
+					<el-table-column prop="auth_group_title" label="角色" width="180"></el-table-column>
 					<el-table-column prop="status" label="状态" width="90" :filters="[{ text: '禁用', value: 0 }, { text: '正常', value: 1 }]" :filter-method="filterStatus" filter-placement="bottom-end">
 						<template slot-scope="scope">
 							<el-tag :type="scope.row.status === 0 ? 'info' : (scope.row.status === 1 ? 'success' : 'danger')" size="mini">{{scope.row.status_msg}}</el-tag>
