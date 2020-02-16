@@ -31,11 +31,10 @@ class Company extends Base
 	public function getarea(){
 		$form=input();
 		if($form['companyid']==1){
-			//查询省级
+			//平台查询所有省级
 			$map['level']=1;
-			$listdata = model('Region')->getRegion($map);
 		}
-		
+		$listdata = model('Region')->getRegion($map);		
 		if(!empty($listdata)){
 			$message['data']=$listdata;
 			$message['status']=1;
