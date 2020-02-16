@@ -53,7 +53,8 @@
 							<el-collapse-transition>
 								<div v-show="menuvalue[4]">
 									<router-link to="/home/auth_group"><dd id='menu41' :class="activevalue[41]?activeclass:''"  @click="menuactive(41,4,1)">角色管理</dd></router-link>
-									<router-link to="/home/company_user"><dd id='menu42' :class="activevalue[42]?activeclass:''"  @click="menuactive(42,4,2)">供应商账户</dd></router-link>
+									<router-link to="/home/auth_rule"><dd id='menu42' :class="activevalue[42]?activeclass:''"  @click="menuactive(42,4,2)">权限规则</dd></router-link>
+									<router-link to="/home/company_user"><dd id='menu43' :class="activevalue[43]?activeclass:''"  @click="menuactive(43,4,3)">供应商账户</dd></router-link>
 								</div>
 							</el-collapse-transition>
 						</dl>
