@@ -25,6 +25,32 @@ class Company extends Base
 		return json($message);
 	}
 
+   /**
+   *获取供应商销售区域
+   */
+	public function getarea(){
+		$form=input();
+		if($form['companyid']==1){
+			//查询省级
+			$map['level']=1;
+			$listdata = model('Region')->getRegion($map);
+		}
+		
+		if(!empty($listdata)){
+			$message['data']=$listdata;
+			$message['status']=1;
+			$message['words']='基本信息添加成功';
+		}else{
+			$message['status']=0;
+			$message['words']='基本信息添加失败';
+		}
+		return json($message);
+	}
+
+
+
+
+
 	/**
 	 * 获取供应商列表树
 	 * @return \think\response\Json
