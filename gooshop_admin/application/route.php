@@ -20,6 +20,9 @@ Route::resource('goods_brand', 'admin/goods_brand');
 // Auth用户组
 Route::resource('auth_group', 'admin/auth_group');
 Route::get('auth_group_tree', 'admin/auth_group/authGroupTree'); // Auth用户组列表树
+// Auth权限规则
+Route::resource('auth_rule', 'admin/auth_rule');
+Route::get('auth_rule_tree', 'admin/auth_rule/authRuleTree'); // Auth权限规则列表树
 // 供应商账户
 Route::resource('company_user', 'admin/company_user');
 // 供应商
