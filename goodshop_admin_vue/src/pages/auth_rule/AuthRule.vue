@@ -162,7 +162,7 @@
 			 * @param {Object} row
 			 */
 			toAuthRuleEdit(row) {
-				this.$router.push({path: "auth_rule_edit", query: {id: row.id, title: row.title, status: row.status, parent_id: row.parent_id}});
+				this.$router.push({path: "auth_rule_edit", query: {id: row.id}});/* , title: row.title, status: row.status, pid: row.pid */
 			},
 			
 			/**
