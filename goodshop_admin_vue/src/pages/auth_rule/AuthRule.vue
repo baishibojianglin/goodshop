@@ -24,14 +24,16 @@
 			</div>
 			<div class="">
 				<!-- 权限规则列表 s -->
-				<el-table :data="authRuleList" border style="width: 100%">
+				<el-table :data="authRuleList" height="390" border style="width: 100%">
 					<el-table-column prop="id" type="" label="ID" fixed width="90"></el-table-column>
 					<el-table-column prop="title" label="权限规则名称" fixed min-width="180"></el-table-column>
 					<el-table-column prop="name" label="权限规则" min-width="180"></el-table-column>
 					<el-table-column prop="type" label="权限规则类型" min-width="120"></el-table-column>
 					<el-table-column prop="pid" label="上级ID" width="90"></el-table-column>
 					<el-table-column prop="level" label="级别" width="90"></el-table-column>
-					<el-table-column prop="icon" label="图标" width="90"></el-table-column>
+					<el-table-column prop="icon" label="图标" width="90">
+						<template slot-scope="scope"><i :class="scope.row.icon" :title="scope.row.icon"></i></template>
+					</el-table-column>
 					<el-table-column prop="status" label="状态" width="90" :filters="[{ text: '禁用', value: 0 }, { text: '正常', value: 1 }]" :filter-method="filterStatus" filter-placement="bottom-end">
 						<template slot-scope="scope">
 							<el-tag :type="scope.row.status === 1 ? 'success' : 'info'" size="mini">{{scope.row.status_msg}}</el-tag>
@@ -48,7 +50,7 @@
 				<!-- 权限规则列表 e -->
 				
 				<!-- 分页 s -->
-				<div>
+				<div hidden="hidden">
 					<el-pagination
 						background
 						:page-sizes="[5, 10, 15, 20]"

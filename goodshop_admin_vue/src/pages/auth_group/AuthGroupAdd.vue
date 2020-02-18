@@ -25,7 +25,7 @@
 					<el-form-item prop="title" label="角色名称">
 						<el-input v-model="form.title" placeholder="输入角色名称" clearable style="width:350px;"></el-input>
 					</el-form-item>
-					<el-form-item prop="status" label="角色类型">
+					<el-form-item prop="type" label="角色类型">
 						<el-radio-group v-model="form.type">
 							<el-radio :label="0">私有角色</el-radio>
 							<el-radio :label="1">通用角色</el-radio>

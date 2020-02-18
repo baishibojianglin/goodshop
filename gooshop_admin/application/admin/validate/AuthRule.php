@@ -39,7 +39,7 @@ class AuthRule extends Validate
         // 验证update场景
         'update' => [
             'name'=> 'require|max:80',
-            'name.unique' => 'unique:auth_rule, name^id', // 忽略唯一(unique)类型字段name对自身数据的唯一性验证
+            'name.unique' => 'unique:auth_rule, name^id', // 忽略唯一(unique)类型字段name对自身数据的唯一性验证，TODO：这样无效，待处理
             'title' => 'require|max:20',
             'title.unique' => 'unique:auth_rule, title^id', // 忽略唯一(unique)类型字段title对自身数据的唯一性验证
             'type',
