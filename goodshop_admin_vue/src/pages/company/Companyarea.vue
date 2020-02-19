@@ -9,9 +9,16 @@
 			 </el-steps>			  
 		  </el-col>
 		 </el-row>
+		 
+	 
+		<el-tree
+		  :props="props"
+		  :load="loadNode"
+		  empty-text=''
+		  lazy
+		  show-checkbox>
+		</el-tree> 
 
-
-         <el-tree :data="area" @node-click="handleNodeClick" show-checkbox></el-tree>
 		
 	
 	</div>
@@ -21,13 +28,24 @@
    export default {
      data() {
 		   return {
-			   active: 1,  //步骤条
-			   area: []
+			    active: 1,  //步骤条
+			    companyid:'', //登录账号所属供应商
+				parent_id:'',
+				level:'',
+				props: {
+				  label: 'region_name',
+				  //children: 'region_name',
+				  //isLeaf: true
+				},
+
+
 		    }
      },
 	 mounted(){
-		//调用获取数据方法
-	    this.getarea();
+		 let self=this;
+		 let company=JSON.parse(localStorage.getItem('company')); //取出的缓存的登录账户信息
+		 this.companyid=company.company_id; //获取登录账号所属的供应商id
+		 	     
 	 },
 
      methods: {
@@ -38,27 +56,46 @@
 		  next(){
 			if (this.active++ > 2) this.active = 0;
 		  },
-		  /**
-		   * 获取区域数据
-		   */
-		  getarea(){
-			//向后台请求地区数据
+
+		  loadNode(node, resolve) {	
 			let self=this;
 			let company=JSON.parse(localStorage.getItem('company')); //取出的缓存的登录账户信息
-			this.$axios.post(this.$url+'companyarea',{
-				 companyid:company.company_id  //获取登录账号所属的供应商id
-			}).then(function(res){
-				console.log(res.data.data)
-				//向省级区域赋值
-				res.data.data.forEach((value,index)=>{
-					self.$set(self.area,index,{index:index,label:value.region_name,region_id:value.region_id,level:value.level,parent_id:value.parent_id});
-				})						
-			})			  
-		  },
-		  
-		  handleNodeClick(data) {
-		          console.log(data);
-		  },
+			this.companyid=company.company_id; //获取登录账号所属的供应商id
+			if(node.data){
+				this.parent_id=node.data.region_id;
+				this.level=node.data.level+1;
+			}else{
+				this.parent_id=0;
+				this.level=1;
+			}
+			console.log(node.data)
+			//平台账号
+			if(this.companyid==1){ 
+				this.$axios.post(this.$url+'platformarea',{
+					 parent_id:this.parent_id,
+					 level:this.level
+				}).then(function(res){
+					    //console.log(res.data)
+						if (node.level === 0) {
+						  return resolve(res.data.data);
+						}
+						if (node.level > 1) return resolve(res.data.data);
+
+						setTimeout(() => {
+						  const data = res.data.data;		
+						  resolve(data);
+						}, 500);				
+									
+				})
+				
+				
+			}			  
+			  
+			  
+
+			
+			
+		  }
 
 		  
      }
@@ -69,4 +106,5 @@
 	.area{
 		padding:20px 0 50px 0;
 	}
+
 </style>

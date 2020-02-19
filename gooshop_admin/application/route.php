@@ -10,8 +10,8 @@ Route::GET('code','admin/Login/createverifycode');
 Route::POST('upload','admin/Common/uploadimg');
 //删除图片
 Route::POST('deleteimages','admin/Common/deleteimg');
-//获取供应商销售区域数据
-Route::POST('companyarea','admin/Company/getarea');
+//获取平台销售区域数据
+Route::POST('platformarea','admin/Company/getarea_platform');
 // 区域
 Route::resource('region', 'admin/region');
 // 商品类别
