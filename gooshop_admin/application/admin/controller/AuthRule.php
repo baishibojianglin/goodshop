@@ -154,6 +154,9 @@ class AuthRule extends Base
             if (isset($param['type'])) {
                 $data['type'] = input('param.type', null, 'intval');
             }
+            if (isset($param['condition'])) {
+                $data['condition'] = trim($param['condition']);
+            }
             if (isset($param['status'])) { // 不能用 !empty() ，否则 status = 0 时也判断为空
                 $data['status'] = input('param.status', null, 'intval');
             }
