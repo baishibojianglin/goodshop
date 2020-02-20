@@ -22,6 +22,7 @@ import GoodsBrandEdit from '@/pages/goods_brand/GoodsBrandEdit.vue'
 import AuthGroup from '@/pages/auth_group/AuthGroup.vue'
 import AuthGroupAdd from '@/pages/auth_group/AuthGroupAdd.vue'
 import AuthGroupEdit from '@/pages/auth_group/AuthGroupEdit.vue'
+import AuthGroupRule from '@/pages/auth_group/AuthGroupRule.vue'
 // 账户管理·权限规则
 import AuthRule from '@/pages/auth_rule/AuthRule.vue'
 import AuthRuleAdd from '@/pages/auth_rule/AuthRuleAdd.vue'
@@ -69,6 +70,7 @@ const routes = [
 			{path: 'auth_group', name: 'auth_group', component: AuthGroup}, // 角色管理
 			{path: 'auth_group_add', name: 'auth_group_add', component: AuthGroupAdd}, // 新增角色
 			{path: 'auth_group_edit', name: 'auth_group_edit', component: AuthGroupEdit}, // 编辑角色
+			{path: 'auth_group_rule', name: 'auth_group_rule', component: AuthGroupRule}, // 角色权限规则配置
 			// 权限规则
 			{path: 'auth_rule', name: 'auth_rule', component: AuthRule}, // 权限规则
 			{path: 'auth_rule_add', name: 'auth_rule_add', component: AuthRuleAdd}, // 新增权限规则

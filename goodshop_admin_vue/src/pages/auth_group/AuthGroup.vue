@@ -45,7 +45,7 @@
 					</el-table-column>
 					<el-table-column label="操作" fixed="right" min-width="160">
 						<template slot-scope="scope">
-							<el-button type="primary" size="mini" plain @click="toAuthGroupConfig(scope.row)">权限配置</el-button>
+							<el-button type="primary" size="mini" plain @click="toAuthGroupRule(scope.row)">权限配置</el-button>
 							<el-button type="primary" size="mini" plain @click="toAuthGroupEdit(scope.row)">编辑</el-button>
 							<el-button type="danger" size="mini" plain @click="deleteAuthGroup(scope)">删除</el-button>
 						</template>
@@ -159,6 +159,14 @@
 			 */
 			filterStatus(value, row) {
 				return row.status === value;
+			},
+			
+			/**
+			 * 跳转角色权限配置页
+			 * @param {Object} row
+			 */
+			toAuthGroupRule(row) {
+				this.$router.push({path: "auth_group_rule", query: {id: row.id}});/* , title: row.title, status: row.status, parent_id: row.parent_id */
 			},
 			
 			/**
