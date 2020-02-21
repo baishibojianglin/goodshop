@@ -11,7 +11,7 @@
 			</div>
 			<div class="">
 				<!-- Tree 树形控件（可选择层级） s -->
-				<el-tree :data="data" :props="defaultProps" show-checkbox @node-click="handleNodeClick"></el-tree>
+				<el-tree :props="props" :load="loadNode" empty-text='' lazy show-checkbox></el-tree>
 				<!-- Tree 树形控件 e -->
 			</div>
 		</el-card>
@@ -22,50 +22,72 @@
 	export default {
 		data() {
 			return {
-				data: [{
-					label: '一级 1',
-					children: [{
-						label: '二级 1-1',
-						children: [{
-							label: '三级 1-1-1'
-						}]
-					}]
-					}, {
-						label: '一级 2',
-						children: [{
-						label: '二级 2-1',
-						children: [{
-							label: '三级 2-1-1'
-						}]
-					}, {
-						label: '二级 2-2',
-						children: [{
-							label: '三级 2-2-1'
-							}]
-						}]
-					}, {
-						label: '一级 3',
-						children: [{
-						label: '二级 3-1',
-						children: [{
-							label: '三级 3-1-1'
-						}]
-						}, {
-							label: '二级 3-2',
-							children: [{
-								label: '三级 3-2-1'
-							}]
-						}]
-				}],
-				defaultProps: {
-					children: 'children',
-					label: 'label'
-				}
+				props: {
+					label: 'title',
+					isLeaf: 'leaf' // 指定节点是否为叶子节点
+				},
+
+				parent_id: '', // 父级ID
+				level: '', // 层级
 			};
 		},
 		methods: {
-			handleNodeClick(data) {
-				console.log(data);
+			/**
+			 * 懒加载（权限规则） Tree 树形数据
+			 * @param {Object} node
+			 * @param {Object} resolve
+			 */
+			loadNode(node, resolve) {
+				let self = this;
+				if (node.data) {
+					this.parent_id = node.data.id;
+					this.level = node.data.level + 1;
+				} else {
+					this.parent_id = 0;
+					this.level = 1;
+				}
+				
+				// 懒加载Auth权限规则树形列表
+				this.$axios.get(this.$url + 'lazy_load_auth_rule_tree', {
+					params: {
+						parent_id: this.parent_id,
+						level: this.level,
+					},
+					headers: {
+						'company-user-id': JSON.parse(localStorage.getItem('company')).user_id,
+						'company-user-token': JSON.parse(localStorage.getItem('company')).token
+					}
+				}).then(function(res) {
+					if (res.data.status == 1) {
+						const data = res.data.data;
+						data.forEach((value, index) => {
+							// 当不存在子级时，指定节点为叶子节点
+							if (value.children_count == 0) {
+								value.leaf = true;
+							}
+						})
+						
+						/* if (node.level === 0) {
+							return resolve(res.data.data);
+						}
+						if (node.level > 1) return resolve([]); */
+										
+						setTimeout(() => {
+							resolve(data);
+						}, 500);
+					} else {
+						self.$message({
+							message: '网络忙，请重试',
+							type: 'warning'
+						});
+					}
+				})
+				.catch(function (error) {
+					self.$message({
+						message: error.response.data.message,
+						type: 'warning'
+					});
+				});
 			}
 		}
 	};

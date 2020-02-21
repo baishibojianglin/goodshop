@@ -75,7 +75,7 @@
 				rules: { // 验证规则
 					name: [
 						{ required: true, message: '请输入权限规则', trigger: 'blur' },
-						{ min: 1, max: 20, message: '长度在 1 到 80 个字符', trigger: 'blur' }
+						{ min: 1, max: 80, message: '长度在 1 到 80 个字符', trigger: 'blur' }
 					],
 					title: [
 						{ required: true, message: '请输入权限规则名称', trigger: 'blur' },
