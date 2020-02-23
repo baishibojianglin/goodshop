@@ -59,7 +59,7 @@ class AuthRule extends Base
      * @param int $level
      * @return array
      */
-    public function sort($data, $pid = 0, $level = 0)
+    public function sort($data, $pid = 0, $level = 1)
     {
         // 定义静态数组
         static $arr = array();

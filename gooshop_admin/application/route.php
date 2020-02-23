@@ -24,9 +24,11 @@ Route::resource('goods_brand', 'admin/goods_brand');
 // Auth用户组
 Route::resource('auth_group', 'admin/auth_group');
 Route::get('auth_group_tree', 'admin/auth_group/authGroupTree'); // Auth用户组列表树
+Route::put('config_auth_group_rule/:id', 'admin/auth_group/configAuthGroupRule'); // 配置Auth用户组权限规则
 // Auth权限规则
 Route::resource('auth_rule', 'admin/auth_rule');
 Route::get('auth_rule_tree', 'admin/auth_rule/authRuleTree'); // Auth权限规则列表树
+Route::get('lazy_load_auth_rule_tree', 'admin/auth_rule/lazyLoadAuthGroupTree'); // 懒加载Auth权限规则树形列表
 // 供应商账户
 Route::resource('company_user', 'admin/company_user');
 // 供应商

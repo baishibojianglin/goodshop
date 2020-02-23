@@ -73,7 +73,7 @@ class AuthRule extends Base
             if ($plevel) {
                 $data['level'] = $plevel['level'] + 1;
             } else {
-                $data['level'] = 0;
+                $data['level'] = 1;
             }
 
             // 新增
@@ -85,6 +85,7 @@ class AuthRule extends Base
             }
             // 判断是否新增成功：获取id
             if ($id) {
+                @cache('auth_rule_tree', null); // 删除缓存
                 return show(config('code.success'), '权限规则新增成功', '', 201);
             } else {
                 return show(config('code.error'), '权限规则新增失败', '', 403);
@@ -171,7 +172,7 @@ class AuthRule extends Base
                 if ($plevel) {
                     $data['level'] = $plevel['level'] + 1;
                 } else {
-                    $data['level'] = 0;
+                    $data['level'] = 1;
                 }
             }
             if (!empty($param['icon'])) {
@@ -194,6 +195,7 @@ class AuthRule extends Base
             if (false === $result) {
                 return show(config('code.error'), '更新失败', '', 403);
             } else {
+                @cache('auth_rule_tree', null); // 删除缓存
                 return show(config('code.success'), '更新成功', '', 201);
             }
         } else {
@@ -240,6 +242,7 @@ class AuthRule extends Base
             if (!$result) {
                 return show(config('code.error'), '删除失败', '', 403);
             } else {
+                @cache('auth_rule_tree', null); // 删除缓存
                 return show(config('code.success'), '删除成功', '');
             }
         } else {
@@ -260,36 +263,84 @@ class AuthRule extends Base
 
     /**
      * 获取处理数据后的Auth规则列表树
-     * @param $map
+     * @param array $map
      * @return mixed
      * @throws ApiException
      */
     private function _authRuleTree($map = [])
     {
-        // 获取Auth规则列表树，用于页面下拉框列表、权限配置
-        // 捕获异常
-        try {
-            $data = model('AuthRule')->getAuthRuleTree($map);
-        } catch (\Exception $e) {
-            throw new ApiException($e->getMessage(), 500, config('code.error'));
-        }
+        // 获取缓存
+        if (cache('auth_rule_tree')){
+            return cache('auth_rule_tree');
+        } else {
+            // 获取Auth规则列表树，用于页面下拉框列表、权限配置
+            // 捕获异常
+            try {
+                $data = model('AuthRule')->getAuthRuleTree($map);
+            } catch (\Exception $e) {
+                throw new ApiException($e->getMessage(), 500, config('code.error'));
+            }
 
-        if ($data) {
-            // 处理数据
-            $status = config('code.status');
-            foreach ($data as $key => $value) {
-                if ($value['level'] != 0) {
-                    // level 用于定义 title 前面的空位符的长度
-                    $data[$key]['title'] = '└' . str_repeat('─', $value['level'] * 2). ' ' .$value['title']; // str_repeat(string,repeat) 函数把字符串重复指定的次数
+            if ($data) {
+                // 处理数据
+                $status = config('code.status');
+                foreach ($data as $key => $value) {
+                    if ($value['level'] > 1) {
+                        // level 用于定义 title 前面的空位符的长度
+                        $data[$key]['title'] = '└' . str_repeat('─', ($value['level'] - 1) * 2). ' ' .$value['title']; // str_repeat(string,repeat) 函数把字符串重复指定的次数
+                    }
+
+                    // 定义状态信息status_msg
+                    $data[$key]['status_msg'] = $status[$value['status']];
+                    // 规则类型
+                    $data[$key]['type'] = $value['type'] == 2 ? 'menu' : 'url';
                 }
 
-                // 定义状态信息status_msg
-                $data[$key]['status_msg'] = $status[$value['status']];
-                // 规则类型
-                $data[$key]['type'] = $value['type'] == 2 ? 'menu' : 'url';
+                // 设置缓存
+                cache('auth_rule_tree', $data, 60);
             }
+
+            return $data;
+        }
+    }
+
+    /**
+     * 懒加载Auth权限规则树形列表
+     * @return \think\response\Json
+     */
+    public function lazyLoadAuthGroupTree()
+    {
+        // 判断为GET请求
+        if (!request()->isGet()) {
+            return show(config('code.error'), '请求不合法', '', 400);
         }
 
-        return $data;
+        // 传入的参数
+        $param = input('param.');
+
+        // 查询条件
+        $map = [];
+        $map['pid'] = $param['parent_id'] ? : 0; // 父级ID
+        $map['level'] = $param['level'] ? : 1; // 级别
+        $map['status'] = 1; // 启用状态
+        $map['module'] = 'admin'; // 规则所属模块
+
+        // 查询
+        try {
+            $data = model('AuthRule')->field('id, name, title, pid, level')->where($map)->select();
+        } catch (\Exception $e) {
+            return show(config('code.error'), '网络忙，请重试', '', 500); // $e->getMessage()
+        }
+        if ($data) {
+            foreach ($data as $key => $value) {
+                // 判断是否存在子级Auth权限规则
+                $sonAuthRuleCount = model('AuthRule')->field('id')->where(['pid' => $value['id']])->count();
+                $data[$key]['children_count'] = $sonAuthRuleCount; // 定义 children_count
+            }
+
+            return show(config('code.success'), 'OK', $data);
+        } else {
+            return show(config('code.error'), 'Not Found', '', 404);
+        }
     }
 }

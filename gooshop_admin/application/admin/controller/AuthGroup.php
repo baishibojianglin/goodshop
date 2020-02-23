@@ -174,6 +174,11 @@ class AuthGroup extends Base
      */
     public function update(Request $request, $id)
     {
+        // 判断为PUT请求
+        if (!request()->isPut()) {
+            return show(config('code.error'), '请求不合法', '', 400);
+        }
+
         // 传入的数据
         $param = input('param.');
 
@@ -217,6 +222,44 @@ class AuthGroup extends Base
             return show(config('code.error'), '更新失败', [], 403);
         } else {
             return show(config('code.success'), '更新成功', [], 201);
+        }
+    }
+
+    /**
+     * 配置Auth用户组权限规则
+     * @param Request $request
+     * @param $id
+     * @return \think\response\Json
+     */
+    public function configAuthGroupRule(Request $request, $id)
+    {
+        // 判断为PUT请求
+        if (!request()->isPut()) {
+            return show(config('code.error'), '请求不合法', '', 400);
+        }
+
+        // 传入的参数
+        $param = input('param.');
+
+        // 判断参数是否存在
+        if (!empty($param['rules'])) { // 用户组拥有的权限规则
+            $data['rules'] = implode(',', $param['rules']);
+        }
+
+        if (empty($data)) {
+            return show(config('code.error'), '数据不合法', '', 404);
+        }
+
+        // 更新
+        try {
+            $result = model('AuthGroup')->save($data, ['id' => $id]); // 更新
+        } catch (\Exception $e) {
+            return show(config('code.error'), '网络忙，请重试', '', 500);
+        }
+        if (false === $result) {
+            return show(config('code.error'), '权限规则配置失败', '', 403);
+        } else {
+            return show(config('code.success'), '权限规则配置成功', '', 201);
         }
     }
 
