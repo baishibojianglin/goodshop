@@ -14,13 +14,13 @@
 			  <el-col :span="15" style="margin-left: 50px;">
 					<el-form  ref="ruleForm" :model="ruleForm" :rules="rules"  label-width="0px">
 						
-				       <p>勾选可销售地区：</p>
-					   <el-tree :props="props" :load="loadNode" empty-text='' lazy show-checkbox></el-tree> 
+				       <p><i></i>勾选可销售地区：</p>
+					   <el-tree ref="tree" :props="props" @check-change="handleCheckChange" :load="loadNode" empty-text='' lazy show-checkbox></el-tree> 
                       
 					   <p v-show="loadfinish" >上传销售凭证：</p>
 					   <el-form-item v-if="loadfinish"   label="" prop="url_sale">
 						   <el-input v-show='false'  v-model="ruleForm.url_sale"></el-input>
-						   <el-upload  list-type="picture-card" :action="this.$url+'upload?name=image'"  :on-preview="handlePictureCardPreview"  name='image'>
+						   <el-upload  list-type="picture-card" :action="this.$url+'upload?name=image'"  :on-success="returnUrl"  :on-preview="handlePictureCardPreview"  name='image'>
 								 <i class="el-icon-circle-plus-outline" style="font-size: 14px;"> 上传凭证</i>
 						   </el-upload>
 						   <el-dialog :visible.sync="dialogVisible">
@@ -58,12 +58,14 @@
 				  isLeaf: 'leaf'
 				},
 				ruleForm: {
-				   url_sale: '', //凭证图片地址
+				   url_sale: '' , //凭证图片地址
+				   salearea:'', //区域数据 
+				   id:this.$route.query.companyid //新建的该供应商id
 				},
 				rules: {
 				  url_sale: [
 					{ required:true, message: '请上传凭证图片', trigger: 'blur' }
-				  ],											  
+				  ]											  
 				},
 				dialogImageUrl: '',
 				dialogVisible: false, //放大预览图片
@@ -74,36 +76,40 @@
 	 mounted(){
 		 let self=this;
 		 let company=JSON.parse(localStorage.getItem('company')); //取出的缓存的登录账户信息
-		 this.companyid=company.company_id; //获取登录账号所属的供应商id
-		 	     
+		 this.companyid=company.company_id; //获取登录账号所属的供应商id	
+		 console.log( this.$route.query.companyid)
 	 },
 
      methods: {
+		 handleCheckChange(){
+			 //console.log(this.$refs.tree.getCheckedNodes());
+			 
+		 },
+		 
 		  /**
 		  * 提交表单
 		  * @param {Object} formName
 		  */
 		  submitForm(formName) {
 			let self=this;
-			console.log(this.ruleForm)
-			// this.$refs[formName].validate((valid) => {
-			//   if (valid) {
-			// 	this.$axios.post(this.$url+'createCompany',{
-			// 	   data:this.ruleForm
-			// 	}).then(function(res){
-   //                 if(res.data.status==1){
-			// 		 self.$message({
-			// 			 message:'基本信息添加成功',
-			// 			 type: 'warning'
-			// 		  });
-			// 		  self.$router.push({path: "companyarea", query: {companyid:res.data.companyid}});
-			// 		  self.next(); 
-			// 	   }
-			// 	})                
-			//   }else {
-			// 	return false;
-			//   }
-			// });
+			this.$refs[formName].validate((valid) => {
+			  if (valid) {
+				this.$axios.post(this.$url+'createCompany',{
+				   data:this.ruleForm
+				}).then(function(res){
+                   if(res.data.status==1){
+					  self.$message({
+						 message:'基本信息添加成功',
+						 type: 'warning'
+					  });
+					  self.$router.push({path: "companyarea", query: {companyid:res.data.companyid}});
+					  self.next(); 
+				   }
+				})                
+			  }else {
+				return false;
+			  }
+			});
 		  },
 		  /**
 		   * 重置表单
@@ -118,6 +124,19 @@
 		  next(){
 			if (this.active++ > 2) this.active = 0;
 		  },
+		  /**
+		   * 上传图片
+		   * @param {string} response  返回图片地址
+		   * @param {Object} file
+		   * @param {Object} fileList
+		   */
+		  returnUrl(response, file, fileList){
+			  if(this.ruleForm.url_sale==''){
+				  this.ruleForm.url_sale=response['url'];  //一张图
+			  }else{
+				  this.ruleForm.url_sale=this.ruleForm.url_sale+'|'+response['url']; //多张图
+			  }
+		  },
          /**
 		  * 获取tree形数据
 		  * @param {Object} node
@@ -127,15 +146,17 @@
 			let self=this;
 			let company=JSON.parse(localStorage.getItem('company')); //取出的缓存的登录账户信息
 			this.companyid=company.company_id; //获取登录账号所属的供应商id
-			if(node.data){
+
+			if(node.data){  //逐级查询
 				this.parent_id=node.data.region_id;
 				this.level=node.data.level+1;
-			}else{
+			}else{ //首次进入页面默认设置查询第一级地域
 				this.parent_id=0;
 				this.level=1;
-			}
-			//平台账号
-			if(this.companyid==1){ 
+			}	
+		
+			if(this.companyid==1){  	//平台账号
+								
 				this.$axios.post(this.$url+'platformarea',{
 					 parent_id:this.parent_id,
 					 level:this.level
@@ -157,6 +178,31 @@
 						}, 500);							
 									
 				})		
+				
+			}else{  //供应商账号
+			
+				this.$axios.post(this.$url+'companyarea',{
+					 id:this.companyid,
+					 parent_id:this.parent_id,
+					 level:this.level
+				}).then(function(res){					
+					 self.loadfinish=true; //地区加载显示完成
+					 if(self.level==4){ //第四级时不再显示三角形
+						res.data.data.forEach((value,index)=>{
+							value.leaf=true;
+						})
+					 }
+					 if (node.level === 0) {
+					   return resolve(res.data.data);
+					 }
+					 if (node.level > 1) return resolve(res.data.data);
+					 
+					 setTimeout(() => {
+					   const data = res.data.data;		
+					   resolve(data);
+					 }, 500);
+				})							
+				
 				
 			}		  		
 		  },

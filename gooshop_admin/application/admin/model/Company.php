@@ -24,12 +24,28 @@ class Company extends Base
     {
         //入库供应商基本信息表
 
-        $data['role']=1;
-        $data['status']=2;
-        $data['type']=1;
+        $data['role']=1;  //供应商
+        $data['status']=2; //草稿
+        $data['type']=1; //正式数据
         $data['create_time']=date('Y-m-d H:i:s');
         $list=$this->save($data);
         return $this->id;
 
     }
+
+
+    /**
+     * 获取供应商销售区域字段
+     * @param $data
+     */
+    public function salearea($data)
+    {
+        //入库供应商基本信息表
+
+        $list=$this->where($data)->value('salearea');
+        return $list;
+
+    }
+
+
 }

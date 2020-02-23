@@ -12,6 +12,8 @@ Route::POST('upload','admin/Common/uploadimg');
 Route::POST('deleteimages','admin/Common/deleteimg');
 //获取平台销售区域数据
 Route::POST('platformarea','admin/Company/getarea_platform');
+//获取供应商销售区域数据
+Route::POST('companyarea','admin/Company/getarea_company');
 // 区域
 Route::resource('region', 'admin/region');
 // 商品类别
