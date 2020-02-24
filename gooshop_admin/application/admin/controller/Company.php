@@ -44,6 +44,37 @@ class Company extends Base
 
 
 
+   /**
+   *获取供应商销售区域
+   */
+	public function getarea_company(){
+		$form=input();
+		$mapcompany['id']=$form['id'];	
+		$map['parent_id']=$form['parent_id'];
+		$map['level']=$form['level'];
+        //获取company表销售区域字段值，并分解成数组
+		$listcompany = model('Company')->salearea($mapcompany);
+        $listcompanyvalue=explode("|",$listcompany);
+        //查询生成前台tree组件需要的数据格式
+        $data=model('Region')->getzone($map,$listcompanyvalue);
+        //区域全选情况的查询
+        if(empty($data)){
+        	 $data=model('Region')->getRegion($map);
+        }
+
+        if(!empty($data)){
+        	$message['data']= $data;
+        	$message['status']=1;
+        }else{
+        	$message['status']=0;       	
+        }
+
+		return json($message);
+
+
+	}
+
+
 
 
 	/**
