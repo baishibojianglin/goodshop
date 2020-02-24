@@ -11,7 +11,7 @@
 			</div>
 			<div class="">
 				<!-- Form 表单 s -->
-				<el-form ref="ruleForm" :model="form" :rules="rules"  label-width="120px" size="small" class="demo-form-inline">
+				<el-form ref="ruleForm" :model="form" :rules="rules" label-width="200px" size="small" class="demo-form-inline">
 					<el-form-item prop="title" label="角色名称">
 						<el-input v-model="form.title" clearable style="width:350px;" readonly></el-input>
 					</el-form-item>
