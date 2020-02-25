@@ -24,7 +24,7 @@
 			</div>
 			<div class="">
 				<!-- 供应商账户列表 s -->
-				<el-table :data="companyUserList" border style="width: 100%">
+				<el-table :data="companyUserList" height="500" border style="width: 100%">
 					<el-table-column prop="user_id" label="序号" fixed width="90"></el-table-column>
 					<el-table-column prop="user_name" label="供应商账户名称" fixed min-width="180"></el-table-column>
 					<el-table-column prop="avatar" label="头像" width="180">

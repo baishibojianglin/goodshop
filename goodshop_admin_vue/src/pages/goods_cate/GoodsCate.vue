@@ -46,7 +46,7 @@
 						</template>
 					</el-table-column>
 					<el-table-column prop="audit_time" label="审核时间" width="180"></el-table-column>
-					<el-table-column label="操作" fixed="right" min-width="160">
+					<el-table-column label="操作" fixed="right" min-width="350">
 						<template slot-scope="scope">
 							<el-button type="warning" size="mini" plain @click="isOnSale(scope)">{{scope.row.is_on_sale ? '下架' : '上架'}}</el-button>
 							<el-button type="primary" size="mini" plain @click="dialogFormVisible = true; form.cate_id = scope.row.cate_id; tableRowIndex = scope.$index">审核</el-button>
