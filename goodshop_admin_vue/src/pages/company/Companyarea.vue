@@ -14,10 +14,10 @@
 			  <el-col :span="15" style="margin-left: 50px;">
 					<el-form  ref="ruleForm" :model="ruleForm" :rules="rules"  label-width="0px">
 						
-				       <p><i></i>勾选可销售地区：</p>
-					   <el-tree ref="tree" :props="props" @check-change="handleCheckChange" :load="loadNode" empty-text='' lazy show-checkbox></el-tree> 
+				       <p><span style="color:#f00;">*</span> 勾选可销售地区：</p>
+					   <el-tree ref="tree" :props="props" :load="loadNode" empty-text='' lazy show-checkbox></el-tree> 
                       
-					   <p v-show="loadfinish" >上传销售凭证：</p>
+					   <p v-show="loadfinish" ><span style="color:#f00;">*</span> 上传销售凭证：</p>
 					   <el-form-item v-if="loadfinish"   label="" prop="url_sale">
 						   <el-input v-show='false'  v-model="ruleForm.url_sale"></el-input>
 						   <el-upload  list-type="picture-card" :action="this.$url+'upload?name=image'"  :on-success="returnUrl"  :on-preview="handlePictureCardPreview"  name='image'>
@@ -77,30 +77,45 @@
 		 let self=this;
 		 let company=JSON.parse(localStorage.getItem('company')); //取出的缓存的登录账户信息
 		 this.companyid=company.company_id; //获取登录账号所属的供应商id	
-		 console.log( this.$route.query.companyid)
 	 },
 
      methods: {
-		 handleCheckChange(){
-			 //console.log(this.$refs.tree.getCheckedNodes());
-			 
-		 },
 		 
 		  /**
 		  * 提交表单
 		  * @param {Object} formName
 		  */
 		  submitForm(formName) {
-			let self=this;
+			 let self=this;
+             self.ruleForm.salearea='';
+			 //获取全选的数据
+			 this.$refs.tree.getCheckedNodes().forEach((value,index)=>{
+			 	self.ruleForm.salearea=self.ruleForm.salearea+value.region_id+'|';
+			 })
+			 //获取半选的数据
+			 this.$refs.tree.getHalfCheckedKeys().forEach((value,index)=>{
+			 	self.ruleForm.salearea=self.ruleForm.salearea+value.region_id+'|';
+			 })
+			 //去除最后一个符号"|"
+			 self.ruleForm.salearea=self.ruleForm.salearea.slice(0,-1);
+			 //验证销售地区
+			 if(self.ruleForm.salearea==''){
+				 self.$message({
+				 					 message:'请勾选销售地区',
+				 					 type: 'warning'
+				 });
+				 return false;
+			 }
+             //提交数据
 			this.$refs[formName].validate((valid) => {
 			  if (valid) {
-				this.$axios.post(this.$url+'createCompany',{
+				this.$axios.post(this.$url+'companyareainsert',{
 				   data:this.ruleForm
 				}).then(function(res){
                    if(res.data.status==1){
 					  self.$message({
-						 message:'基本信息添加成功',
-						 type: 'warning'
+						 message:'销售地区配置成功',
+						 type: 'success'
 					  });
 					  self.$router.push({path: "companyarea", query: {companyid:res.data.companyid}});
 					  self.next(); 

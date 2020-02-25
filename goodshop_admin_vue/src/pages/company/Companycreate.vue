@@ -123,6 +123,7 @@
 		  * @param {Object} formName
 		  */
 		  submitForm(formName) {
+			 
 			let self=this;
 			let company=JSON.parse(localStorage.getItem('company')); //取出的缓存的登录账户信息
 			this.ruleForm.parent_id=company.company_id; //获取登录账号所属的供应商id，并赋值给表单
@@ -135,7 +136,7 @@
                    if(res.data.status==1){
 					 self.$message({
 						 message:'基本信息添加成功',
-						 type: 'warning'
+						 type: 'success'
 					  });
 					  self.$router.push({path: "companyarea", query: {companyid:res.data.companyid}});
 					  self.next(); 
@@ -234,9 +235,9 @@
 		line-height: 170px;
 	}
 	.license .el-upload--picture-card {
-		width: 120px;
-		height: 170px;
-		line-height: 170px;
+		width: 140px;
+		height: 198px;
+		line-height: 198px;
 	}
 	.hide .el-upload--picture-card {
 		display: none;
