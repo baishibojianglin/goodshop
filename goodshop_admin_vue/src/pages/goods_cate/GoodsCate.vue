@@ -30,10 +30,14 @@
 			<div class="">
 				<!-- 商品类别列表 s -->
 				<el-table :data="goodsCateList" border style="width: 100%">
-					<el-table-column type="index" label="ID" fixed width="90"></el-table-column>
+					<el-table-column prop="cate_id" label="序号" fixed width="90"></el-table-column>
 					<el-table-column prop="cate_name" label="类别名称" fixed min-width="180"></el-table-column>
+					<el-table-column prop="parent_id" label="上级序号" width="90">
+						<template slot-scope="scope">
+							{{scope.row.parent_id == 0 ? '（无）' : scope.row.parent_id}}
+						</template>
+					</el-table-column>
 					<el-table-column prop="parent_name" label="上级类别" width="180"></el-table-column>
-					<!-- <el-table-column prop="parent_id" label="上级ID" width="90"></el-table-column> -->
 					<!-- <el-table-column prop="grandparent_id" label="上上级ID" width="100"></el-table-column> -->
 					<el-table-column prop="is_on_sale_msg" label="是否上架" width="90" :filters="[{ text: '下架', value: 0 }, { text: '上架', value: 1 }]" :filter-method="filterIsOnSale" filter-placement="bottom-end"></el-table-column>
 					<el-table-column prop="audit_status" label="审核状态" width="90" :filters="[{ text: '待审核', value: 0 }, { text: '正常', value: 1 }, { text: '驳回', value: 2 }]" :filter-method="filterAuditStatus" filter-placement="bottom-end">

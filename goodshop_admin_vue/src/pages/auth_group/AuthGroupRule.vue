@@ -11,7 +11,10 @@
 			</div>
 			<div class="">
 				<!-- Form 表单 s -->
-				<el-form ref="ruleForm" :model="form" :rules="rules" label-position="top" size="small" class="demo-form-inline">
+				<el-form ref="ruleForm" :model="form" :rules="rules" label-width="200px" size="small" class="demo-form-inline">
+					<el-form-item prop="title" label="角色名称">
+						<el-input v-model="form.title" clearable style="width:350px;" readonly></el-input>
+					</el-form-item>
 					<el-form-item prop="rules" label="选择权限规则">
 						<!-- Tree 树形控件（可选择层级） s -->
 						<el-tree node-key="id" :props="props" :load="loadNode" lazy show-checkbox :default-expanded-keys="form.rules" :default-checked-keys="form.rules" @check-change="handleCheckChange" ref="tree"></el-tree>
@@ -42,6 +45,7 @@
 
 				form: {
 					id: '', // 角色ID
+					title: '', // 角色名称
 					rules: [] // 权限规则ID集合（数组）
 				},
 				rules: { // 验证规则

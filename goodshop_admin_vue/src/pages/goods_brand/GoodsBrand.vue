@@ -25,11 +25,11 @@
 			<div class="">
 				<!-- 商品品牌列表 s -->
 				<el-table :data="goodsBrandList" border style="width: 100%">
-					<el-table-column type="index" label="ID" fixed width="90"></el-table-column>
+					<el-table-column prop="brand_id" label="序号" fixed width="90"></el-table-column>
 					<el-table-column prop="brand_name" label="品牌名称" fixed min-width="180"></el-table-column>
 					<el-table-column prop="logo" label="logo" width="180">
 						<template slot-scope="scope">
-							<img :src="scope.row.logo" :alt="scope.row.brand_name" :title="scope.row.brand_name" width="50" height="50" />
+							<img :src="scope.row.logo" :alt="scope.row.logo" :title="scope.row.brand_name" width="50" height="50" />
 						</template>
 					</el-table-column>
 					<el-table-column prop="create_name" label="创建者" width="180"></el-table-column>

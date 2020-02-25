@@ -25,11 +25,16 @@
 			<div class="">
 				<!-- 角色列表 s -->
 				<el-table :data="authGroupList" border style="width: 100%">
-					<el-table-column prop="id" type="" label="ID" fixed width="90"></el-table-column>
+					<el-table-column prop="id" type="" label="序号" fixed width="90"></el-table-column>
 					<el-table-column prop="title" label="角色名称" fixed min-width="180"></el-table-column>
-					<el-table-column prop="parent_title" label="上级角色/上级ID" width="180">
+					<el-table-column prop="parent_id" type="" label="上级序号" width="90">
 						<template slot-scope="scope">
-							{{scope.row.parent_id == 0 ? '（无）' : scope.row.parent_title + '/' + scope.row.parent_id}}
+							{{scope.row.parent_id == 0 ? '（无）' : scope.row.parent_id}}
+						</template>
+					</el-table-column>
+					<el-table-column prop="parent_title" label="上级角色" width="180">
+						<template slot-scope="scope">
+							{{scope.row.parent_id == 0 ? '（无）' : scope.row.parent_title}}
 						</template>
 					</el-table-column>
 					<el-table-column prop="status" label="状态" width="90" :filters="[{ text: '禁用', value: 0 }, { text: '正常', value: 1 }]" :filter-method="filterStatus" filter-placement="bottom-end">

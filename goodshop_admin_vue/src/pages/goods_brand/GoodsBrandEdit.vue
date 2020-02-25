@@ -11,7 +11,7 @@
 			</div>
 			<div class="">
 				<!-- Form 表单 s -->
-				<el-form ref="ruleForm" :model="form" :rules="rules" label-width="100px" size="small" class="demo-form-inline">
+				<el-form ref="ruleForm" :model="form" :rules="rules" label-width="200px" size="small" class="demo-form-inline">
 					<el-form-item prop="brand_name" label="商品品牌">
 						<el-input v-model="form.brand_name" placeholder="输入商品品牌名称" clearable style="width:350px;"></el-input>
 					</el-form-item>

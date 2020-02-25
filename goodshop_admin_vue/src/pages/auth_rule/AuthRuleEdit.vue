@@ -11,7 +11,7 @@
 			</div>
 			<div class="">
 				<!-- Form 表单 s -->
-				<el-form ref="ruleForm" :model="form" :rules="rules" label-width="100px" size="small" class="demo-form-inline">
+				<el-form ref="ruleForm" :model="form" :rules="rules" label-width="200px" size="small" class="demo-form-inline">
 					<el-form-item prop="title" label="规则名称">
 						<el-input v-model="form.title" placeholder="输入权限规则名称" clearable style="width:350px;"></el-input>
 					</el-form-item>
@@ -30,7 +30,7 @@
 					<el-form-item prop="module" label="规则所属模块">
 						<el-input v-model="form.module" placeholder="输入权限规则所属模块，默认为 admin" clearable style="width:350px;"></el-input>
 					</el-form-item>
-					<el-form-item label="上级规则/ID" prop="pid">
+					<el-form-item label="上级规则/序号" prop="pid">
 						<el-select v-model="form.pid" placeholder="请选择…" filterable>
 							<el-option :key="0" label="（顶级规则）" :value="0"></el-option>
 							<el-option

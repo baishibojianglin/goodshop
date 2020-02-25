@@ -11,13 +11,13 @@
 			</div>
 			<div class="">
 				<!-- Form 表单 s -->
-				<el-form ref="ruleForm" :model="form" :rules="rules" label-width="100px" size="small" class="demo-form-inline">
+				<el-form ref="ruleForm" :model="form" :rules="rules" label-width="200px" size="small" class="demo-form-inline">
 					<el-form-item label="商品类别" prop="cate_name">
 						<el-input v-model="form.cate_name" placeholder="输入商品类别名称" clearable style="width:350px;"></el-input>
 					</el-form-item>
 					<el-form-item label="上级类别" prop="parent_id">
 						<el-select v-model="form.parent_id" placeholder="请选择…" filterable>
-							<el-option :key="0" label="一级类别" :value="0"></el-option>
+							<el-option :key="0" label="（一级类别）" :value="0"></el-option>
 							<el-option
 								v-for="item in options"
 								:key="item.cate_id"

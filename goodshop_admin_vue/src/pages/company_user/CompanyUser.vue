@@ -25,17 +25,22 @@
 			<div class="">
 				<!-- 供应商账户列表 s -->
 				<el-table :data="companyUserList" border style="width: 100%">
-					<el-table-column prop="user_id" label="ID" fixed width="90"></el-table-column>
+					<el-table-column prop="user_id" label="序号" fixed width="90"></el-table-column>
 					<el-table-column prop="user_name" label="供应商账户名称" fixed min-width="180"></el-table-column>
 					<el-table-column prop="avatar" label="头像" width="180">
 						<template slot-scope="scope">
-							<img :src="scope.row.avatar" :alt="scope.row.user_name" :title="scope.row.user_name" width="50" height="50" />
+							<img :src="scope.row.avatar" :alt="scope.row.avatar" :title="scope.row.user_name" width="50" height="50" />
 						</template>
 					</el-table-column>
 					<el-table-column prop="account" label="供应商账户号" width="180"></el-table-column>
-					<el-table-column prop="parent_name" label="上级/上级ID" width="180">
+					<el-table-column prop="parent_name" label="上级序号" width="90">
 						<template slot-scope="scope">
-							{{scope.row.parent_id == 0 ? '（无）' : scope.row.parent_name + '/' + scope.row.parent_id}}
+							{{scope.row.parent_id == 0 ? '（无）' : scope.row.parent_id}}
+						</template>
+					</el-table-column>
+					<el-table-column prop="parent_name" label="上级账户" width="180">
+						<template slot-scope="scope">
+							{{scope.row.parent_id == 0 ? '（无）' : scope.row.parent_name}}
 						</template>
 					</el-table-column>
 					<el-table-column prop="company_name" label="供应商名称" width="180"></el-table-column>

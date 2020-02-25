@@ -11,7 +11,7 @@
 			</div>
 			<div class="">
 				<!-- Form 表单 s -->
-				<el-form ref="ruleForm" :model="form" :rules="rules" label-width="100px" size="small" class="demo-form-inline">
+				<el-form ref="ruleForm" :model="form" :rules="rules" label-width="200px" size="small" class="demo-form-inline">
 					<el-form-item label="上级" prop="parent_id">
 						<el-select v-model="form.parent_id" placeholder="请选择…" filterable>
 							<el-option

@@ -11,7 +11,7 @@
 			</div>
 			<div class="">
 				<!-- Form 表单 s -->
-				<el-form ref="ruleForm" :model="form" :rules="rules" label-width="100px" size="small" class="demo-form-inline">
+				<el-form ref="ruleForm" :model="form" :rules="rules" label-width="200px" size="small" class="demo-form-inline">
 					<el-form-item label="上级" prop="parent_id" v-if="form.id == 1 ? false : true"><!-- 供应商总管理员不更新parent_id、type、status、auth_rules字段 -->
 						<el-select v-model="form.parent_id" placeholder="请选择…" filterable>
 							<el-option

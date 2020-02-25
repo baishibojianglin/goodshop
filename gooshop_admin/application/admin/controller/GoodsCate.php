@@ -53,7 +53,7 @@ class GoodsCate extends Base
                 foreach ($data as $key => $value) {
                     $data[$key]['audit_status_msg'] = $auditStatus[$value['audit_status']]; // 定义审核状态信息
                     $data[$key]['audit_time'] = $value['audit_time'] ? date('Y-m-d H:i:s', $value['audit_time']) : ''; // 审核时间
-                    $data[$key]['parent_name'] = $value['parent_id'] == 0 ? '一级类别' : $value['parent_name']; // 上级类别名称
+                    $data[$key]['parent_name'] = $value['parent_id'] == 0 ? '（一级类别）' : $value['parent_name']; // 上级类别名称
                     $data[$key]['is_on_sale_msg'] = $isOnSale[$value['is_on_sale']]; // 是否上架状态信息
                 }
 

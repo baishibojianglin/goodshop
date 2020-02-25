@@ -84,7 +84,7 @@ class AuthGroup extends Base
         if ($data) {
             // 处理数据
             foreach ($data as $key => $value) {
-                $data[$key]['title'] = $value['title'] . '/' . ($value['type'] == 0 ? '私有角色' : '通用角色');
+                $data[$key]['title'] = $value['title'] . '（' . ($value['type'] == 0 ? '私有角色' : '通用角色') . '）';
                 /*if ($value['level'] != 0) {
                     // level 用于定义 title 前面的空位符的长度
                     $data[$key]['title'] = '└' . str_repeat('─', $value['level'] * 1). ' ' . $value['title']; // str_repeat(string,repeat) 函数把字符串重复指定的次数
