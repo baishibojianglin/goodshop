@@ -75,6 +75,30 @@ class Company extends Base
 	}
 
 
+   /**
+   *插入供应商销售区域字段值
+   */
+	public function area_insert(){
+		$form=input();
+		//添加供应商基本信息
+		$listcompany=model('Company')->insertcompany($form['data']);
+		
+		if(!empty($listcompany)){
+			$message['companyid']=$listcompany;
+			$message['status']=1;
+			$message['words']='基本信息添加成功';
+		}else{
+			$message['status']=0;
+			$message['words']='基本信息添加失败';
+		}
+		return json($message);
+	}
+
+
+
+
+
+
 
 
 	/**
