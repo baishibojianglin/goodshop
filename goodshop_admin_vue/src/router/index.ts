@@ -5,6 +5,7 @@ import Home from '@/views/Home.vue'
 // 供应商管理
 import Companycreate from '@/pages/company/Companycreate.vue'
 import Companyarea from '@/pages/company/Companyarea.vue'
+import Companycate from '@/pages/company/Companycate.vue'
 // 区域管理
 import Region from '@/pages/region/Region.vue'
 import RegionCity from '@/pages/region/RegionCity.vue'
@@ -50,7 +51,9 @@ const routes = [
 		children: [
 			// 2--供应商管理
 			{path: 'companycreate',name: 'companycreate',component:Companycreate}, //创建供应商
-			{path: 'companyarea',name: 'companyarea',component:Companyarea}, //供应商配置信息
+			{path: 'companyarea',name: 'companyarea',component:Companyarea}, //供应商配置销售地区信息
+			{path: 'companycate',name: 'companycate',component:Companycate}, //供应商配置商品种类信息
+			
 			// 2--区域管理
 			{path: 'region', name: 'region', component: Region}, // 省级区域
 			{path: 'regioncity', name: 'regioncity', component: RegionCity}, // 市级区域

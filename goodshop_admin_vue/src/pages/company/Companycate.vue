@@ -15,10 +15,10 @@
 			  <el-col :span="15" style="margin-left: 50px;">
 					<el-form  ref="ruleForm" :model="ruleForm" :rules="rules"  label-width="0px">
 						
-				       <p><span style="color:#f00;">*</span> 选择销售地区：</p>
+				       <p><span style="color:#f00;">*</span> 选择销售种类并设置提成比例：</p>
 					   <el-tree ref="tree" :props="props" :load="loadNode" empty-text='' lazy show-checkbox></el-tree> 
                       
-<!-- 					   <p v-show="loadfinish" ><span style="color:#f00;">*</span> 上传经销区域凭证：</p>
+<!-- 					   <p v-show="loadfinish"><span style="color:#f00;">*</span> 上传销售凭证：</p>
 					   <el-form-item v-if="loadfinish"   label="" prop="url_sale">
 						   <el-input v-show='false'  v-model="ruleForm.url_sale"></el-input>
 						   <el-upload  list-type="picture-card" :action="this.$url+'upload?name=image'"  :on-success="returnUrl"  :on-preview="handlePictureCardPreview"  name='image'>
@@ -27,9 +27,9 @@
 						   <el-dialog :visible.sync="dialogVisible">
 							 <img width="100%" :src="dialogImageUrl" alt="">
 						   </el-dialog>
-					   </el-form-item>	 -->
+					   </el-form-item> -->	
 															  
-					   <el-form-item v-show="loadfinish"  style="margin-top:20px;">
+					   <el-form-item v-show="loadfinish" style="margin-top: 20px;">
 						 <el-button type="primary" @click="submitForm('ruleForm')">下一步</el-button>
 						 <el-button @click="resetForm('ruleForm')">重置</el-button>
 					   </el-form-item>																															
@@ -49,26 +49,26 @@
    export default {
      data() {
 		   return {
-			    active: 1,  //步骤条
+			    active: 2,  //步骤条
 			    companyid:'', //登录账号所属供应商
 				parent_id:'', //地区父级id
 				level:'', //层级
-				loadfinish:false, //地区是否加载完成
+				loadfinish:false, //种类是否加载完成
 				props: {
-				  label: 'region_name',
+				  label: 'cate_name',
 				  isLeaf: 'leaf'
 				},
 				ruleForm: {
 				   //url_sale: '' , //凭证图片地址
-				   salearea:'', //区域数据 
+				   salecate:'', //区域数据 
 				   id:this.$route.query.companyid ,//新建的该供应商id
-				   step:2 //创建进度
+				   step:3 //创建进度
 				},
-				 rules: {
-				//   url_sale: [
-				// 	{ required:true, message: '请上传凭证图片', trigger: 'blur' }
-				//   ]											  
-				 },
+				rules: {
+				 //  url_sale: [
+					// { required:true, message: '请上传凭证图片', trigger: 'blur' }
+				 //  ]											  
+				},
 				dialogImageUrl: '',
 				dialogVisible: false, //放大预览图片
 
@@ -90,7 +90,6 @@
 		  submitForm(formName) {
 			 let self=this;
              self.ruleForm.salearea='';
-
 			 //获取全选的数据
 			 this.$refs.tree.getCheckedNodes().forEach((value,index)=>{
 			 	self.ruleForm.salearea=self.ruleForm.salearea+value.region_id+'|';
@@ -101,7 +100,6 @@
 			 })
 			 //去除最后一个符号"|"
 			 self.ruleForm.salearea=self.ruleForm.salearea.slice(0,-1);
-
 			 //验证销售地区
 			 if(self.ruleForm.salearea==''){
 				 self.$message({
@@ -110,7 +108,6 @@
 				 });
 				 return false;
 			 }
-
              //提交数据
 			this.$refs[formName].validate((valid) => {
 			  if (valid) {
@@ -122,7 +119,7 @@
 						 message:'销售地区配置成功',
 						 type: 'success'
 					  });
-					  self.$router.push({path: "companycate", query: {companyid:self.$route.query.companyid }});
+					  self.$router.push({path: "companyarea", query: {companyid:res.data.companyid}});
 					  self.next(); 
 				   }
 				})                
@@ -163,23 +160,16 @@
 		  * @param {Object} resolve
 		  */
 		  loadNode(node, resolve) {	
-			let self=this;
-			let company=JSON.parse(localStorage.getItem('company')); //取出的缓存的登录账户信息
-			this.companyid=company.company_id; //获取登录账号所属的供应商id
-
+			
 			if(node.data){  //逐级查询
-				this.parent_id=node.data.region_id;
-				this.level=node.data.level+1;
+				this.parent_id=node.data.cate_id;
 			}else{ //首次进入页面默认设置查询第一级地域
 				this.parent_id=0;
-				this.level=1;
 			}	
-		
-			if(this.companyid==1){  	//平台账号
+
 								
-				this.$axios.post(this.$url+'platformarea',{
-					 parent_id:this.parent_id,
-					 level:this.level
+				this.$axios.post(this.$url+'getshopcate',{
+					 parent_id:this.parent_id
 				}).then(function(res){
 					    self.loadfinish=true; //地区加载显示完成
 					    if(self.level==4){ //第四级时不再显示三角形
@@ -199,32 +189,7 @@
 									
 				})		
 				
-			}else{  //供应商账号
-			
-				this.$axios.post(this.$url+'companyarea',{
-					 id:this.companyid,
-					 parent_id:this.parent_id,
-					 level:this.level
-				}).then(function(res){					
-					 self.loadfinish=true; //地区加载显示完成
-					 if(self.level==4){ //第四级时不再显示三角形
-						res.data.data.forEach((value,index)=>{
-							value.leaf=true;
-						})
-					 }
-					 if (node.level === 0) {
-					   return resolve(res.data.data);
-					 }
-					 if (node.level > 1) return resolve(res.data.data);
-					 
-					 setTimeout(() => {
-					   const data = res.data.data;		
-					   resolve(data);
-					 }, 500);
-				})							
-				
-				
-			}		  		
+					  		
 		  },
 		  /**
 			* 放大图片

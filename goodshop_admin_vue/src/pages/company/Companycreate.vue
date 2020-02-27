@@ -1,10 +1,11 @@
 <template>
 	<div class="create">
 		<el-row>
-		  <el-col :span="15">
+		  <el-col :span="22">
 			 <el-steps :active="active" finish-status="success" style="margin-left: 50px;margin-bottom: 50px;">
 			   <el-step title="填写基本信息"></el-step>
 			   <el-step title="配置销售地区"></el-step>
+			   <el-step title="配置商品种类"></el-step>
 			   <el-step title="创建成功"></el-step>
 			 </el-steps>			  
 		  </el-col>
@@ -82,7 +83,8 @@
 				   legalperson_idcard_code:'', //法人身份证号码
 				   url_license:'', //营业执照图片地址
 				   license_creditcode:'', //营业执照社会统一信用码
-				   parent_id:'' //上级供应商id
+				   parent_id:'', //上级供应商id
+				   step:1 //创建进度
 				},
 				rules: {
 				  name: [

@@ -95,7 +95,28 @@ class Company extends Base
 	}
 
 
+   /**
+   *获取商品种类
+   */
+	public function getshopcate_company(){
+		$form=input();	
+		$map['parent_id']=$form['parent_id'];
+		$map['audit_status']=1;
+        //获取商品种类表，并分解成数组
+		$listcompany = model('GoodsCate')->getGoodsCateTree($map);
 
+        if(!empty($listcompany)){
+        	$message['data']= $listcompany;
+        	$message['status']=1;
+        }else{
+        	$message['status']=0;       	
+        }
+
+	    return json($message);
+
+
+
+	}
 
 
 

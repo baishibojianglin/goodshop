@@ -24,15 +24,6 @@
 								</div>
 							</el-collapse-transition>
 							
-							<dt @click="menush(2)">
-								<span class="el-icon-s-tools" id="menu2"> 系统设置</span>
-								<span class="fr derection" :class="menuvalue[2]?derectionup:derectiondown"></span>
-							</dt>
-							<el-collapse-transition>
-								<div v-show="menuvalue[2]">
-									<router-link to="/home/region"><dd id='menu21' :class="activevalue[21]?activeclass:''" @click="menuactive(21,2,1)">区域管理</dd></router-link>
-								</div>
-							</el-collapse-transition>
 							
 							<dt @click="menush(3)">
 								<span class="el-icon-s-goods" id="menu3"> 商品管理</span>
@@ -57,6 +48,19 @@
 									<router-link to="/home/company_user"><dd id='menu43' :class="activevalue[43]?activeclass:''"  @click="menuactive(43,4,3)">供应商账户</dd></router-link>
 								</div>
 							</el-collapse-transition>
+
+							<dt @click="menush(2)">
+								<span class="el-icon-s-tools" id="menu2"> 系统设置</span>
+								<span class="fr derection" :class="menuvalue[2]?derectionup:derectiondown"></span>
+							</dt>
+							<el-collapse-transition>
+								<div v-show="menuvalue[2]">
+									<router-link to="/home/region"><dd id='menu21' :class="activevalue[21]?activeclass:''" @click="menuactive(21,2,1)">区域管理</dd></router-link>
+								</div>
+							</el-collapse-transition>							
+							
+							
+							
 						</dl>
 					</div>
 				</el-col> <!--menu e-->
