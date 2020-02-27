@@ -24,7 +24,7 @@
 			</div>
 			<div class="">
 				<!-- 角色列表 s -->
-				<el-table :data="authGroupList" border style="width: 100%">
+				<el-table :data="authGroupList" height="500" border style="width: 100%">
 					<el-table-column prop="id" type="" label="序号" fixed width="90"></el-table-column>
 					<el-table-column prop="title" label="角色名称" fixed min-width="180"></el-table-column>
 					<el-table-column prop="parent_id" type="" label="上级序号" width="90">
@@ -48,7 +48,7 @@
 					<el-table-column prop="auth_rules" label="授权配置下级权限" width="150">
 						<template slot-scope="scope">{{scope.row.auth_rules == 1 ? "允许" : "禁止"}}</template>
 					</el-table-column>
-					<el-table-column label="操作" fixed="right" min-width="160">
+					<el-table-column label="操作" fixed="right" min-width="240">
 						<template slot-scope="scope">
 							<el-button type="primary" size="mini" plain @click="toAuthGroupRule(scope.row)">权限配置</el-button>
 							<el-button type="primary" size="mini" plain @click="toAuthGroupEdit(scope.row)">编辑</el-button>
