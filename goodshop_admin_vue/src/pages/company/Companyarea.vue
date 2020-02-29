@@ -164,9 +164,6 @@
 		  */
 		  loadNode(node, resolve) {	
 			let self=this;
-			let company=JSON.parse(localStorage.getItem('company')); //取出的缓存的登录账户信息
-			this.companyid=company.company_id; //获取登录账号所属的供应商id
-
 			if(node.data){  //逐级查询
 				this.parent_id=node.data.region_id;
 				this.level=node.data.level+1;

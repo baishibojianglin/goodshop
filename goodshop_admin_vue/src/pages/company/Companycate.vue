@@ -15,8 +15,13 @@
 			  <el-col :span="15" style="margin-left: 50px;">
 					<el-form  ref="ruleForm" :model="ruleForm" :rules="rules"  label-width="0px">
 						
-				       <p><span style="color:#f00;">*</span> 选择销售种类并设置提成比例：</p>
-					   <el-tree ref="tree" :props="props" :load="loadNode" empty-text='' lazy show-checkbox></el-tree> 
+				       <p><span style="color:#f00;">*</span> 设置商品提成比例：</p>
+					   <el-tree  ref="tree" :props="props" :load="loadNode" empty-text='' lazy show-checkbox>
+						   <span  slot-scope="{ node, data }">
+							   <span>{{ node.label }}</span>
+							   <input :click='function(){if (event.target != this) {return false}}' class="treeinput" type="number" v-model='node.data.value' />
+						   </span>
+					   </el-tree> 
                       
 <!-- 					   <p v-show="loadfinish"><span style="color:#f00;">*</span> 上传销售凭证：</p>
 					   <el-form-item v-if="loadfinish"   label="" prop="url_sale">
@@ -82,6 +87,7 @@
 	 },
 
      methods: {
+
 		 
 		  /**
 		  * 提交表单
@@ -160,23 +166,24 @@
 		  * @param {Object} resolve
 		  */
 		  loadNode(node, resolve) {	
-			
-			if(node.data){  //逐级查询
-				this.parent_id=node.data.cate_id;
-			}else{ //首次进入页面默认设置查询第一级地域
-				this.parent_id=0;
-			}	
-
-								
+			  
+			    let self=this;
+				if(node.data){  //逐级查询
+					this.parent_id=node.data.cate_id;
+				}else{ //首次进入页面默认设置查询第一级地域
+					this.parent_id=0;
+				}	
+		    
 				this.$axios.post(this.$url+'getshopcate',{
 					 parent_id:this.parent_id
 				}).then(function(res){
-					    self.loadfinish=true; //地区加载显示完成
-					    if(self.level==4){ //第四级时不再显示三角形
-							res.data.data.forEach((value,index)=>{
-								value.leaf=true;
-							})
+					    if(res.data.data.length==0){
+							self.$message({
+								 message:'已无下级分类',
+								 type: 'warning'
+							});
 						}
+					    self.loadfinish=true; //种类加载显示完成
 						if (node.level === 0) {
 						  return resolve(res.data.data);
 						}
@@ -198,8 +205,9 @@
 		  handlePictureCardPreview(file) {
 		  			  this.dialogImageUrl = file.url;
 		  			  this.dialogVisible = true;
-		  }
+		  },
 
+		  
 		  
      }
    }
@@ -208,6 +216,20 @@
 <style>
 	.area{
 		padding:20px 0 50px 0;
+	}
+	.treeinput{
+		border:1px solid #ccc;
+		border-radius:3px;
+		width: 50px;
+		line-height: 16px;
+		margin-left: 10px;
+		text-align: center;
+	}
+	input::-webkit-outer-spin-button,input::-webkit-inner-spin-button {
+	    -webkit-appearance: none;
+	}	 
+	input[type="number"] {
+	    -moz-appearance: textfield;
 	}
 
 </style>
