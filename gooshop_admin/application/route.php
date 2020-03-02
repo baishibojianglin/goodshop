@@ -33,6 +33,8 @@ Route::put('config_auth_group_rule/:id', 'admin/auth_group/configAuthGroupRule')
 Route::resource('auth_rule', 'admin/auth_rule');
 Route::get('auth_rule_tree', 'admin/auth_rule/authRuleTree'); // Auth权限规则列表树
 Route::get('lazy_load_auth_rule_tree', 'admin/auth_rule/lazyLoadAuthGroupTree'); // 懒加载Auth权限规则树形列表
+// Auth权限规则菜单
+Route::get('auth_rule_menus', 'admin/auth_rule_menus/authRuleMenus'); // 权限规则菜单
 // 供应商账户
 Route::resource('company_user', 'admin/company_user');
 // 供应商
