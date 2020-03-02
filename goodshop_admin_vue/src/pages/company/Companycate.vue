@@ -15,8 +15,13 @@
 			  <el-col :span="15" style="margin-left: 50px;">
 					<el-form  ref="ruleForm" :model="ruleForm" :rules="rules"  label-width="0px">
 						
-				       <p><span style="color:#f00;">*</span> 选择销售种类并设置提成比例：</p>
-					   <el-tree ref="tree" :props="props" :load="loadNode" empty-text='' lazy show-checkbox></el-tree> 
+				       <p><span style="color:#f00;">*</span> 设置商品提成比例：</p>
+					   <el-tree  ref="tree" :expand-on-click-node="false" :props="props" :load="loadNode" empty-text='' lazy>
+						   <span  slot-scope="{ node, data }">
+							   <span>{{ node.label }}</span>
+							   <input class="treeinput" type="number" v-model='data.ratio' /> ‰
+						   </span>
+					   </el-tree> 
                       
 <!-- 					   <p v-show="loadfinish"><span style="color:#f00;">*</span> 上传销售凭证：</p>
 					   <el-form-item v-if="loadfinish"   label="" prop="url_sale">
@@ -51,7 +56,7 @@
 		   return {
 			    active: 2,  //步骤条
 			    companyid:'', //登录账号所属供应商
-				parent_id:'', //地区父级id
+				parent_id:'', //种类父级id
 				level:'', //层级
 				loadfinish:false, //种类是否加载完成
 				props: {
@@ -60,7 +65,7 @@
 				},
 				ruleForm: {
 				   //url_sale: '' , //凭证图片地址
-				   salecate:'', //区域数据 
+				   salecate:'', //种类数据 
 				   id:this.$route.query.companyid ,//新建的该供应商id
 				   step:3 //创建进度
 				},
@@ -82,6 +87,22 @@
 	 },
 
      methods: {
+         getCheckedAll(e){
+
+           return this.$refs.tree.filter(function (e) {
+              if(e.node.indeterminate){
+                  return e.node.indeterminate
+              }
+			  console.log(e.node.indeterminate)
+              return e.node.checked
+          }).map(function (e) {
+          //map高阶函数处理map之前的数据并将处理好的数据返回一个新的数组
+		  console.log(e.node.indeterminate)
+              return e.node
+          })
+
+          },
+
 		 
 		  /**
 		  * 提交表单
@@ -89,7 +110,9 @@
 		  */
 		  submitForm(formName) {
 			 let self=this;
-             self.ruleForm.salearea='';
+             self.ruleForm.salecate='';
+			this.getCheckedAll();
+			return false;
 			 //获取全选的数据
 			 this.$refs.tree.getCheckedNodes().forEach((value,index)=>{
 			 	self.ruleForm.salearea=self.ruleForm.salearea+value.region_id+'|';
@@ -160,23 +183,28 @@
 		  * @param {Object} resolve
 		  */
 		  loadNode(node, resolve) {	
-			
-			if(node.data){  //逐级查询
-				this.parent_id=node.data.cate_id;
-			}else{ //首次进入页面默认设置查询第一级地域
-				this.parent_id=0;
-			}	
-
-								
+			  
+			    let self=this;
+				if(node.data){  //逐级查询
+					this.parent_id=node.data.cate_id;
+				}else{ //首次进入页面默认设置查询第一级地域
+					this.parent_id=0;
+				}	
+		    
 				this.$axios.post(this.$url+'getshopcate',{
 					 parent_id:this.parent_id
 				}).then(function(res){
-					    self.loadfinish=true; //地区加载显示完成
-					    if(self.level==4){ //第四级时不再显示三角形
-							res.data.data.forEach((value,index)=>{
-								value.leaf=true;
-							})
+					   //添加提成比例属性
+					    res.data.data.forEach((value,index)=>{
+							value.ratio='';
+						})
+					    if(res.data.data.length==0){
+							self.$message({
+								 message:'已无下级分类',
+								 type: 'warning'
+							});
 						}
+					    self.loadfinish=true; //种类加载显示完成
 						if (node.level === 0) {
 						  return resolve(res.data.data);
 						}
@@ -198,8 +226,9 @@
 		  handlePictureCardPreview(file) {
 		  			  this.dialogImageUrl = file.url;
 		  			  this.dialogVisible = true;
-		  }
+		  },
 
+		  
 		  
      }
    }
@@ -208,6 +237,20 @@
 <style>
 	.area{
 		padding:20px 0 50px 0;
+	}
+	.treeinput{
+		border:1px solid #ccc;
+		border-radius:3px;
+		width: 50px;
+		line-height: 16px;
+		margin-left: 10px;
+		text-align: center;
+	}
+	input::-webkit-outer-spin-button,input::-webkit-inner-spin-button {
+	    -webkit-appearance: none;
+	}	 
+	input[type="number"] {
+	    -moz-appearance: textfield;
 	}
 
 </style>

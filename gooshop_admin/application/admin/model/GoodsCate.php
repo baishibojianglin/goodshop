@@ -41,6 +41,8 @@ class GoodsCate extends Base
         return $this->sort($result);
     }
 
+
+
     /**
      * 无限级分类递归排序
      * @param $data
