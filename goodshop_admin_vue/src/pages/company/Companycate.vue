@@ -16,10 +16,10 @@
 					<el-form  ref="ruleForm" :model="ruleForm" :rules="rules"  label-width="0px">
 						
 				       <p><span style="color:#f00;">*</span> 设置商品提成比例：</p>
-					   <el-tree  ref="tree" :props="props" :load="loadNode" empty-text='' lazy show-checkbox>
+					   <el-tree  ref="tree" :expand-on-click-node="false" :props="props" :load="loadNode" empty-text='' lazy>
 						   <span  slot-scope="{ node, data }">
 							   <span>{{ node.label }}</span>
-							   <input :click='function(){if (event.target != this) {return false}}' class="treeinput" type="number" v-model='node.data.value' />
+							   <input class="treeinput" type="number" v-model='data.ratio' /> ‰
 						   </span>
 					   </el-tree> 
                       
@@ -56,7 +56,7 @@
 		   return {
 			    active: 2,  //步骤条
 			    companyid:'', //登录账号所属供应商
-				parent_id:'', //地区父级id
+				parent_id:'', //种类父级id
 				level:'', //层级
 				loadfinish:false, //种类是否加载完成
 				props: {
@@ -65,7 +65,7 @@
 				},
 				ruleForm: {
 				   //url_sale: '' , //凭证图片地址
-				   salecate:'', //区域数据 
+				   salecate:'', //种类数据 
 				   id:this.$route.query.companyid ,//新建的该供应商id
 				   step:3 //创建进度
 				},
@@ -87,6 +87,21 @@
 	 },
 
      methods: {
+         getCheckedAll(e){
+
+           return this.$refs.tree.filter(function (e) {
+              if(e.node.indeterminate){
+                  return e.node.indeterminate
+              }
+			  console.log(e.node.indeterminate)
+              return e.node.checked
+          }).map(function (e) {
+          //map高阶函数处理map之前的数据并将处理好的数据返回一个新的数组
+		  console.log(e.node.indeterminate)
+              return e.node
+          })
+
+          },
 
 		 
 		  /**
@@ -95,7 +110,9 @@
 		  */
 		  submitForm(formName) {
 			 let self=this;
-             self.ruleForm.salearea='';
+             self.ruleForm.salecate='';
+			this.getCheckedAll();
+			return false;
 			 //获取全选的数据
 			 this.$refs.tree.getCheckedNodes().forEach((value,index)=>{
 			 	self.ruleForm.salearea=self.ruleForm.salearea+value.region_id+'|';
@@ -177,6 +194,10 @@
 				this.$axios.post(this.$url+'getshopcate',{
 					 parent_id:this.parent_id
 				}).then(function(res){
+					   //添加提成比例属性
+					    res.data.data.forEach((value,index)=>{
+							value.ratio='';
+						})
 					    if(res.data.data.length==0){
 							self.$message({
 								 message:'已无下级分类',
