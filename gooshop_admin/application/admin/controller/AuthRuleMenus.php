@@ -135,18 +135,4 @@ class AuthRuleMenus extends Base
 
         return $userinfo[$uid];
     }
-
-    /**
-     * 获取超级管理员
-     * @return array
-     */
-    public function getSuperAdmin()
-    {
-        $userGroupIds = Db::name('auth_group_access')->where('group_id = 1')->select();
-        $superAdmin = [];
-        foreach ($userGroupIds as $key => $value) {
-            $superAdmin[] = $value['uid'];
-        }
-        return $superAdmin;
-    }
 }
