@@ -3,6 +3,7 @@
 namespace app\admin\controller;
 
 use app\common\lib\Aes;
+use app\common\lib\exception\ApiException;
 use think\auth\Auth;
 use think\Controller;
 use think\Db;
@@ -43,7 +44,7 @@ class Base extends Common
         }
 
         // Auth权限认证：对节点进行认证
-        //$this->checkAuth();
+        $this->checkAuth();
     }
 
     /**
@@ -91,7 +92,8 @@ class Base extends Common
         $auth = new Auth(); // 实例化Auth权限认证类
         $controller = request()->controller(); // 控制器
         $action = request()->action(); // 方法
-        $name = $this->module . '/' . $controller . '/' . $action; // 规则唯一标识
+        $name = $this->module . '/' . $controller . '/' . $action; // 规则唯一标识（节点）
+        $name = request()->url(); // 规则唯一标识（请求URL）
         $notCheckName = [ // 不需认证的规则
             $this->module . '/' .'Index/index',
             $this->module . '/' .'Login/logout',
@@ -102,7 +104,8 @@ class Base extends Common
             if (!in_array($name, $notCheckName)) {
                 // 检查权限
                 if (!$auth->check($name, $this->companyUser->user_id, $type = 1)) {
-                    return show(config('code.error'), '无权访问', '', 401); //$this->error('无权访问');
+                    throw new ApiException('无权访问' . $name, 401);
+                    //return show(config('code.error'), '无权访问', '', 401); //$this->error('无权访问');
                 }
             }
         }
