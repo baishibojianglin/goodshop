@@ -40,7 +40,8 @@ class Base extends Common
 
         // 判断是否登录
         if (!($this->isLogin())) {
-            return show(config('code.error'), '未登录', '', 401);
+            throw new ApiException('未登录', 401);
+            //return show(config('code.error'), '未登录', '', 401);
         }
 
         // Auth权限认证：对节点进行认证
@@ -93,10 +94,11 @@ class Base extends Common
         $controller = request()->controller(); // 控制器
         $action = request()->action(); // 方法
         $name = $this->module . '/' . $controller . '/' . $action; // 规则唯一标识（节点）
-        $name = request()->url(); // 规则唯一标识（请求URL）
+        //$name = strpos(request()->url(), '/index.php/') === false ? request()->url() : str_replace ('/index.php/', '', request()->url()); // 规则唯一标识（请求URL）
         $notCheckName = [ // 不需认证的规则
-            $this->module . '/' .'Index/index',
-            $this->module . '/' .'Login/logout',
+            $this->module . '/' . 'Index/index',
+            $this->module . '/' . 'Login/logout',
+            $this->module . '/' . 'AuthRuleMenus/authrulemenus' // 权限规则菜单
         ];
         // 超级管理员拥有所有权限
         if (!in_array($this->companyUser->user_id, $this->getSuperAdmin())) {
