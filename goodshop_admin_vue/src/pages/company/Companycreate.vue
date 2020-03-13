@@ -136,9 +136,9 @@
 				   data:this.ruleForm
 				}).then(function(res){
                    if(res.data.status==1){
-					 self.$message({
-						 message:'基本信息添加成功',
-						 type: 'success'
+					  self.$message({
+					   		message:'基本信息填写成功',
+					   		type: 'success'
 					  });
 					  self.$router.push({path: "companyarea", query: {companyid:res.data.companyid}});
 					  self.next(); 

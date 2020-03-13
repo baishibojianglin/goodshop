@@ -14,13 +14,13 @@
 						<dl class="m0">
 							
 							<dt @click="menush(1)">
-								<span class="el-icon-menu" id="menu1"> 供应商管理</span>
+								<span class="el-icon-menu" id="menu1"> 经销商管理</span>
 								<span class="fr derection" :class="menuvalue[1]?derectionup:derectiondown"></span>
 							</dt>
 							<el-collapse-transition>
 								<div v-show="menuvalue[1]">
-									<router-link to="/home/companycreate"><dd id='menu11' :class="activevalue[11]?activeclass:''"  @click="menuactive(11,1,1)">新建供应商</dd></router-link>
-									<router-link to="/home/companycreate"><dd id='menu12' :class="activevalue[12]?activeclass:''"  @click="menuactive(12,1,2)">供应商管理</dd></router-link>
+									<router-link to="/home/companycreate"><dd id='menu11' :class="activevalue[11]?activeclass:''"  @click="menuactive(11,1,1)">新建经销商</dd></router-link>
+									<router-link to="/home/companycreate"><dd id='menu12' :class="activevalue[12]?activeclass:''"  @click="menuactive(12,1,2)">经销商列表</dd></router-link>
 								</div>
 							</el-collapse-transition>
 							

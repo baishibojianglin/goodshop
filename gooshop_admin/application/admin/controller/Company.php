@@ -9,6 +9,7 @@ use think\Request;
 
 class Company extends Base
 {
+
    /**
    *创建供应商
    */
@@ -74,7 +75,6 @@ class Company extends Base
 
 		return json($message);
 
-
 	}
 
 
@@ -83,16 +83,15 @@ class Company extends Base
    */
 	public function area_insert(){
 		$form=input();
-		//添加供应商基本信息
 		$listcompany=model('Company')->insertcompany($form['data']);
 		
 		if(!empty($listcompany)){
 			$message['companyid']=$listcompany;
 			$message['status']=1;
-			$message['words']='基本信息添加成功';
+			$message['words']='销售区域配置成功';
 		}else{
 			$message['status']=0;
-			$message['words']='基本信息添加失败';
+			$message['words']='销售区域配置失败';
 		}
 		return json($message);
 	}
@@ -103,22 +102,47 @@ class Company extends Base
    */
 	public function getshopcate_company(){
 		$form=input();	
-		$map['parent_id']=$form['parent_id'];
-		$map['audit_status']=1;
-        //获取商品种类表，并分解成数组
-        $listcompany=model('GoodsCate')->where($map)->field('cate_id,cate_name')->cache(true, 10)->select();
-
-        if(!empty($listcompany)){
-        	$message['data']= $listcompany;
+		$mapcate['parent_id']=$form['parent_id'];
+		$mapcate['audit_status']=1;
+        //获取商品种类
+        $listcate=model('GoodsCate')->where($mapcate)->field('cate_id,cate_name')->cache(true, 10)->select();
+        //原来勾选的商品种类
+    	$mapcompany['id']=$form['id'];
+        $listselectcate=model('Company')->where($mapcompany)->field('salecate')->find();
+        
+        
+          
+        if(!empty($listcate)){
+        	$message['data']=$listcate;
+        	$message['selectdata']=$listselectcate;
         	$message['status']=1;
         }else{
         	$message['data']=[];
         	$message['status']=0;      	
         }
-
 	    return json($message);
+	}
 
 
+
+
+   /**
+   *插入供应商销售商品种类字段值
+   */
+	public function cate_insert(){
+		$form=input();
+		$form['data']['status']=1;
+		$listcompany=model('Company')->update($form['data']);
+		
+		if(!empty($listcompany)){
+			$message['companyid']=$listcompany;
+			$message['status']=1;
+			$message['words']='主营产品配置成功';
+		}else{
+			$message['status']=0;
+			$message['words']='主营产品配置失败';
+		}
+		return json($message);
 	}
 
 
@@ -150,5 +174,8 @@ class Company extends Base
 
 		return show(config('code.success'), 'OK', $data);
 	}
+
+
+
 	
 }

@@ -18,6 +18,8 @@ Route::POST('companyarea','admin/Company/getarea_company');
 Route::POST('companyareainsert','admin/Company/area_insert');
 //获取供应商销售商品种类
 Route::POST('getshopcate','admin/Company/getshopcate_company');
+//插入供应商销售商品种类
+Route::POST('shopcateinsert','admin/Company/cate_insert');
 // 区域
 Route::resource('region', 'admin/region');
 // 商品类别

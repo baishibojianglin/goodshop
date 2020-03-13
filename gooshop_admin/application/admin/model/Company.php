@@ -25,7 +25,7 @@ class Company extends Base
         //入库供应商基本信息表
 
         $data['role']=1;  //供应商
-        $data['status']=3; //创建中
+        $data['status']=2; //草稿创建中
         $data['type']=1; //正式数据
         $data['create_time']=date('Y-m-d H:i:s');
         $list=$this->save($data);

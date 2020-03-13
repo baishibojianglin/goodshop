@@ -16,7 +16,7 @@
 					<el-form  ref="ruleForm" :model="ruleForm" :rules="rules"  label-width="0px">
 						
 				       <p><span style="color:#f00;">*</span> 选择销售地区：</p>
-					   <el-tree ref="tree" :props="props" :load="loadNode" empty-text='' lazy show-checkbox></el-tree> 
+					   <el-tree ref="tree"  :props="props" :load="loadNode" empty-text='' lazy show-checkbox></el-tree> 
                       
 <!-- 					   <p v-show="loadfinish" ><span style="color:#f00;">*</span> 上传经销区域凭证：</p>
 					   <el-form-item v-if="loadfinish"   label="" prop="url_sale">
@@ -96,7 +96,7 @@
 			 	self.ruleForm.salearea=self.ruleForm.salearea+value.region_id+'|';
 			 })
 			 //获取半选的数据
-			 this.$refs.tree.getHalfCheckedKeys().forEach((value,index)=>{
+			 this.$refs.tree.getHalfCheckedNodes().forEach((value,index)=>{
 			 	self.ruleForm.salearea=self.ruleForm.salearea+value.region_id+'|';
 			 })
 			 //去除最后一个符号"|"
@@ -118,10 +118,10 @@
 				   data:this.ruleForm
 				}).then(function(res){
                    if(res.data.status==1){
-					  self.$message({
-						 message:'销售地区配置成功',
-						 type: 'success'
-					  });
+					   self.$message({
+					    		message:'销售地区配置成功',
+					    		type: 'success'
+					   });
 					  self.$router.push({path: "companycate", query: {companyid:self.$route.query.companyid }});
 					  self.next(); 
 				   }
