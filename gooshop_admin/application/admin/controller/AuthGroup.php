@@ -78,6 +78,7 @@ class AuthGroup extends Base
         try {
             $data = model('AuthGroup')->field('id, title, type')->where($map)->select(); // TODO：待处理，暂时这样写
         } catch (\Exception $e) {
+            //throw new ApiException('网络忙，请重试', 500, config('code.error'));
             return show(config('code.error'), '网络忙，请重试', [], 500); // $e->getMessage()
         }
 

@@ -185,6 +185,20 @@
 							self.$router.go(-1); // 返回上一页
 						})
 						.catch(function (error) {
+							// 错误处理
+							console.log('error', error);
+							if (error.response) {
+								console.log('error.response', error.response);
+								console.log(1, error.response.data);
+								console.log(2, error.response.status);
+								console.log(3, error.response.headers);
+							} else if (error.request) {
+								console.log('error.request', error.request)
+							} else {
+								console.log('error.message', error.message)
+							}
+							console.log('error.config', error.config)
+							
 							self.$message({
 								message: error.response.data.message,
 								type: 'warning'

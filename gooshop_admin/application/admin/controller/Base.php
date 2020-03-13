@@ -3,7 +3,10 @@
 namespace app\admin\controller;
 
 use app\common\lib\Aes;
+use app\common\lib\exception\ApiException;
+use think\auth\Auth;
 use think\Controller;
+use think\Db;
 use think\Request;
 
 /**
@@ -13,6 +16,12 @@ use think\Request;
  */
 class Base extends Common
 {
+    /**
+     * 模块
+     * @var string
+     */
+    public $module = 'admin';
+
     /**
      * 登录账户的基本信息
      * @var array
@@ -26,10 +35,17 @@ class Base extends Common
     {
         parent::_initialize();
 
+        // 初始化参数
+        $this->module = request()->module(); // 模块
+
         // 判断是否登录
         if (!($this->isLogin())) {
-            return show(config('code.error'), '未登录', '', 401);
+            throw new ApiException('未登录', 401);
+            //return show(config('code.error'), '未登录', '', 401);
         }
+
+        // Auth权限认证：对节点进行认证
+        $this->checkAuth();
     }
 
     /**
@@ -67,5 +83,47 @@ class Base extends Common
         // 赋值登录账户的基本信息
         $this->companyUser = $companyUser;
         return true;
+    }
+
+    /**
+     * Auth权限认证：对节点进行认证
+     */
+    public function checkAuth()
+    {
+        $auth = new Auth(); // 实例化Auth权限认证类
+        $controller = request()->controller(); // 控制器
+        $action = request()->action(); // 方法
+        $name = $this->module . '/' . $controller . '/' . $action; // 规则唯一标识（节点）
+        //$name = strpos(request()->url(), '/index.php/') === false ? request()->url() : str_replace ('/index.php/', '', request()->url()); // 规则唯一标识（请求URL）
+        $notCheckName = [ // 不需认证的规则
+            $this->module . '/' . 'Index/index',
+            $this->module . '/' . 'Login/logout',
+            $this->module . '/' . 'AuthRuleMenus/authrulemenus' // 权限规则菜单
+        ];
+        // 超级管理员拥有所有权限
+        if (!in_array($this->companyUser->user_id, $this->getSuperAdmin())) {
+            // 不需认证的规则
+            if (!in_array($name, $notCheckName)) {
+                // 检查权限
+                if (!$auth->check($name, $this->companyUser->user_id, $type = 1)) {
+                    throw new ApiException('无权访问' . $name, 401);
+                    //return show(config('code.error'), '无权访问', '', 401); //$this->error('无权访问');
+                }
+            }
+        }
+    }
+
+    /**
+     * 获取超级管理员
+     * @return array
+     */
+    public function getSuperAdmin()
+    {
+        $userGroupIds = Db::name('auth_group_access')->where('group_id = 1')->select();
+        $superAdmin = [];
+        foreach ($userGroupIds as $key => $value) {
+            $superAdmin[] = $value['uid'];
+        }
+        return $superAdmin;
     }
 }

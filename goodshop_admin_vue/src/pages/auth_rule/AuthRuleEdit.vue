@@ -24,6 +24,12 @@
 							<el-radio :label="2">menu</el-radio>
 						</el-radio-group>
 					</el-form-item>
+					<el-form-item prop="status" label="状态">
+						<el-radio-group v-model="form.status">
+							<el-radio :label="1">启用</el-radio>
+							<el-radio :label="0">禁用</el-radio>
+						</el-radio-group>
+					</el-form-item>
 					<el-form-item prop="condition" label="权限规则验证条件">
 						<el-input v-model="form.condition" placeholder="输入权限规则验证条件" clearable style="width:350px;"></el-input>
 					</el-form-item>
@@ -66,6 +72,7 @@
 					name: '', // 权限规则
 					title: '', // 权限规则名称
 					type: '', // 权限规则类型
+					status: '', // 权限规则状态
 					condition: '', // 权限规则验证条件
 					module: 'admin', // 规则所属模块
 					pid: '', // 上级ID
@@ -180,6 +187,7 @@
 							name: this.form.name,
 							title: this.form.title,
 							type: this.form.type,
+							status: this.form.status,
 							condition: this.form.condition,
 							module: this.form.module,
 							pid: this.form.pid,
