@@ -33,6 +33,14 @@ import AuthRuleEdit from '@/pages/auth_rule/AuthRuleEdit.vue'
 import CompanyUser from '@/pages/company_user/CompanyUser.vue'
 import CompanyUserAdd from '@/pages/company_user/CompanyUserAdd.vue'
 import CompanyUserEdit from '@/pages/company_user/CompanyUserEdit.vue'
+// 广告管理·广告
+import Ad from '@/pages/ad/Ad.vue'
+import AdAdd from '@/pages/ad/AdAdd.vue'
+import AdEdit from '@/pages/ad/AdEdit.vue'
+// 广告管理·广告位
+/* import AdPosition from '@/pages/ad_position/AdPosition.vue'
+import AdPositionAdd from '@/pages/ad_position/AdPositionAdd.vue'
+import AdPositionEdit from '@/pages/ad_position/AdPositionEdit.vue' */
 
 Vue.use(VueRouter)
 
@@ -83,6 +91,15 @@ const routes = [
 			{path: 'company_user', name: 'company_user', component: CompanyUser}, // 供应商账户
 			{path: 'company_user_add', name: 'company_user_add', component: CompanyUserAdd}, // 新增供应商账户
 			{path: 'company_user_edit', name: 'company_user_edit', component: CompanyUserEdit}, // 编辑供应商账户
+			// 2--广告管理
+			// 广告
+			{path: 'ad', name: 'ad', component: Ad}, // 广告列表
+			{path: 'ad_add', name: 'ad_add', component: AdAdd}, // 新增广告
+			{path: 'ad_edit', name: 'ad_edit', component: AdEdit}, // 编辑广告
+			// 广告位
+			/* {path: 'ad_position', name: 'ad_position', component: AdPosition}, // 广告位列表
+			{path: 'ad_position_add', name: 'ad_position_add', component: AdPositionAdd}, // 新增广告位
+			{path: 'ad_position_edit', name: 'ad_position_edit', component: AdPositionEdit}, // 编辑广告位 */
 		]
 	}
 ]

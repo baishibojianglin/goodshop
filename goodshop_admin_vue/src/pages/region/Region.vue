@@ -82,6 +82,10 @@
 				this.$axios.get(this.$url + 'region', {
 					params: {
 						region_name: this.formInline.region_name
+					},
+					headers: {
+						'company-user-id': JSON.parse(localStorage.getItem('company')).user_id,
+						'company-user-token': JSON.parse(localStorage.getItem('company')).token
 					}
 				})
 				.then(function(res) {

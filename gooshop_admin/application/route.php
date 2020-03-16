@@ -42,3 +42,5 @@ Route::resource('company_user', 'admin/CompanyUser');
 // 供应商
 Route::get('company_tree', 'admin/Company/companyTree'); // 供应商列表树
 Route::POST('createCompany','admin/Company/submitCompany'); // 创建供应商
+// 广告
+Route::resource('ad', 'admin/Ad');
