@@ -4,8 +4,8 @@
 		  <el-col :span="22">
 			 <el-steps :active="active" finish-status="success" style="margin-left: 50px;margin-bottom: 20px;">
 			   <el-step title="填写基本信息"></el-step>
-			   <el-step title="配置销售地区"></el-step>
 			   <el-step title="配置商品种类"></el-step>
+			   <el-step title="配置销售地区"></el-step>
 			   <el-step title="创建成功"></el-step>
 			 </el-steps>			  
 		  </el-col>

@@ -11,11 +11,11 @@ Route::POST('upload','admin/Common/uploadimg');
 //删除图片
 Route::POST('deleteimages','admin/Common/deleteimg');
 //获取平台销售区域数据
-Route::POST('platformarea','admin/Company/getarea_platform');
+Route::POST('getarea','admin/Company/getArea');
 //获取供应商销售区域数据
 Route::POST('companyarea','admin/Company/getarea_company');
 //插入供应商销售区域数据
-Route::POST('companyareainsert','admin/Company/area_insert');
+Route::POST('submitArea','admin/Company/submitArea');
 //获取供应商销售商品种类
 Route::POST('getshopcate','admin/Company/getshopcate_company');
 //插入供应商销售商品种类

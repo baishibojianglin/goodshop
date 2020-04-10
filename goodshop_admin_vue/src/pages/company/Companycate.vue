@@ -4,8 +4,8 @@
 		  <el-col :span="22">
 			 <el-steps :active="active" finish-status="success" style="margin-left: 50px;margin-bottom: 20px;">
 			   <el-step title="填写基本信息"></el-step>
-			   <el-step title="配置销售地区"></el-step>
 			   <el-step title="配置商品种类"></el-step>
+			   <el-step title="配置销售地区"></el-step>
 			   <el-step title="创建成功"></el-step>
 			 </el-steps>			  
 		  </el-col>
@@ -22,8 +22,7 @@
 						 <el-button type="primary" @click="submitForm('ruleForm')">下一步</el-button>
 						 <el-button @click="resetForm('ruleForm')">重置</el-button>
 					   </el-form-item>	
-																												   
-															  
+																																																	 
 					</el-form>    
 			  </el-col>
 		 </el-row>		 
@@ -50,7 +49,7 @@
 				ruleForm: {
 				   salecate:'', //种类数据 
 				   id:this.$route.query.companyid ,//新建的该经销商id
-				   step:3 //创建进度
+				   step:2 //创建进度
 				}
 
 
@@ -110,7 +109,7 @@
 					    		message:'商品种类配置成功',
 					    		type: 'success'
 					   });
-					  self.$router.push({path: "companysuccess", query: {companyid:self.$route.query.companyid}});
+					  self.$router.push({path: "companyarea", query: {companyid:self.$route.query.companyid}});
 					  self.next(); 
 				   }
 				})                
@@ -169,7 +168,6 @@
 										if(self.checkdata.length==count_checkdata){
 											clearInterval(checkdata_time);
 										}
-										console.log(1)
 									},1000);	
 								}														
 							}
