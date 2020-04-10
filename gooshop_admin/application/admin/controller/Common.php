@@ -66,9 +66,9 @@ class Common extends Controller
 
         // TODO：校验 headers 信息
         // 校验基础参数
-        if (!$headers) {
+        /*if (!$headers) {
             throw new ApiException('headers参数错误', 400);
-        }
+        }*/
         /*if (empty($headers['sign'])) {
             throw new ApiException('sign不存在', 400);
         }*/
