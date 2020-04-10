@@ -11,7 +11,7 @@
 			<el-col :span="24"> <!--content s-->
 				<el-col  :xs="6" :sm="5" :md="4" :lg="3" :xl="2">  <!--menu s-->
 					<div class="homemenu">
-						<!-- <dl class="m0">
+						<dl class="m0">
 							
 							<dt @click="menush(1)">
 								<span class="el-icon-menu" id="menu1"> 经销商管理</span>
@@ -60,10 +60,11 @@
 							</el-collapse-transition>
 							
 							
-						</dl> -->
+						</dl>
 						
 						<!-- 以下是动态数据 menus -->
-						<dl class="m0" v-for="(item, index) in menus" :key="index" v-if="item.level == 1">
+						--------------------
+						<dl class="m0" v-for="(item, index) in menus" :key="index" v-if="item.level == 1" style="color: #C0C4CC;">
 							<dt @click="menush(item.id)">
 								<span :class="item.icon" :id="'menu' + item.id"> {{item.title}}</span>
 								<span class="fr derection" :class="menuvalue[item.id]?derectionup:derectiondown"></span>
