@@ -30,17 +30,22 @@ class Company extends Base
 	}
 
    /**
-   *获取平台全国销售区域
+   *获取销售区域
    */
-	public function getarea_platform(){
+	public function getArea(){
 		$form=input();	
-		$map['parent_id']=$form['parent_id'];
-		$map['level']=$form['level'];
-	    $listdata = model('Region')->getRegion($map);
-		if(!empty($listdata)){
-			$message['data']=$listdata;
+		$maparea['parent_id']=$form['parent_id'];
+	    $listarea=model('Region')->where($maparea)->cache(true, 10)->select();
+        //原来勾选的商品种类
+    	$mapcompany['id']=$form['id'];
+        $listselectarea=model('Company')->where($mapcompany)->field('salearea')->find();
+
+		if(!empty($listarea)){
+			$message['data']=$listarea;
+			$message['selectdata']=$listselectarea;
 			$message['status']=1;
 		}else{
+			$message['data']=[];
 			$message['status']=0;
 		}
 		return json($message);
@@ -81,7 +86,7 @@ class Company extends Base
    /**
    *插入供应商销售区域字段值
    */
-	public function area_insert(){
+	public function submitArea(){
 		$form=input();
 		$listcompany=model('Company')->insertcompany($form['data']);
 		
@@ -137,10 +142,10 @@ class Company extends Base
 		if(!empty($listcompany)){
 			$message['companyid']=$listcompany;
 			$message['status']=1;
-			$message['words']='主营产品配置成功';
+			$message['words']='商品种类配置成功';
 		}else{
 			$message['status']=0;
-			$message['words']='主营产品配置失败';
+			$message['words']='商品种类配置失败';
 		}
 		return json($message);
 	}

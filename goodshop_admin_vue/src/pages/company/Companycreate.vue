@@ -4,8 +4,8 @@
 		  <el-col :span="22">
 			 <el-steps :active="active" finish-status="success" style="margin-left: 50px;margin-bottom: 50px;">
 			   <el-step title="填写基本信息"></el-step>
-			   <el-step title="配置销售地区"></el-step>
 			   <el-step title="配置商品种类"></el-step>
+			   <el-step title="配置销售地区"></el-step>
 			   <el-step title="创建成功"></el-step>
 			 </el-steps>			  
 		  </el-col>
@@ -140,7 +140,7 @@
 					   		message:'基本信息填写成功',
 					   		type: 'success'
 					  });
-					  self.$router.push({path: "companyarea", query: {companyid:res.data.companyid}});
+					  self.$router.push({path: "companycate", query: {companyid:res.data.companyid}});
 					  self.next(); 
 				   }
 				})                

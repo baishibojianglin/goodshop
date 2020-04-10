@@ -4,8 +4,8 @@
 		  <el-col :span="22">
 			 <el-steps :active="active" finish-status="success" style="margin-left: 50px;margin-bottom: 20px;">
 			   <el-step title="填写基本信息"></el-step>
-			   <el-step title="配置销售地区"></el-step>
 			   <el-step title="配置商品种类"></el-step>
+			   <el-step title="配置销售地区"></el-step>
 			   <el-step title="创建成功"></el-step>
 			 </el-steps>			  
 		  </el-col>
@@ -13,22 +13,11 @@
 		 
 	     <el-row>
 			  <el-col :span="15" style="margin-left: 50px;">
-					<el-form  ref="ruleForm" :model="ruleForm" :rules="rules"  label-width="0px">
+					<el-form  ref="ruleForm" :model="ruleForm"  label-width="0px">
 						
 				       <p><span style="color:#f00;">*</span> 选择销售地区：</p>
-					   <el-tree ref="tree"  :props="props" :load="loadNode" empty-text='' lazy show-checkbox></el-tree> 
-                      
-<!-- 					   <p v-show="loadfinish" ><span style="color:#f00;">*</span> 上传经销区域凭证：</p>
-					   <el-form-item v-if="loadfinish"   label="" prop="url_sale">
-						   <el-input v-show='false'  v-model="ruleForm.url_sale"></el-input>
-						   <el-upload  list-type="picture-card" :action="this.$url+'upload?name=image'"  :on-success="returnUrl"  :on-preview="handlePictureCardPreview"  name='image'>
-								 <i class="el-icon-circle-plus-outline" style="font-size: 14px;"> 上传凭证</i>
-						   </el-upload>
-						   <el-dialog :visible.sync="dialogVisible">
-							 <img width="100%" :src="dialogImageUrl" alt="">
-						   </el-dialog>
-					   </el-form-item>	 -->
-															  
+					   <el-tree ref="tree" :default-expanded-keys="opendata" :default-checked-keys="checkdata" show-checkbox node-key="region_id"  :props="props" :load="loadNode" empty-text='' lazy show-checkbox></el-tree> 
+                      															  
 					   <el-form-item v-show="loadfinish"  style="margin-top:20px;">
 						 <el-button type="primary" @click="submitForm('ruleForm')">下一步</el-button>
 						 <el-button @click="resetForm('ruleForm')">重置</el-button>
@@ -50,28 +39,18 @@
      data() {
 		   return {
 			    active: 1,  //步骤条
-			    companyid:'', //登录账号所属供应商
-				parent_id:'', //地区父级id
-				level:'', //层级
 				loadfinish:false, //地区是否加载完成
+				opendata:[], //默认要展开的节点id
+				checkdata:[], //默认要选中的节点id
 				props: {
 				  label: 'region_name',
 				  isLeaf: 'leaf'
 				},
 				ruleForm: {
-				   //url_sale: '' , //凭证图片地址
 				   salearea:'', //区域数据 
 				   id:this.$route.query.companyid ,//新建的该供应商id
-				   step:2 //创建进度
-				},
-				 rules: {
-				//   url_sale: [
-				// 	{ required:true, message: '请上传凭证图片', trigger: 'blur' }
-				//   ]											  
-				 },
-				dialogImageUrl: '',
-				dialogVisible: false, //放大预览图片
-
+				   step:3 //创建进度
+				}
 
 		    }
      },
@@ -95,12 +74,18 @@
 			 this.$refs.tree.getCheckedNodes().forEach((value,index)=>{
 			 	self.ruleForm.salearea=self.ruleForm.salearea+value.region_id+'|';
 			 })
-			 //获取半选的数据
-			 this.$refs.tree.getHalfCheckedNodes().forEach((value,index)=>{
-			 	self.ruleForm.salearea=self.ruleForm.salearea+value.region_id+'|';
-			 })
 			 //去除最后一个符号"|"
 			 self.ruleForm.salearea=self.ruleForm.salearea.slice(0,-1);
+			 //如果存在半选，设置半选分割点
+			 if(this.$refs.tree.getHalfCheckedNodes().length>0){
+				 self.ruleForm.salearea=self.ruleForm.salearea+',';
+				 //获取半选的数据
+				 this.$refs.tree.getHalfCheckedNodes().forEach((value,index)=>{
+				 	self.ruleForm.salearea=self.ruleForm.salearea+value.region_id+'|';
+				 })
+				 //去除最后一个符号"|"
+				 self.ruleForm.salearea=self.ruleForm.salearea.slice(0,-1);
+			 }
 
 			 //验证销售地区
 			 if(self.ruleForm.salearea==''){
@@ -114,7 +99,7 @@
              //提交数据
 			this.$refs[formName].validate((valid) => {
 			  if (valid) {
-				this.$axios.post(this.$url+'companyareainsert',{
+				this.$axios.post(this.$url+'submitArea',{
 				   data:this.ruleForm
 				}).then(function(res){
                    if(res.data.status==1){
@@ -122,7 +107,7 @@
 					    		message:'销售地区配置成功',
 					    		type: 'success'
 					   });
-					  self.$router.push({path: "companycate", query: {companyid:self.$route.query.companyid }});
+					  self.$router.push({path: "companysuccess", query: {companyid:self.$route.query.companyid }});
 					  self.next(); 
 				   }
 				})                
@@ -144,19 +129,6 @@
 		  next(){
 			if (this.active++ > 2) this.active = 0;
 		  },
-		  /**
-		   * 上传图片
-		   * @param {string} response  返回图片地址
-		   * @param {Object} file
-		   * @param {Object} fileList
-		   */
-		  returnUrl(response, file, fileList){
-			  if(this.ruleForm.url_sale==''){
-				  this.ruleForm.url_sale=response['url'];  //一张图
-			  }else{
-				  this.ruleForm.url_sale=this.ruleForm.url_sale+'|'+response['url']; //多张图
-			  }
-		  },
          /**
 		  * 获取tree形数据
 		  * @param {Object} node
@@ -164,73 +136,61 @@
 		  */
 		  loadNode(node, resolve) {	
 			let self=this;
+			let parent_id=0; //首次进入查询第一级
+			let level=1;
 			if(node.data){  //逐级查询
-				this.parent_id=node.data.region_id;
-				this.level=node.data.level+1;
-			}else{ //首次进入页面默认设置查询第一级地域
-				this.parent_id=0;
-				this.level=1;
-			}	
-		
-			if(this.companyid==1){  	//平台账号
-								
-				this.$axios.post(this.$url+'platformarea',{
-					 parent_id:this.parent_id,
-					 level:this.level
-				}).then(function(res){
-					    self.loadfinish=true; //地区加载显示完成
-					    if(self.level==4){ //第四级时不再显示三角形
-							res.data.data.forEach((value,index)=>{
-								value.leaf=true;
-							})
-						}
-						if (node.level === 0) {
-						  return resolve(res.data.data);
-						}
-						if (node.level > 1) return resolve(res.data.data);
-
-						setTimeout(() => {
-						  const data = res.data.data;		
-						  resolve(data);
-						}, 500);							
+			   parent_id=node.data.region_id;
+			   level=node.data.level+1;
+			}
 									
-				})		
-				
-			}else{  //供应商账号
-			
-				this.$axios.post(this.$url+'companyarea',{
-					 id:this.companyid,
-					 parent_id:this.parent_id,
-					 level:this.level
-				}).then(function(res){					
-					 self.loadfinish=true; //地区加载显示完成
-					 if(self.level==4){ //第四级时不再显示三角形
+			this.$axios.post(this.$url+'getarea',{
+				 parent_id:parent_id,  //父级id
+				 id:this.$route.query.companyid //新建的经销商id
+			}).then(function(res){
+					//赋值已配置的数据
+					if(self.checkdata.length==0){
+						let catestring=res.data.selectdata['salecate'];
+						if(catestring){
+							//检测是否有半选节点
+							let ishalf=catestring.indexOf(',');
+							if(ishalf==-1){ //无半选节点
+								self.checkdata=catestring.split("|")
+							}else{  //有半选节点
+								//全选和半选节点的分割
+								let cate_total_array=catestring.split(","); 
+								//半选节点，赋值给展开数组
+								self.opendata=cate_total_array[1].split("|");
+								//全选数组，赋值给要勾选数组
+								let count_checkdata=cate_total_array[0].split("|").length;
+								var checkdata_time=setInterval(function(){
+									self.checkdata=cate_total_array[0].split("|");
+									if(self.checkdata.length==count_checkdata){
+										clearInterval(checkdata_time);
+									}
+								},1000);	
+							}														
+						}
+					}
+					self.loadfinish=true; //地区加载显示完成
+					if(level==4){ //第四级时不再显示三角形
 						res.data.data.forEach((value,index)=>{
 							value.leaf=true;
 						})
-					 }
-					 if (node.level === 0) {
-					   return resolve(res.data.data);
-					 }
-					 if (node.level > 1) return resolve(res.data.data);
-					 
-					 setTimeout(() => {
-					   const data = res.data.data;		
-					   resolve(data);
-					 }, 500);
-				})							
+					}
+					if (node.level === 0) {
+					  return resolve(res.data.data);
+					}
+					if (node.level > 1) return resolve(res.data.data);
+
+					setTimeout(() => {
+					  const data = res.data.data;		
+					  resolve(data);
+					}, 500);							
+								
+			})		
 				
-				
-			}		  		
-		  },
-		  /**
-			* 放大图片
-			* @param {Object} file
-		  */
-		  handlePictureCardPreview(file) {
-		  			  this.dialogImageUrl = file.url;
-		  			  this.dialogVisible = true;
 		  }
+
 
 		  
      }
