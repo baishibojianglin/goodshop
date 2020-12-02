@@ -2,3 +2,7 @@
 composer.lock
 *.log
 thinkphp
+/application/database.php
+/application/extra/app.php
+/application/extra/aliyun.php
+/application/common/lib/Aes.php
