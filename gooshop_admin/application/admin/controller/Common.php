@@ -16,7 +16,6 @@ if (is_file(__DIR__ . '/../vendor/autoload.php')) {
 use OSS\OssClient;
 use OSS\Core\OssException;
 
-
 /**
  * admin模块公共控制器类
  * Class Common
@@ -88,23 +87,23 @@ class Common extends Controller
         $this->from = ($this->page - 1) * $this->size; // 'limit from,size'
     }
 
-  /**
-  *上传图片
-  */
-
+    /**
+     * 上传图片
+     * @return \think\response\Json|void
+     */
     public function uploadimg()
     {
-        //上传
+        // 上传
         $data=input();
         $file = request()->file($data['name']);
         $info=$file->getInfo();
         // 阿里云RAM账号AccessKey
-        $accessKeyId = "LTAI4FkCSGwQHirzGvdvWqiG";
-        $accessKeySecret = "ACpMHxZXPkkl23ont4mQfzjCZKtL3L";
+        $accessKeyId = config('aliyun.access_key_id');
+        $accessKeySecret = config('aliyun.access_key_secret');
         // Endpoint以成都为例，其它Region请按实际情况填写。
-        $endpoint = "http://oss-cn-chengdu.aliyuncs.com";
+        $endpoint = config('aliyun.endpoint');
         // 存储空间名称
-        $bucket = "goodshopimages";
+        $bucket = config('aliyun.bucket');
         // 文件名称
         $object =md5(uniqid(mt_rand(),true)).$info['name'];
         // <yourLocalFile>由本地文件路径加文件名包括后缀组成，例如/users/local/myfile.txt
@@ -119,38 +118,33 @@ class Common extends Controller
             return;
         }
 
-        //返回图片地址
-
+        // 返回图片地址
         $data['name']=$object;
         $data['url']=$result['info']['url'];
         return json($data);
+    }
 
-      }
-
-
-
-  /**
-  *删除图片
-  */
+    /**
+     * 删除图片
+     */
     public function deleteimg()
     {
         //上传
         $data=input();
         // 阿里云RAM账号AccessKey
-        $accessKeyId = "LTAI4FkCSGwQHirzGvdvWqiG";
-        $accessKeySecret = "ACpMHxZXPkkl23ont4mQfzjCZKtL3L";
+        $accessKeyId = config('aliyun.access_key_id');
+        $accessKeySecret = config('aliyun.access_key_secret');
         // Endpoint以成都为例，其它Region请按实际情况填写。
-        $endpoint = "http://oss-cn-chengdu.aliyuncs.com";
+        $endpoint = config('aliyun.endpoint');
         // 存储空间名称
-        $bucket = "goodshopimages";
+        $bucket = config('aliyun.bucket');
         // 文件名称
         $object =$data['name'];
-
 
         try{
             $ossClient = new OssClient($accessKeyId, $accessKeySecret, $endpoint);
 
-            $result=$ossClient->deleteObject($bucket, $object);
+            $result = $ossClient->deleteObject($bucket, $object);
         } catch(OssException $e) {
             printf(__FUNCTION__ . ": FAILED\n");
             printf($e->getMessage() . "\n");
@@ -160,10 +154,5 @@ class Common extends Controller
 
         //返回图片地址
         //return json($result);
-
-      }
-
-
-
-
+    }
 }
